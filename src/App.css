@@ -1,0 +1,186 @@
+html {
+  height: 100vh;
+}
+
+body {
+  --capped-cell-size: min(var(--cell-size), 0.8cm);
+  --font-size: min(calc(var(--capped-cell-size) * 0.8), 0.5cm);
+  --dark-color: #000000;
+  --light-color: rgb(239 239 239);
+  --quad: 9vw;
+
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  background-color: var(--dark-color);
+  color: var(--light-color);
+  overflow: hidden;
+}
+
+#app {
+  height: 100vh;
+  width: 98vw;
+  justify-content: center;
+  display: grid;
+  grid-template-areas:
+    "controls"
+    "matrix"
+    "result"
+    "clues";
+  grid-template-rows: auto auto auto 1fr;
+  overflow: hidden;
+  font-size: var(--font-size);
+}
+
+button {
+  all: unset;
+  text-decoration: none;
+  text-align: center;
+  appearance: none;
+  font-size: var(--font-size);
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  background-color: var(--light-color);
+  border: 1px solid var(--light-color);
+  border-radius: 2px;
+  color: black;
+  margin: 0;
+  padding: 1px 6px;
+}
+
+/* Controls */
+
+#controls {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  grid-area: controls;
+  width: 100%;
+  height: 5vmax;
+  margin-bottom: 5px;
+}
+
+#controls > button {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+  width: 4vmax;
+  height: 4vmax;
+  background-color: transparent;
+  padding: 1px 6px;
+}
+
+#newGameButton {
+  background-image: url("./images/new_game.svg");
+}
+
+#heartButton {
+  background-image: url("./images/heart.svg");
+}
+
+#installButton {
+  background-image: url("./images/install.svg");
+}
+
+.heart {
+  white-space: pre-line;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  overflow: scroll;
+  justify-items: center;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: calc(var(--default-font-size) * 0.75);
+}
+
+.heartText {
+  margin: 2vmax;
+}
+
+.heart a {
+  color: rgb(0 162 255);
+}
+
+.square {
+  width: var(--quad);
+  height: var(--quad);
+  color: white;
+  white-space: nowrap;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding: 5px;
+  background-origin: content-box;
+  box-sizing: border-box;
+}
+
+.moon {
+  background-image: url(./images/moon.svg);
+}
+
+.planet {
+  background-image: url(./images/planet.svg);
+}
+
+.star {
+  background-image: url(./images/star.svg);
+}
+
+.whirl {
+  background-image: url(./images/whirl.svg);
+}
+
+.square.offer {
+  background-color: transparent;
+}
+
+.square.red {
+  background-color: red;
+}
+
+.square.blue {
+  background-color: blue;
+}
+
+.square.black {
+  background-color: black;
+}
+
+.overlay.red {
+  background-color: rgba(255, 0, 0, 0.7);
+}
+
+.overlay.blue {
+  background-color: rgba(0, 0, 255, 0.7);
+}
+
+.overlay.black {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+#board {
+  display: grid;
+}
+
+#board > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+#played, #overlay {
+  display: grid;
+  grid-template-columns: repeat(10, var(--quad));
+  grid-template-rows: repeat(10, var(--quad));
+  justify-content: center;
+  border: 1px solid white;
+  width: fit-content;
+  align-self: center;
+}
+
+#deck {
+  display: grid;
+  grid-template-columns: repeat(2, var(--quad));
+  grid-template-rows: repeat(2, var(--quad));
+  justify-content: center;
+  border: 1px solid white;
+  width: fit-content;
+  align-self: center;
+}

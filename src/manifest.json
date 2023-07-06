@@ -1,0 +1,16 @@
+{
+  "name": "Sector",
+  "short_name": "Sector",
+  "description": "A spatial two player game",
+  "dir": "auto",
+  "lang": "en-US",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "../.",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "shortcuts": [],
+  "categories": ["games", "entertainment"],
+  "icons": [],
+  "screenshots": []
+}
