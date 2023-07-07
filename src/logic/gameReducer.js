@@ -21,12 +21,15 @@ export function gameReducer(currentGameState, payload) {
       overlay: newOverlay,
     }
   } else if (payload.action === "dragStart") {
+    // Store the quadrant that the player is dragging
+    // in the game state instead of in the event data
+    // so that we can access the data from the dragEnter event
     return {
       ...currentGameState,
       draggedOverlayIndex: payload.draggedOverlayIndex,
     }
   } else if (payload.action === "drop" || payload.action === "dragEnter") {
-    // Drop a piece on the overlay, but don't update the played pieces yet (that is taken care of by the 'end turn' action)
+    // Drop/move a piece on the overlay, but don't update the played pieces yet (that is taken care of by the 'end turn' action)
 
     // Adjust the position depending on which quadrant was dragged
     let newOverlayTopLeft
@@ -74,6 +77,7 @@ export function gameReducer(currentGameState, payload) {
       draggedOverlayIndex: undefined,
       overlayTopLeft: undefined,
       played: newPlayed,
+      isBlueTurn : !currentGameState.isBlueTurn,
     }
   } else {
     console.error(`unhandled action: ${payload.action}`);

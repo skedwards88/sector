@@ -34,6 +34,7 @@ export function gameInit({
     overlay,
     overlayTopLeft: undefined, // undefined indicates that the overlay piece is off the board (on top of the deck)
     draggedOverlayIndex: undefined,
+    isBlueTurn: true,
     lastBreakingChange: "20230706",
   };
 }

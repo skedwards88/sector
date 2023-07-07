@@ -45,6 +45,29 @@ button {
   padding: 1px 6px;
 }
 
+button.blue {
+  background: radial-gradient(
+    ellipse at 20% 20%,
+    #bdbce9 0%,
+    rgb(95, 104, 230) 50%,
+    rgb(37, 17, 148) 100%
+  );
+  border: 0px;
+  margin: 5px;
+  padding: 5px;
+}
+
+button.red {
+  background: radial-gradient(
+    ellipse at 20% 20%,
+    #e9bcbc 0%,
+    rgb(201, 61, 61) 50%,
+    rgb(148, 17, 17) 100%
+  );
+  border: 0px;
+  margin: 5px;
+  padding: 5px;
+}
 /* Controls */
 
 #controls {
