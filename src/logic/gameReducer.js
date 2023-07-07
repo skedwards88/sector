@@ -9,18 +9,16 @@ export function gameReducer(currentGameState, payload) {
       useSaved: false,
     });
   } else if (payload.action === "rotate") {
-    let newDeck = JSON.parse(JSON.stringify(currentGameState.deck));
-    let oldOverlay = newDeck[0];
+    let oldOverlay = currentGameState.overlay;
     let newOverlay = [
       oldOverlay[2],
       oldOverlay[0],
       oldOverlay[3],
       oldOverlay[1],
     ]
-    newDeck[0] = newOverlay
     return {
       ...currentGameState,
-      deck: newDeck,
+      overlay: newOverlay,
     }
   } else if (payload.action === "dragStart") {
     return {
@@ -56,7 +54,7 @@ export function gameReducer(currentGameState, payload) {
     };
   } else if (payload.action === "endTurn") {
     let newPlayed = JSON.parse(JSON.stringify(currentGameState.played));
-    const overlay = currentGameState.deck[0];
+    const overlay = currentGameState.overlay;
 
     for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
       const adjustedIndex =
@@ -66,9 +64,13 @@ export function gameReducer(currentGameState, payload) {
           newPlayed[adjustedIndex].color = overlay[overlayIndex].color
           newPlayed[adjustedIndex].shape = overlay[overlayIndex].shape
     }
+
+    let newDeck = JSON.parse(JSON.stringify(currentGameState.deck));
+    const newOverlay = newDeck.pop();
     return {
       ...currentGameState,
-      deck: currentGameState.deck.slice(1, currentGameState.deck.length),
+      deck: newDeck,
+      overlay: newOverlay,
       draggedOverlayIndex: undefined,
       overlayTopLeft: undefined,
       played: newPlayed,

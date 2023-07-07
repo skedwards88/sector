@@ -21,13 +21,13 @@ export default function Deck({
   overlay,
   dispatchGameState,
 }) {
-  console.log('render deck')
   let deckDivs = [];
   for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
     deckDivs.push(
       <div
         draggable
         onDragStart={(event) => handleDragStart({event, overlayIndex, dispatchGameState})}
+        onClick={()=>dispatchGameState({action: "rotate"})}
         className={`square overlay ${overlay[overlayIndex].color || ""} ${
           overlay[overlayIndex].shape || ""
         }`}

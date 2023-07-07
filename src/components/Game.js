@@ -26,13 +26,13 @@ export default function Game({
           <Played played={gameState.played}></Played>
           <Overlay
             overlayTopLeft={gameState.overlayTopLeft}
-            overlay={gameState.deck[0]}
+            overlay={gameState.overlay}
             expanseSize={gameState.expanseSize}
             dispatchGameState={dispatchGameState}
           ></Overlay>
         </div>
-        {gameState.overlayTopLeft ? <>{gameState.deck.length - 1}</> : <Deck
-            overlay={gameState.deck[0]}
+        {gameState.overlayTopLeft ? <>{gameState.deck.length}</> : <Deck
+            overlay={gameState.overlay}
             dispatchGameState={dispatchGameState}
           ></Deck>}
         
