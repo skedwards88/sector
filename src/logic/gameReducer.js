@@ -31,26 +31,25 @@ export function gameReducer(currentGameState, payload) {
   } else if (payload.action === "drop" || payload.action === "dragEnter") {
     // Drop/move a piece on the overlay, but don't update the played pieces yet (that is taken care of by the 'end turn' action)
 
-    // Adjust the position depending on which quadrant was dragged
-    let newOverlayTopLeft
-    switch (parseInt(currentGameState.draggedOverlayIndex)) {
-      case 0:
-        newOverlayTopLeft = payload.dropIndex
-        break;
-      case 1:
-        newOverlayTopLeft = payload.dropIndex - 1
-        break;
-      case 2:
-        newOverlayTopLeft = payload.dropIndex - currentGameState.expanseSize
-        break;
-      case 3:
-        newOverlayTopLeft = payload.dropIndex - currentGameState.expanseSize - 1
-        break;
-  
-      default:
-        newOverlayTopLeft = payload.dropIndex
-        break;
-    }
+    // Convert the index where the overlay was dropped to a row/column
+    const dropIndex = payload.dropIndex;
+    const dropRow = Math.floor(dropIndex / currentGameState.expanseSize);
+    const dropColumn = dropIndex - dropRow * currentGameState.expanseSize;
+
+    // Convert the overlay quadrant index that the user dragged t oa row/column
+    const overlayIndex = currentGameState.draggedOverlayIndex
+    const overlayRow = Math.floor(overlayIndex / (currentGameState.overlay.length / 2));
+    const overlayColumn = overlayIndex - overlayRow * (currentGameState.overlay.length / 2);
+
+    // Adjust the index where the overlay was dropped
+    // to reflect the index where the top left of the overlay ended up
+    // but don't let the overlay go off the board
+    const adjustedDropRow = Math.min(Math.max(0, dropRow - overlayRow), currentGameState.expanseSize - 2)
+    const adjustedDropColumn = Math.min(Math.max(0, dropColumn - overlayColumn), currentGameState.expanseSize - 2)
+
+    // Convert the row/column back to the index where the top left of the overlay ended up
+    const newOverlayTopLeft = adjustedDropColumn + (currentGameState.expanseSize * adjustedDropRow);
+
     return {
       ...currentGameState,
       overlayTopLeft: newOverlayTopLeft,

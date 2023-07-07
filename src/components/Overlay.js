@@ -55,7 +55,7 @@ export default function Overlay({
 
   // Replace the quadrants where the overlaid piece actually is with the quadrant color/shape
   // And make the quadrant draggable in addition to being a drop target
-  if (overlayTopLeft) {
+  if (overlayTopLeft != undefined) {
   for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
     const adjustedIndex =
       overlayIndex < 2

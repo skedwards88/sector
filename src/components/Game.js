@@ -31,7 +31,7 @@ export default function Game({
             dispatchGameState={dispatchGameState}
           ></Overlay>
         </div>
-        {gameState.overlayTopLeft ? <>{gameState.deck.length}</> : <Deck
+        {gameState.overlayTopLeft != undefined ? <>{gameState.deck.length}</> : <Deck
             overlay={gameState.overlay}
             dispatchGameState={dispatchGameState}
           ></Deck>}
