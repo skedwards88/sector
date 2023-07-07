@@ -31,22 +31,30 @@ export default function Game({
             dispatchGameState={dispatchGameState}
           ></Overlay>
         </div>
-        {gameState.overlayTopLeft != undefined ? <>{gameState.deck.length}</> : <Deck
+        {gameState.overlayTopLeft != undefined ? (
+          <>{gameState.deck.length}</>
+        ) : (
+          <Deck
             overlay={gameState.overlay}
             dispatchGameState={dispatchGameState}
-          ></Deck>}
-        
+          ></Deck>
+        )}
+
         <div>feedback</div>
         <div>
           {/* todo disable end turn buttons if not valid placement */}
-          <button 
-          onClick={() => dispatchGameState({action: "endTurn"})}
-          className={gameState.isBlueTurn ? "blue" : "red"}
-          >End turn</button>
-          <button 
-          onClick={() => console.log("todo")}
-          className={gameState.isBlueTurn ? "blue" : "red"}
-          >End turn and score</button>
+          <button
+            onClick={() => dispatchGameState({action: "endTurn"})}
+            className={gameState.isBlueTurn ? "blue" : "red"}
+          >
+            End turn
+          </button>
+          <button
+            onClick={() => console.log("todo")}
+            className={gameState.isBlueTurn ? "blue" : "red"}
+          >
+            End turn and score
+          </button>
         </div>
       </div>
     </div>

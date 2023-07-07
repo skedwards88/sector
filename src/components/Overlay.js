@@ -1,10 +1,10 @@
 import React from "react";
-import dragImage from "../images/moon.svg"
+import dragImage from "../images/moon.svg";
 
 function handleDragStart({event, overlayIndex, dispatchGameState}) {
   // todo figure out ghost image
   const blankImage = new Image();
-  blankImage.src = dragImage
+  blankImage.src = dragImage;
   blankImage.setAttribute("style", "display:none;");
   event.dataTransfer.setDragImage(blankImage, 0, 0);
 
@@ -44,9 +44,13 @@ export default function Overlay({
       <div
         key={index}
         onDragOver={(event) => handleOnDragOver({event})}
-        onDragEnter={(event) => handleOnDragEnter({event, dispatchGameState, index})}
-        onDrop={(event) => handleOnDrop({event, dispatchGameState, index, source: "blank"})}
-        onClick={()=>dispatchGameState({action: "rotate"})}
+        onDragEnter={(event) =>
+          handleOnDragEnter({event, dispatchGameState, index})
+        }
+        onDrop={(event) =>
+          handleOnDrop({event, dispatchGameState, index, source: "blank"})
+        }
+        onClick={() => dispatchGameState({action: "rotate"})}
       >
         {index}
       </div>,
@@ -56,28 +60,39 @@ export default function Overlay({
   // Replace the quadrants where the overlaid piece actually is with the quadrant color/shape
   // And make the quadrant draggable in addition to being a drop target
   if (overlayTopLeft != undefined) {
-  for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
-    const adjustedIndex =
-      overlayIndex < 2
-        ? overlayTopLeft + overlayIndex
-        : overlayTopLeft + expanseSize + overlayIndex - 2;
-    overlayDivs[adjustedIndex] = (
-      <div
-        draggable
-        onDragStart={(event) => handleDragStart({event, overlayIndex, dispatchGameState})}
-        onDragOver={(event) => handleOnDragOver({event})}
-        onDragEnter={(event) => handleOnDragEnter({event, dispatchGameState, index: adjustedIndex})}
-        onDrop={(event) => handleOnDrop({event, dispatchGameState, index: adjustedIndex, source:"overlay"})}
-        onClick={()=>dispatchGameState({action: "rotate"})}
-        className={`square overlay ${overlay[overlayIndex].color || ""} ${
-          overlay[overlayIndex].shape || ""
-        }`}
-        key={`overlay${overlayIndex}`}
-      >
-        {overlayIndex}
-      </div>
-    );
+    for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
+      const adjustedIndex =
+        overlayIndex < 2
+          ? overlayTopLeft + overlayIndex
+          : overlayTopLeft + expanseSize + overlayIndex - 2;
+      overlayDivs[adjustedIndex] = (
+        <div
+          draggable
+          onDragStart={(event) =>
+            handleDragStart({event, overlayIndex, dispatchGameState})
+          }
+          onDragOver={(event) => handleOnDragOver({event})}
+          onDragEnter={(event) =>
+            handleOnDragEnter({event, dispatchGameState, index: adjustedIndex})
+          }
+          onDrop={(event) =>
+            handleOnDrop({
+              event,
+              dispatchGameState,
+              index: adjustedIndex,
+              source: "overlay",
+            })
+          }
+          onClick={() => dispatchGameState({action: "rotate"})}
+          className={`square overlay ${overlay[overlayIndex].color || ""} ${
+            overlay[overlayIndex].shape || ""
+          }`}
+          key={`overlay${overlayIndex}`}
+        >
+          {overlayIndex}
+        </div>
+      );
+    }
   }
-}
   return <div id="overlay">{overlayDivs}</div>;
 }
