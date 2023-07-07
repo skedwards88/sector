@@ -46,6 +46,7 @@ export default function Overlay({
         onDragOver={(event) => handleOnDragOver({event})}
         onDragEnter={(event) => handleOnDragEnter({event, dispatchGameState, index})}
         onDrop={(event) => handleOnDrop({event, dispatchGameState, index, source: "blank"})}
+        onClick={()=>dispatchGameState({action: "rotate"})}
       >
         {index}
       </div>,
@@ -67,6 +68,7 @@ export default function Overlay({
         onDragOver={(event) => handleOnDragOver({event})}
         onDragEnter={(event) => handleOnDragEnter({event, dispatchGameState, index: adjustedIndex})}
         onDrop={(event) => handleOnDrop({event, dispatchGameState, index: adjustedIndex, source:"overlay"})}
+        onClick={()=>dispatchGameState({action: "rotate"})}
         className={`square overlay ${overlay[overlayIndex].color || ""} ${
           overlay[overlayIndex].shape || ""
         }`}
