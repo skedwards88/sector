@@ -45,6 +45,12 @@ button {
   padding: 1px 6px;
 }
 
+button:disabled {
+  opacity: 0.6;
+  color: white;
+  touch-action: none;
+}
+
 button.blue {
   background: radial-gradient(
     ellipse at 20% 20%,
@@ -196,6 +202,10 @@ button.red {
   border: 1px solid white;
   width: fit-content;
   align-self: center;
+}
+
+#played {
+  background-color: rgb(60, 59, 59);
 }
 
 #deck {

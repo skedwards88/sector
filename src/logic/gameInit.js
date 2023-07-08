@@ -8,12 +8,11 @@ export function gameInit({
 }) {
   const shuffledDeck = shuffleArray(deck);
 
-  console.log(shuffledDeck.length);
   sendAnalytics("new_game");
 
   // The played quadrants are empty except for a single tile in the middle of the board
   const played = Array.from({length: expanseSize * expanseSize}, () => ({
-    color: "black",
+    color: "",
     shape: "",
   }));
   const firstTileTopLeft = 44; // todo could calc from expanse size

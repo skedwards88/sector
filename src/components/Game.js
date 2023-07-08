@@ -3,6 +3,7 @@ import ControlBar from "./ControlBar";
 import Overlay from "./Overlay";
 import Played from "./Played";
 import Deck from "./Deck";
+import {canEndTurnQ} from "../logic/canEndTurnQ";
 
 export default function Game({
   gameState,
@@ -12,6 +13,13 @@ export default function Game({
   showInstallButton,
   installPromptEvent,
 }) {
+  const canEndTurn = canEndTurnQ({
+    overlayTopLeft: gameState.overlayTopLeft,
+    played: gameState.played,
+    overlay: gameState.overlay,
+    expanseSize: gameState.expanseSize,
+  });
+
   return (
     <div id="app">
       <ControlBar
@@ -44,12 +52,14 @@ export default function Game({
         <div>
           {/* todo disable end turn buttons if not valid placement */}
           <button
+            disabled={!canEndTurn}
             onClick={() => dispatchGameState({action: "endTurn"})}
             className={gameState.isBlueTurn ? "blue" : "red"}
           >
             End turn
           </button>
           <button
+            disabled={!canEndTurn}
             onClick={() => console.log("todo")}
             className={gameState.isBlueTurn ? "blue" : "red"}
           >

@@ -5,7 +5,7 @@ export default function Played({played}) {
     <div id="played">
       {played.map((data, index) => (
         <div
-          className={`square ${data.color || "black"} ${data.shape || ""}`}
+          className={`square ${data.color || ""} ${data.shape || ""}`}
           key={index}
         ></div>
       ))}
