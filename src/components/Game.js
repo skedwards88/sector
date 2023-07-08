@@ -4,6 +4,7 @@ import Overlay from "./Overlay";
 import Played from "./Played";
 import Deck from "./Deck";
 import {canEndTurnQ} from "../logic/canEndTurnQ";
+import {calculateScore} from "../logic/calculateScore"
 
 export default function Game({
   gameState,
@@ -49,6 +50,8 @@ export default function Game({
         )}
 
         <div>feedback</div>
+        <div>{"red: " + calculateScore("red", gameState.played)}</div>
+        <div>{"blue: " + calculateScore("blue", gameState.played)}</div>
         <div>
           {/* todo disable end turn buttons if not valid placement */}
           <button

@@ -2,10 +2,9 @@
 
 - determine when game is over, and disable the buttons and display the winner and scores
 - add scoring function
-- make dragging work on touch screen
 - dragging prematurely stops when drag onto board initially?
 
-- port over to old repo
+- port over to old repo (or just do repo renames)
 - add deployment workflow
 - Exchange the gtag in index.html
 - in gameinit, read in and return saved state
