@@ -57,7 +57,6 @@ export default function Overlay({
         onClick={() => dispatchGameState({action: "rotate"})}
         onDragEnd={() => console.log('drag end')}
       >
-        {index}
       </div>,
     );
   }
@@ -95,7 +94,6 @@ export default function Overlay({
           }`}
           key={`overlay${overlayIndex}`}
         >
-          {overlayIndex}
         </div>
       );
     }

@@ -36,7 +36,6 @@ export default function Deck({overlay, dispatchGameState}) {
         key={`overlay${overlayIndex}`}
         onDragEnd={() => console.log('drag end')}
       >
-        {overlayIndex}
       </div>,
     );
   }
