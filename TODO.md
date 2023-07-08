@@ -3,6 +3,7 @@
 - determine when game is over, and disable the buttons and display the winner and scores
 - add scoring function
 - make dragging work on touch screen
+- dragging prematurely stops when drag onto board initially?
 
 - port over to old repo
 - add deployment workflow
