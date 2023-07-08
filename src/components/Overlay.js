@@ -1,9 +1,8 @@
 import React from "react";
 import dragImage from "../images/moon.svg";
-import { polyfill } from "mobile-drag-drop";
+import {polyfill} from "mobile-drag-drop";
 
-polyfill({
-});
+polyfill({});
 
 function handleDragStart({event, overlayIndex, dispatchGameState}) {
   // todo figure out ghost image
@@ -55,9 +54,8 @@ export default function Overlay({
           handleOnDrop({event, dispatchGameState, index, source: "blank"})
         }
         onClick={() => dispatchGameState({action: "rotate"})}
-        onDragEnd={() => console.log('drag end')}
-      >
-      </div>,
+        onDragEnd={() => console.log("drag end")}
+      ></div>,
     );
   }
 
@@ -88,13 +86,12 @@ export default function Overlay({
             })
           }
           onClick={() => dispatchGameState({action: "rotate"})}
-          onDragEnd={() => console.log('drag end')}
+          onDragEnd={() => console.log("drag end")}
           className={`square overlay ${overlay[overlayIndex].color || ""} ${
             overlay[overlayIndex].shape || ""
           }`}
           key={`overlay${overlayIndex}`}
-        >
-        </div>
+        ></div>
       );
     }
   }

@@ -4,7 +4,7 @@ import Overlay from "./Overlay";
 import Played from "./Played";
 import Deck from "./Deck";
 import {canEndTurnQ} from "../logic/canEndTurnQ";
-import {calculateScore} from "../logic/calculateScore"
+import {calculateScore} from "../logic/calculateScore";
 
 export default function Game({
   gameState,

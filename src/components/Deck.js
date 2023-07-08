@@ -1,9 +1,8 @@
 import React from "react";
 import dragImage from "../images/moon.svg";
-import { polyfill } from "mobile-drag-drop";
+import {polyfill} from "mobile-drag-drop";
 
-polyfill({
-});
+polyfill({});
 
 function handleDragStart({event, overlayIndex, dispatchGameState}) {
   console.log("drag start deck");
@@ -34,9 +33,8 @@ export default function Deck({overlay, dispatchGameState}) {
           overlay[overlayIndex].shape || ""
         }`}
         key={`overlay${overlayIndex}`}
-        onDragEnd={() => console.log('drag end')}
-      >
-      </div>,
+        onDragEnd={() => console.log("drag end")}
+      ></div>,
     );
   }
   return <div id="deck">{deckDivs}</div>;

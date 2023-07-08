@@ -1,7 +1,7 @@
 import {gameInit} from "./gameInit.js";
 
 export function gameReducer(currentGameState, payload) {
-  console.log(`'in reducer' ${payload.action}`)
+  console.log(`'in reducer' ${payload.action}`);
   if (payload.action === "newGame") {
     return gameInit({
       ...currentGameState,
