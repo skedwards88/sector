@@ -3,7 +3,6 @@ export function canEndTurnQ({overlay, overlayTopLeft, played, expanseSize}) {
 
   // If the overlay is not on the board, return
   if (overlayTopLeft === undefined) {
-    console.log("not on board");
     return false;
   }
 
@@ -19,7 +18,6 @@ export function canEndTurnQ({overlay, overlayTopLeft, played, expanseSize}) {
       (played[adjustedIndex].color === "blue" &&
         overlay[overlayIndex].color === "red")
     ) {
-      console.log("overlap");
       return false;
     }
   }

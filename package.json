@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/skedwards88/sector#readme",
   "dependencies": {
+    "mobile-drag-drop": "^3.0.0-rc.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
