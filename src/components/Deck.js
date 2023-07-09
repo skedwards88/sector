@@ -2,7 +2,7 @@ import React from "react";
 import dragImage from "../images/moon.svg";
 import {polyfill} from "mobile-drag-drop";
 
-polyfill({});
+polyfill();
 
 function handleDragStart({event, overlayIndex, dispatchGameState}) {
   console.log("drag start deck");

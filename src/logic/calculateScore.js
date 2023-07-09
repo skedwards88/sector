@@ -76,7 +76,7 @@ export function calculateScore(color, played) {
   const sectors = findSectors(color, played);
 
   if (!sectors.length) {
-    return 0
+    return 0;
   }
 
   const scores = sectors.map((sector) => sector.score);

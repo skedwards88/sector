@@ -1,5 +1,6 @@
 # Future work
 
+- change expanse size to just use sqrt of played
 - add end turn and score function
 - determine when game is over, and disable the buttons and display the winner and scores
 - dragging prematurely stops when drag onto board initially?

@@ -1,4 +1,5 @@
 import {gameInit} from "./gameInit.js";
+import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 
 export function gameReducer(currentGameState, payload) {
   console.log(`'in reducer' ${payload.action}`);
@@ -65,20 +66,11 @@ export function gameReducer(currentGameState, payload) {
       overlayTopLeft: newOverlayTopLeft,
     };
   } else if (payload.action === "endTurn") {
-    let newPlayed = JSON.parse(JSON.stringify(currentGameState.played));
-    const overlay = currentGameState.overlay;
-
-    for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
-      const adjustedIndex =
-        overlayIndex < 2
-          ? currentGameState.overlayTopLeft + overlayIndex
-          : currentGameState.overlayTopLeft +
-            currentGameState.expanseSize +
-            overlayIndex -
-            2;
-      newPlayed[adjustedIndex].color = overlay[overlayIndex].color;
-      newPlayed[adjustedIndex].shape = overlay[overlayIndex].shape;
-    }
+    let newPlayed = mergeOverlayAndPlayed({
+      played: currentGameState.played,
+      overlay: currentGameState.overlay,
+      overlayTopLeft: currentGameState.overlayTopLeft,
+    });
 
     let newDeck = JSON.parse(JSON.stringify(currentGameState.deck));
     const newOverlay = newDeck.pop();

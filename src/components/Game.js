@@ -5,6 +5,7 @@ import Played from "./Played";
 import Deck from "./Deck";
 import {canEndTurnQ} from "../logic/canEndTurnQ";
 import {calculateScore} from "../logic/calculateScore";
+import {mergeOverlayAndPlayed} from "../logic/mergeOverlayAndPlayed";
 
 export default function Game({
   gameState,
@@ -25,10 +26,21 @@ export default function Game({
 
   let feedback = "";
   if (gameState.overlayTopLeft === undefined) {
-    feedback = `${currentColor.toUpperCase()}'s turn.\n\nMove the tile into the expanse.`
+    feedback = `${currentColor.toUpperCase()}'s turn.\n\nMove the tile into the expanse.`;
   } else if (!canEndTurn) {
-    feedback = canEndTurnReason
+    feedback = canEndTurnReason;
   }
+
+  const potentialScore = calculateScore(
+    currentColor,
+    gameState.overlayTopLeft === undefined
+      ? gameState.played
+      : mergeOverlayAndPlayed({
+          played: gameState.played,
+          overlay: gameState.overlay,
+          overlayTopLeft: gameState.overlayTopLeft,
+        }),
+  );
 
   return (
     <div id="app">
@@ -39,45 +51,45 @@ export default function Game({
         showInstallButton={showInstallButton}
         installPromptEvent={installPromptEvent}
       ></ControlBar>
-        <div id="board">
-          <Played played={gameState.played}></Played>
-          <Overlay
-            overlayTopLeft={gameState.overlayTopLeft}
-            overlay={gameState.overlay}
-            expanseSize={gameState.expanseSize}
-            dispatchGameState={dispatchGameState}
-          ></Overlay>
-        </div>
-        <div id="console">
-          <div id="console-left"></div>
+      <div id="board">
+        <Played played={gameState.played}></Played>
+        <Overlay
+          overlayTopLeft={gameState.overlayTopLeft}
+          overlay={gameState.overlay}
+          expanseSize={gameState.expanseSize}
+          dispatchGameState={dispatchGameState}
+        ></Overlay>
+      </div>
+      <div id="console">
+        <div id="console-left"></div>
         {gameState.overlayTopLeft != undefined ? (
           <>{gameState.deck.length}</>
-          ) : (
-            <Deck
+        ) : (
+          <Deck
             overlay={gameState.overlay}
             dispatchGameState={dispatchGameState}
-            ></Deck>
-            )}
-            <div id="console-right"></div>
-          </div>
+          ></Deck>
+        )}
+        <div id="console-right"></div>
+      </div>
 
-        <div id="feedback">{feedback}</div>
-        <div id="end-turn-buttons">
-          <button
-            disabled={!canEndTurn}
-            onClick={() => dispatchGameState({action: "endTurn"})}
-            className={gameState.isBlueTurn ? "blue" : "red"}
-          >
-            End turn
-          </button>
-          <button
-            disabled={!canEndTurn}
-            onClick={() => console.log("todo")}
-            className={gameState.isBlueTurn ? "blue" : "red"}
-          >
-            {`End turn and score ${calculateScore(currentColor, gameState.played)}`}
-          </button>
-        </div>
+      <div id="feedback">{feedback}</div>
+      <div id="end-turn-buttons">
+        <button
+          disabled={!canEndTurn}
+          onClick={() => dispatchGameState({action: "endTurn"})}
+          className={gameState.isBlueTurn ? "blue" : "red"}
+        >
+          End turn
+        </button>
+        <button
+          disabled={!canEndTurn}
+          onClick={() => console.log("todo")}
+          className={gameState.isBlueTurn ? "blue" : "red"}
+        >
+          {`End turn and score ${potentialScore}`}
+        </button>
+      </div>
     </div>
   );
 }
