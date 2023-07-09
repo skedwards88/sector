@@ -14,12 +14,21 @@ export default function Game({
   showInstallButton,
   installPromptEvent,
 }) {
-  const canEndTurn = canEndTurnQ({
+  const [canEndTurn, canEndTurnReason] = canEndTurnQ({
     overlayTopLeft: gameState.overlayTopLeft,
     played: gameState.played,
     overlay: gameState.overlay,
     expanseSize: gameState.expanseSize,
   });
+
+  const currentColor = gameState.isBlueTurn ? "blue" : "red";
+
+  let feedback = "";
+  if (gameState.overlayTopLeft === undefined) {
+    feedback = `${currentColor.toUpperCase()}'s turn.\n\nMove the tile into the expanse.`
+  } else if (!canEndTurn) {
+    feedback = canEndTurnReason
+  }
 
   return (
     <div id="app">
@@ -30,7 +39,6 @@ export default function Game({
         showInstallButton={showInstallButton}
         installPromptEvent={installPromptEvent}
       ></ControlBar>
-      <div>
         <div id="board">
           <Played played={gameState.played}></Played>
           <Overlay
@@ -40,20 +48,21 @@ export default function Game({
             dispatchGameState={dispatchGameState}
           ></Overlay>
         </div>
+        <div id="console">
+          <div id="console-left"></div>
         {gameState.overlayTopLeft != undefined ? (
           <>{gameState.deck.length}</>
-        ) : (
-          <Deck
+          ) : (
+            <Deck
             overlay={gameState.overlay}
             dispatchGameState={dispatchGameState}
-          ></Deck>
-        )}
+            ></Deck>
+            )}
+            <div id="console-right"></div>
+          </div>
 
-        <div>feedback</div>
-        <div>{"red: " + calculateScore("red", gameState.played)}</div>
-        <div>{"blue: " + calculateScore("blue", gameState.played)}</div>
-        <div>
-          {/* todo disable end turn buttons if not valid placement */}
+        <div id="feedback">{feedback}</div>
+        <div id="end-turn-buttons">
           <button
             disabled={!canEndTurn}
             onClick={() => dispatchGameState({action: "endTurn"})}
@@ -66,10 +75,9 @@ export default function Game({
             onClick={() => console.log("todo")}
             className={gameState.isBlueTurn ? "blue" : "red"}
           >
-            End turn and score
+            {`End turn and score ${calculateScore(currentColor, gameState.played)}`}
           </button>
         </div>
-      </div>
     </div>
   );
 }

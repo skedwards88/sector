@@ -3,7 +3,7 @@ export function canEndTurnQ({overlay, overlayTopLeft, played, expanseSize}) {
 
   // If the overlay is not on the board, return
   if (overlayTopLeft === undefined) {
-    return false;
+    return [false];
   }
 
   // If blue is on red or vice versa, placement is invalid
@@ -18,7 +18,7 @@ export function canEndTurnQ({overlay, overlayTopLeft, played, expanseSize}) {
       (played[adjustedIndex].color === "blue" &&
         overlay[overlayIndex].color === "red")
     ) {
-      return false;
+      return [false, "Red and Blue may not overlap."];
     }
   }
 
@@ -42,8 +42,8 @@ export function canEndTurnQ({overlay, overlayTopLeft, played, expanseSize}) {
   }
 
   if (!contactFound) {
-    return false;
+    return [false, "The tile must make contact with the existing tiles."];
   }
 
-  return true;
+  return [true, "end turn ok"];
 }
