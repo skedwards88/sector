@@ -33,9 +33,10 @@ export function gameReducer(currentGameState, payload) {
     // Drop/move a piece on the overlay, but don't update the played pieces yet (that is taken care of by the 'end turn' action)
 
     // Convert the index where the overlay was dropped to a row/column
+    const expanseSize = Math.sqrt(currentGameState.played.length);
     const dropIndex = payload.dropIndex;
-    const dropRow = Math.floor(dropIndex / currentGameState.expanseSize);
-    const dropColumn = dropIndex - dropRow * currentGameState.expanseSize;
+    const dropRow = Math.floor(dropIndex / expanseSize);
+    const dropColumn = dropIndex - dropRow * expanseSize;
 
     // Convert the overlay quadrant index that the user dragged t oa row/column
     const overlayIndex = currentGameState.draggedOverlayIndex;
@@ -50,16 +51,16 @@ export function gameReducer(currentGameState, payload) {
     // but don't let the overlay go off the board
     const adjustedDropRow = Math.min(
       Math.max(0, dropRow - overlayRow),
-      currentGameState.expanseSize - 2,
+      expanseSize - 2,
     );
     const adjustedDropColumn = Math.min(
       Math.max(0, dropColumn - overlayColumn),
-      currentGameState.expanseSize - 2,
+      expanseSize - 2,
     );
 
     // Convert the row/column back to the index where the top left of the overlay ended up
     const newOverlayTopLeft =
-      adjustedDropColumn + currentGameState.expanseSize * adjustedDropRow;
+      adjustedDropColumn + expanseSize * adjustedDropRow;
 
     return {
       ...currentGameState,

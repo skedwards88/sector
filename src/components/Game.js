@@ -19,7 +19,6 @@ export default function Game({
     overlayTopLeft: gameState.overlayTopLeft,
     played: gameState.played,
     overlay: gameState.overlay,
-    expanseSize: gameState.expanseSize,
   });
 
   const currentColor = gameState.isBlueTurn ? "blue" : "red";
@@ -56,7 +55,7 @@ export default function Game({
         <Overlay
           overlayTopLeft={gameState.overlayTopLeft}
           overlay={gameState.overlay}
-          expanseSize={gameState.expanseSize}
+          expanseSize={Math.sqrt(gameState.played.length)}
           dispatchGameState={dispatchGameState}
         ></Overlay>
       </div>

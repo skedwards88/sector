@@ -1,4 +1,4 @@
-export function canEndTurnQ({overlay, overlayTopLeft, played, expanseSize}) {
+export function canEndTurnQ({overlay, overlayTopLeft, played}) {
   // Determine whether the overlay placement is legal
 
   // If the overlay is not on the board, return
@@ -6,6 +6,8 @@ export function canEndTurnQ({overlay, overlayTopLeft, played, expanseSize}) {
     return [false];
   }
 
+  const expanseSize = Math.sqrt(played.length);
+  
   // If blue is on red or vice versa, placement is invalid
   for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
     const adjustedIndex =

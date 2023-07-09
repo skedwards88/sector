@@ -3,7 +3,7 @@ import {deck} from "./deck";
 import {shuffleArray} from "./shuffleArray";
 
 export function gameInit({
-  expanseSize = 10, // todo this isnt being used everywhere (e.g. css)
+  expanseSize = 10,
   useSaved = true,
 }) {
   const shuffledDeck = shuffleArray(deck);
@@ -34,7 +34,6 @@ export function gameInit({
 
   return {
     played,
-    expanseSize,
     deck: shuffledDeck,
     overlay,
     overlayTopLeft: undefined, // undefined indicates that the overlay piece is off the board (on top of the deck)
