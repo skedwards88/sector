@@ -15,13 +15,15 @@ export default function Game({
   showInstallButton,
   installPromptEvent,
 }) {
+  const currentColor = gameState.isBlueTurn ? "blue" : "red";
   const [canEndTurn, canEndTurnReason] = canEndTurnQ({
     overlayTopLeft: gameState.overlayTopLeft,
     played: gameState.played,
     overlay: gameState.overlay,
   });
 
-  const currentColor = gameState.isBlueTurn ? "blue" : "red";
+  const canScore = gameState.scores[currentColor] === undefined;
+
 
   let feedback = "";
   if (gameState.overlayTopLeft === undefined) {
@@ -61,7 +63,7 @@ export default function Game({
       </div>
       <div id="console">
         <div id="console-left"></div>
-        {gameState.overlayTopLeft != undefined ? (
+        {gameState.overlayTopLeft != undefined || !gameState.overlay ? (
           <>{gameState.deck.length}</>
         ) : (
           <Deck
@@ -81,13 +83,14 @@ export default function Game({
         >
           End turn
         </button>
-        <button
+        {canScore ? <button
           disabled={!canEndTurn}
-          onClick={() => console.log("todo")}
+          onClick={() => dispatchGameState({action: "endTurn", andScore: true})}
           className={gameState.isBlueTurn ? "blue" : "red"}
         >
           {`End turn and score ${potentialScore}`}
-        </button>
+        </button> : <></>}
+        
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash.clonedeep';
+import {calculateScore} from "./calculateScore.js";
 import {gameInit} from "./gameInit.js";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 
@@ -67,14 +69,35 @@ export function gameReducer(currentGameState, payload) {
       overlayTopLeft: newOverlayTopLeft,
     };
   } else if (payload.action === "endTurn") {
+    // In all cases, update the board
     let newPlayed = mergeOverlayAndPlayed({
       played: currentGameState.played,
       overlay: currentGameState.overlay,
       overlayTopLeft: currentGameState.overlayTopLeft,
     });
 
-    let newDeck = JSON.parse(JSON.stringify(currentGameState.deck));
+    // Draw the next tile from the deck
+    // If this was the last turn, the deck is empty and 
+    //   the drawn tile will be `undefined`
+    let newDeck = cloneDeep(currentGameState.deck);
     const newOverlay = newDeck.pop();
+
+    // Calculate the score if the player requested
+    let newScores = cloneDeep(currentGameState.scores);
+    if (payload.andScore) {
+      const playerColor = currentGameState.isBlueTurn ? "blue" : "red";
+      const score = calculateScore(playerColor, newPlayed);
+      newScores[playerColor] = score
+    } else if (!newDeck.length) {
+      // Also calculate the score(s) this this is the last turn
+      for (const color in newScores) {
+        if (newScores[color] === undefined) {
+          const score = calculateScore(color, newPlayed);
+          newScores[color] = score
+        }
+      }
+    }
+
     return {
       ...currentGameState,
       deck: newDeck,
@@ -83,6 +106,7 @@ export function gameReducer(currentGameState, payload) {
       overlayTopLeft: undefined,
       played: newPlayed,
       isBlueTurn: !currentGameState.isBlueTurn,
+      scores: newScores,
     };
   } else {
     console.error(`unhandled action: ${payload.action}`);

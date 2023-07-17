@@ -39,6 +39,10 @@ export function gameInit({
     overlayTopLeft: undefined, // undefined indicates that the overlay piece is off the board (on top of the deck)
     draggedOverlayIndex: undefined,
     isBlueTurn: true,
+    scores: {
+      red: undefined,
+      blue: undefined,
+    },
     lastBreakingChange: "20230706",
   };
 }
