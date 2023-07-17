@@ -13,5 +13,7 @@
 - Exchange the gtag in index.html
 - set up jest tests or remove jest script and dev dependency
 - set up eslint
-- add css for landscape and wider screen
+- add css for landscape and wider screen, make sure text fits on larger screens, cap font size
 - make PWA
+- add tests and run tests during deploy
+- update deploy workflow to bump version
