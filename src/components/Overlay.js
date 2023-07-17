@@ -1,15 +1,9 @@
 import React from "react";
-import dragImage from "../images/moon.svg";
 import {polyfill} from "mobile-drag-drop";
 
 polyfill();
 
 function handleDragStart({event, overlayIndex, dispatchGameState}) {
-  // todo figure out ghost image
-  const blankImage = new Image();
-  blankImage.src = dragImage;
-  blankImage.setAttribute("style", "display:none;");
-  event.dataTransfer.setDragImage(blankImage, 0, 0);
 
   // Since we want to know the overlayIndex in the dragEnter event,
   // store that info in the game state

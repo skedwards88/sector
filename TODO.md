@@ -8,6 +8,7 @@
 - in gameinit, read in and return saved state
 - dragging prematurely stops when drag onto board initially?
 
+- figure out drag ghost image
 - port over to old repo (or just do repo renames)
 - add deployment workflow
 - Exchange the gtag in index.html
