@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/skedwards88/sector#readme",
   "dependencies": {
+    "lodash.clonedeep": "^4.5.0",
     "mobile-drag-drop": "^2.3.0-rc.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
