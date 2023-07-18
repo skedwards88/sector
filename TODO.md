@@ -1,12 +1,12 @@
 # Future work
 
+- fix bug when drag the overlay too close to the edge and score functino errors out
 - determine when game is over, and disable the buttons and display the winner and scores
 - once either player has scored, remove end turn and score button, display the score to beat and indicate who
 - when game over, change color of starry background
 
 - add rules to control bar
 - in gameinit, read in and return saved state
-- dragging prematurely stops when drag onto board initially?
 
 - figure out drag ghost image
 - port over to old repo (or just do repo renames)

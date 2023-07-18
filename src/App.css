@@ -240,3 +240,8 @@ button.red {
   white-space: pre-wrap;
   text-align: center;
 }
+
+#deck.hidden {
+  display: none;
+  border: 0px;
+}
