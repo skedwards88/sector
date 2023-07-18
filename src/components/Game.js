@@ -62,9 +62,9 @@ export default function Game({
         ></Overlay>
       </div>
       <div id="console">
-        <div id="console-left"></div>
+        <div id="console-left">{`${gameState.deck.length + 1} tile remaining`}</div>
         {!gameState.overlay ? (
-          <>{gameState.deck.length}</>
+          <></>
         ) : (
           <Deck
             overlay={gameState.overlay}
