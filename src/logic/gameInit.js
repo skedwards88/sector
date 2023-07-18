@@ -2,10 +2,7 @@ import sendAnalytics from "./sendAnalytics";
 import {deck} from "./deck";
 import {shuffleArray} from "./shuffleArray";
 
-export function gameInit({
-  expanseSize = 10,
-  useSaved = true,
-}) {
+export function gameInit({expanseSize = 10, useSaved = true}) {
   const shuffledDeck = shuffleArray(deck);
 
   sendAnalytics("new_game");

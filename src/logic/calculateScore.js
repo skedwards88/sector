@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash.clonedeep';
+import cloneDeep from "lodash.clonedeep";
 
 class Sector {
   constructor({indexes = new Set(), shapes = new Set()}) {

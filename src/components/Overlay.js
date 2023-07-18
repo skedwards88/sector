@@ -4,7 +4,6 @@ import {polyfill} from "mobile-drag-drop";
 polyfill();
 
 function handleDragStart({overlayIndex, dispatchGameState}) {
-
   // Since we want to know the overlayIndex in the dragEnter event,
   // store that info in the game state
   // instead of using `event.dataTransfer.setData`
@@ -44,9 +43,7 @@ export default function Overlay({
         onDragEnter={(event) =>
           handleOnDragEnter({event, dispatchGameState, index})
         }
-        onDrop={(event) =>
-          handleOnDrop({event, dispatchGameState, index})
-        }
+        onDrop={(event) => handleOnDrop({event, dispatchGameState, index})}
         onClick={() => dispatchGameState({action: "rotate"})}
         onDragEnd={() => console.log("drag end")}
       ></div>,
@@ -64,9 +61,7 @@ export default function Overlay({
       overlayDivs[adjustedIndex] = (
         <div
           draggable
-          onDragStart={() =>
-            handleDragStart({overlayIndex, dispatchGameState})
-          }
+          onDragStart={() => handleDragStart({overlayIndex, dispatchGameState})}
           onDragOver={(event) => handleOnDragOver({event})}
           onDragEnter={(event) =>
             handleOnDragEnter({event, dispatchGameState, index: adjustedIndex})

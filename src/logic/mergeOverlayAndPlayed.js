@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash.clonedeep';
+import cloneDeep from "lodash.clonedeep";
 
 export function mergeOverlayAndPlayed({played, overlay, overlayTopLeft}) {
   let newPlayed = cloneDeep(played);

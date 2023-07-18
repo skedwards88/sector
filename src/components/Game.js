@@ -24,7 +24,6 @@ export default function Game({
 
   const canScore = gameState.scores[currentColor] === undefined;
 
-
   let feedback = "";
   if (gameState.overlayTopLeft === undefined) {
     feedback = `${currentColor.toUpperCase()}'s turn.\n\nMove the tile into the expanse.`;
@@ -62,7 +61,9 @@ export default function Game({
         ></Overlay>
       </div>
       <div id="console">
-        <div id="console-left">{`${gameState.deck.length + 1} tile remaining`}</div>
+        <div id="console-left">{`${
+          gameState.deck.length + 1
+        } tile remaining`}</div>
         {!gameState.overlay ? (
           <></>
         ) : (
@@ -84,14 +85,19 @@ export default function Game({
         >
           End turn
         </button>
-        {canScore ? <button
-          disabled={!canEndTurn}
-          onClick={() => dispatchGameState({action: "endTurn", andScore: true})}
-          className={gameState.isBlueTurn ? "blue" : "red"}
-        >
-          {`End turn and score ${potentialScore}`}
-        </button> : <></>}
-        
+        {canScore ? (
+          <button
+            disabled={!canEndTurn}
+            onClick={() =>
+              dispatchGameState({action: "endTurn", andScore: true})
+            }
+            className={gameState.isBlueTurn ? "blue" : "red"}
+          >
+            {`End turn and score ${potentialScore}`}
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

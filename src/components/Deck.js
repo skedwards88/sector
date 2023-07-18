@@ -32,9 +32,7 @@ export default function Deck({overlayTopLeft, overlay, dispatchGameState}) {
       deckDivs.push(
         <div
           draggable
-          onDragStart={() =>
-            handleDragStart({overlayIndex, dispatchGameState})
-          }
+          onDragStart={() => handleDragStart({overlayIndex, dispatchGameState})}
           onClick={() => dispatchGameState({action: "rotate"})}
           className={`square overlay ${overlay[overlayIndex].color || ""} ${
             overlay[overlayIndex].shape || ""
@@ -45,5 +43,9 @@ export default function Deck({overlayTopLeft, overlay, dispatchGameState}) {
       );
     }
   }
-  return <div id="deck" className={hideDeck ? "hidden" : ""}>{deckDivs}</div>;
+  return (
+    <div id="deck" className={hideDeck ? "hidden" : ""}>
+      {deckDivs}
+    </div>
+  );
 }

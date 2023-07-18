@@ -7,7 +7,7 @@ export function canEndTurnQ({overlay, overlayTopLeft, played}) {
   }
 
   const expanseSize = Math.sqrt(played.length);
-  
+
   // If blue is on red or vice versa, placement is invalid
   for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
     const adjustedIndex =

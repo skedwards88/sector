@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --config=jest.config.cjs",
-    "lint": "npx eslint --ignore-path .gitignore . --fix && npx stylelint '**/*.css'",
+    "lint": "npx prettier --write . && npx eslint --ignore-path .gitignore . --fix && npx stylelint '**/*.css'",
     "build": "webpack",
     "dev": "webpack-dev-server --mode development",
     "start": "webpack-dev-server"
