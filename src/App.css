@@ -4,7 +4,7 @@ html {
 
 body {
   --default-font-size: 6vmin;
-  --dark-color: #000000;
+  --dark-color: #000;
   --light-color: rgb(239 239 239);
   --quad: 9vw;
 
@@ -13,7 +13,7 @@ body {
   background-color: var(--dark-color);
   color: var(--light-color);
   overflow: hidden;
-  background-image: url(./images/stars.svg);
+  background-image: url("./images/stars.svg");
   font-size: var(--default-font-size);
 }
 
@@ -57,10 +57,10 @@ button.blue {
   background: radial-gradient(
     ellipse at 20% 20%,
     #bdbce9 0%,
-    rgb(95, 104, 230) 50%,
-    rgb(37, 17, 148) 100%
+    rgb(95 104 230) 50%,
+    rgb(37 17 148) 100%
   );
-  border: 0px;
+  border: 0;
   margin: 5px;
   padding: 5px;
 }
@@ -69,13 +69,14 @@ button.red {
   background: radial-gradient(
     ellipse at 20% 20%,
     #e9bcbc 0%,
-    rgb(201, 61, 61) 50%,
-    rgb(148, 17, 17) 100%
+    rgb(201 61 61) 50%,
+    rgb(148 17 17) 100%
   );
-  border: 0px;
+  border: 0;
   margin: 5px;
   padding: 5px;
 }
+
 /* Controls */
 
 #controls {
@@ -145,19 +146,19 @@ button.red {
 }
 
 .moon {
-  background-image: url(./images/moon.svg);
+  background-image: url("./images/moon.svg");
 }
 
 .planet {
-  background-image: url(./images/planet.svg);
+  background-image: url("./images/planet.svg");
 }
 
 .star {
-  background-image: url(./images/star.svg);
+  background-image: url("./images/star.svg");
 }
 
 .whirl {
-  background-image: url(./images/whirl.svg);
+  background-image: url("./images/whirl.svg");
 }
 
 .square.offer {
@@ -177,15 +178,15 @@ button.red {
 }
 
 .overlay.red {
-  background-color: rgba(255, 0, 0, 0.7);
+  background-color: rgb(255 0 0 / 70%);
 }
 
 .overlay.blue {
-  background-color: rgba(0, 0, 255, 0.7);
+  background-color: rgb(0 0 255 / 70%);
 }
 
 .overlay.black {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgb(0 0 0 / 70%);
 }
 
 #board {
@@ -197,6 +198,7 @@ button.red {
   grid-column-start: 1;
   grid-row-start: 1;
 }
+
 #played,
 #overlay {
   display: grid;
@@ -209,7 +211,7 @@ button.red {
 }
 
 #played {
-  background-color: rgb(60, 59, 59);
+  background-color: rgb(60 59 59);
 }
 
 #deck {
@@ -243,5 +245,5 @@ button.red {
 
 #deck.hidden {
   display: none;
-  border: 0px;
+  border: 0;
 }
