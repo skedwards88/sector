@@ -3,7 +3,7 @@ import {polyfill} from "mobile-drag-drop";
 
 polyfill();
 
-function handleDragStart({event, overlayIndex, dispatchGameState}) {
+function handleDragStart({overlayIndex, dispatchGameState}) {
 
   // Since we want to know the overlayIndex in the dragEnter event,
   // store that info in the game state
@@ -23,7 +23,7 @@ function handleOnDragEnter({event, dispatchGameState, index}) {
   dispatchGameState({action: "dragEnter", dropIndex: index});
 }
 
-function handleOnDrop({event, dispatchGameState, index, source}) {
+function handleOnDrop({event, dispatchGameState, index}) {
   event.preventDefault();
   dispatchGameState({action: "drop", dropIndex: index});
 }
@@ -45,7 +45,7 @@ export default function Overlay({
           handleOnDragEnter({event, dispatchGameState, index})
         }
         onDrop={(event) =>
-          handleOnDrop({event, dispatchGameState, index, source: "blank"})
+          handleOnDrop({event, dispatchGameState, index})
         }
         onClick={() => dispatchGameState({action: "rotate"})}
         onDragEnd={() => console.log("drag end")}
@@ -64,8 +64,8 @@ export default function Overlay({
       overlayDivs[adjustedIndex] = (
         <div
           draggable
-          onDragStart={(event) =>
-            handleDragStart({event, overlayIndex, dispatchGameState})
+          onDragStart={() =>
+            handleDragStart({overlayIndex, dispatchGameState})
           }
           onDragOver={(event) => handleOnDragOver({event})}
           onDragEnter={(event) =>
@@ -76,7 +76,6 @@ export default function Overlay({
               event,
               dispatchGameState,
               index: adjustedIndex,
-              source: "overlay",
             })
           }
           onClick={() => dispatchGameState({action: "rotate"})}

@@ -3,7 +3,7 @@ import {polyfill} from "mobile-drag-drop";
 
 polyfill();
 
-function handleDragStart({event, overlayIndex, dispatchGameState}) {
+function handleDragStart({overlayIndex, dispatchGameState}) {
   console.log("drag start deck");
 
   // Since we want to know the overlayIndex in the dragEnter event,
@@ -32,8 +32,8 @@ export default function Deck({overlayTopLeft, overlay, dispatchGameState}) {
       deckDivs.push(
         <div
           draggable
-          onDragStart={(event) =>
-            handleDragStart({event, overlayIndex, dispatchGameState})
+          onDragStart={() =>
+            handleDragStart({overlayIndex, dispatchGameState})
           }
           onClick={() => dispatchGameState({action: "rotate"})}
           className={`square overlay ${overlay[overlayIndex].color || ""} ${
