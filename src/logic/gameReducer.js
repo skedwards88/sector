@@ -4,7 +4,6 @@ import {gameInit} from "./gameInit.js";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 
 export function gameReducer(currentGameState, payload) {
-  console.log(`'in reducer' ${payload.action}`);
   if (payload.action === "newGame") {
     return gameInit({
       ...currentGameState,

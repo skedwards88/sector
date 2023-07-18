@@ -1,6 +1,7 @@
+import cloneDeep from 'lodash.clonedeep';
+
 export function mergeOverlayAndPlayed({played, overlay, overlayTopLeft}) {
-  console.log(JSON.stringify({overlayTopLeft}));
-  let newPlayed = JSON.parse(JSON.stringify(played));
+  let newPlayed = cloneDeep(played);
   const expanseSize = Math.sqrt(played.length);
 
   for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
