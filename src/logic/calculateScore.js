@@ -57,7 +57,7 @@ function findSectors(color, played) {
             let column_delta = column_deltas[delta_index];
             if (
               playedRows[search_row + row_delta]?.[search_column + column_delta]
-                .color === color
+                ?.color === color
             ) {
               coordinatesToSearch.push([
                 search_row + row_delta,
