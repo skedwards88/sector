@@ -3,32 +3,32 @@ html {
 }
 
 body {
-  --default-font-size: 6vmin;
+  --quad: 9vw;
+  --default-font-size: calc(var(--quad) * 0.5);
   --dark-color: #000;
   --light-color: rgb(239 239 239);
-  --quad: 9vw;
 
   font-family: monospace;
   font-weight: bold;
   background-color: var(--dark-color);
   color: var(--light-color);
-  overflow: hidden;
   background-image: url("./images/stars.svg");
   font-size: var(--default-font-size);
+  display: flex;
+  justify-content: center;
 }
 
 #app {
-  height: 100vh;
-  width: 98vw;
+  height: 98vh;
+  width: calc(var(--quad) * 10);
   justify-content: center;
+  justify-items: center;
   display: grid;
   grid-template-areas:
     "controls"
     "board"
-    "console"
-    "feedback"
-    "endTurn";
-  grid-template-rows: auto auto auto 1fr auto;
+    "console";
+  grid-template-rows: auto auto 1fr;
 }
 
 button {
@@ -45,36 +45,6 @@ button {
   color: black;
   margin: 0;
   padding: 1px 6px;
-}
-
-button:disabled {
-  opacity: 0.6;
-  color: white;
-  touch-action: none;
-}
-
-button.blue {
-  background: radial-gradient(
-    ellipse at 20% 20%,
-    #bdbce9 0%,
-    rgb(95 104 230) 50%,
-    rgb(37 17 148) 100%
-  );
-  border: 0;
-  margin: 5px;
-  padding: 5px;
-}
-
-button.red {
-  background: radial-gradient(
-    ellipse at 20% 20%,
-    #e9bcbc 0%,
-    rgb(201 61 61) 50%,
-    rgb(148 17 17) 100%
-  );
-  border: 0;
-  margin: 5px;
-  padding: 5px;
 }
 
 /* Controls */
@@ -121,7 +91,6 @@ button.red {
   justify-items: center;
   justify-content: space-evenly;
   align-items: center;
-  font-size: calc(var(--default-font-size) * 0.75);
 }
 
 .heartText {
@@ -192,6 +161,7 @@ button.red {
 #board {
   display: grid;
   grid-area: board;
+  justify-items: center;
 }
 
 #board > * {
@@ -215,6 +185,7 @@ button.red {
 }
 
 #deck {
+  grid-area: deck;
   display: grid;
   grid-template-columns: repeat(2, var(--quad));
   grid-template-rows: repeat(2, var(--quad));
@@ -224,26 +195,98 @@ button.red {
   align-self: center;
 }
 
-#console {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  margin: 2vmin;
-  grid-area: console;
-}
-
-#end-turn-buttons {
-  display: flex;
-  justify-content: center;
-  grid-area: endTurn;
-  margin-bottom: 20px;
-}
-
-#feedback {
-  white-space: pre-wrap;
-  text-align: center;
-}
-
-#deck.hidden {
-  display: none;
+#deck.hidden,
+.hidden {
   border: 0;
+}
+
+#sheen {
+  grid-area: console;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+      180deg,
+      rgba(250, 250, 250, 0.8),
+      rgba(250, 250, 250, 0) 5%
+    ),
+    linear-gradient(90deg, rgba(250, 250, 250, 0.8), rgba(250, 250, 250, 0) 5%);
+  /* background: linear-gradient(180deg, rgba(250, 250, 250, 0.8), rgba(250, 250, 250, 0) 10%); */
+  /* background: linear-gradient(135deg, rgba(250, 250, 250, 0.8), rgba(250, 250, 250, 0) 30%); */
+  /* background: radial-gradient(
+    ellipse farthest-corner at 90% 90%,
+    rgba(43, 0, 255, 0) 60%,
+    rgba(247, 248, 248, 0.7)
+  ); */
+}
+
+#playerControls {
+  grid-area: console;
+  display: grid;
+  grid-template-areas:
+    "endTurn deck endAndScore"
+    "terminal terminal terminal";
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr auto 1fr;
+}
+
+#playerControls.red {
+  background-color: red;
+}
+#playerControls.blue {
+  background-color: rgb(7, 7, 246);
+}
+
+#playerControls > button {
+  border-radius: 5px;
+  border: 0;
+  margin: 5px;
+  padding: 5px;
+  color: white;
+  height: calc(var(--quad) * 1.1);
+  align-self: center;
+}
+
+#playerControls > button.blue {
+  background-color: rgb(51, 0, 255);
+  box-shadow:
+    0 0 0.5rem #00ddfe,
+    inset 0 0 0.5rem #00ddfe;
+  text-shadow:
+    0 0 5px #00ddfe,
+    0 0 5px #00ddfe;
+}
+
+#playerControls > button.red {
+  background-color: rgb(255, 0, 0);
+  box-shadow:
+    0 0 0.5rem #fefa00,
+    inset 0 0 0.5rem #fefa00;
+  font-weight: lighter;
+  text-shadow: 0 0 5px #fefa00;
+}
+
+#playerControls > button:disabled {
+  color: rgb(161, 161, 161);
+  touch-action: none;
+  box-shadow: none;
+  text-shadow: none;
+  box-shadow: inset 0 0 0.5rem #000;
+}
+
+#endTurn {
+  grid-area: endTurn;
+}
+
+#endAndScore {
+  grid-area: endAndScore;
+}
+
+#terminal {
+  grid-area: terminal;
+  white-space: pre-wrap;
+  text-align: left;
+  background-color: black;
+  margin: 5px;
+  padding: 15px;
 }
