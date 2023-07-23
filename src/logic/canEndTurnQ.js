@@ -20,7 +20,7 @@ export function canEndTurnQ({overlay, overlayTopLeft, played}) {
       (played[adjustedIndex].color === "blue" &&
         overlay[overlayIndex].color === "red")
     ) {
-      return [false, "Red and Blue may not overlap."];
+      return [false, "red and blue may not overlap"];
     }
   }
 
@@ -44,8 +44,8 @@ export function canEndTurnQ({overlay, overlayTopLeft, played}) {
   }
 
   if (!contactFound) {
-    return [false, "The tile must make contact with the existing tiles."];
+    return [false, "the tile must make contact with the existing tiles"];
   }
 
-  return [true, "end turn ok"];
+  return [true];
 }
