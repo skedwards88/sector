@@ -79,21 +79,31 @@ export function gameReducer(currentGameState, payload) {
     // If this was the last turn, the deck is empty and
     //   the drawn tile will be `undefined`
     let newDeck = cloneDeep(currentGameState.deck);
+    const playerColor = currentGameState.isBlueTurn ? "blue" : "red";
+    const opponentColor = currentGameState.isBlueTurn ? "red" : "blue";
+
     const newOverlay = newDeck.pop();
 
-    // Calculate the score if the player requested
+    // Calculate the score in certain cases:
     let newScores = cloneDeep(currentGameState.scores);
-    if (payload.andScore) {
-      const playerColor = currentGameState.isBlueTurn ? "blue" : "red";
-      const score = calculateScore(playerColor, newPlayed);
-      newScores[playerColor] = score;
-    } else if (!newDeck.length) {
-      // Also calculate the score(s) this this is the last turn
+    if (!newDeck.length) {
+      // - Calculate the score(s) this this is the last turn
       for (const color in newScores) {
         if (newScores[color] === undefined) {
           const score = calculateScore(color, newPlayed);
           newScores[color] = score;
         }
+      }
+    } else if (payload.andScore) {
+      // - Calculate the score if the player requested
+      const score = calculateScore(playerColor, newPlayed);
+      newScores[playerColor] = score;
+    } else if (newScores[opponentColor] != undefined) {
+      // - Calculate the score if the opponent has scored
+      //   AND the current players score is >= the opponent's score
+      const potentialScore = calculateScore(playerColor, newPlayed);
+      if (potentialScore > newScores[opponentColor]) {
+        newScores[playerColor] = potentialScore;
       }
     }
 
