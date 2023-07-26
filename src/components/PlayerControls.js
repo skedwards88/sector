@@ -56,7 +56,11 @@ export default function PlayerControls({
   } else if (!placementIsLegal) {
     feedback += `> ${illegalPlacementInfo}\n\n`;
   }
-  feedback += `> ${PlayerGoal({playerScore, opponentScore, potentialScore})}\n\n`;
+  feedback += `> ${PlayerGoal({
+    playerScore,
+    opponentScore,
+    potentialScore,
+  })}\n\n`;
 
   return (
     <div id="playerScreen">
