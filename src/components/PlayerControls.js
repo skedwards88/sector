@@ -50,13 +50,13 @@ export default function PlayerControls({
         }),
   );
 
-  let feedback = "> ";
-  feedback += PlayerGoal({playerScore, opponentScore, potentialScore});
+  let feedback = "> drag to move; tap to rotate\n\n";
   if (overlayTopLeft === undefined) {
-    feedback += `\n\n> move the tile into the expanse`;
+    feedback += `> move the tile into the expanse\n\n`;
   } else if (!placementIsLegal) {
-    feedback += `\n\n> ${illegalPlacementInfo}`;
+    feedback += `> ${illegalPlacementInfo}\n\n`;
   }
+  feedback += `> ${PlayerGoal({playerScore, opponentScore, potentialScore})}\n\n`;
 
   return (
     <div id="playerScreen">
