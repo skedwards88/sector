@@ -1,8 +1,10 @@
 # Future work
 
+- whoever scores first wins unless the other player beats their score
+
+- in terminal, write "drag to move; tap to rotate"
 - add rules to control bar
 - in gameinit, read in and return saved state
-- figure out drag ghost image
 
 - set up jest tests or remove jest script and dev dependency
 - update deploy workflow run tests and to bump version

@@ -49,6 +49,7 @@ export default function Game({
           dispatchGameState={dispatchGameState}
           played={gameState.played}
           overlay={gameState.overlay}
+          deck={gameState.deck}
         ></PlayerControls>
       )}
     </div>

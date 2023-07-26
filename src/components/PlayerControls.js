@@ -26,6 +26,7 @@ export default function PlayerControls({
   dispatchGameState,
   played,
   overlay,
+  deck,
 }) {
   const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
     overlayTopLeft: overlayTopLeft,
@@ -67,6 +68,7 @@ export default function PlayerControls({
             overlay={overlay}
             overlayTopLeft={overlayTopLeft}
             dispatchGameState={dispatchGameState}
+            deck={deck}
           ></Deck>
         )}
         <button

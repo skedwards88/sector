@@ -3,8 +3,9 @@ import {polyfill} from "mobile-drag-drop";
 
 polyfill();
 
-function handleDragStart({overlayIndex, dispatchGameState}) {
-  console.log("drag start deck");
+function handleDragStart({event, overlayIndex, dispatchGameState}) {
+  const canvas = document.querySelector("canvas");
+  event.dataTransfer.setDragImage(canvas, 0, 0);
 
   // Since we want to know the overlayIndex in the dragEnter event,
   // store that info in the game state
@@ -13,7 +14,12 @@ function handleDragStart({overlayIndex, dispatchGameState}) {
   dispatchGameState({action: "dragStart", draggedOverlayIndex: overlayIndex});
 }
 
-export default function Deck({overlayTopLeft, overlay, dispatchGameState}) {
+export default function Deck({
+  overlayTopLeft,
+  overlay,
+  dispatchGameState,
+  deck,
+}) {
   // If overlayTopLeft is not undefined, the tile is being dragged (is not on the deck).
   // In this case, we don't want to show the deck,
   // but the mobile drag-drop polyfill freezes if we remove the source drag element mid-drag
@@ -32,7 +38,9 @@ export default function Deck({overlayTopLeft, overlay, dispatchGameState}) {
       deckDivs.push(
         <div
           draggable
-          onDragStart={() => handleDragStart({overlayIndex, dispatchGameState})}
+          onDragStart={(event) =>
+            handleDragStart({event, overlayIndex, dispatchGameState})
+          }
           onClick={() => dispatchGameState({action: "rotate"})}
           className={`square overlay ${overlay[overlayIndex].color || ""} ${
             overlay[overlayIndex].shape || ""
@@ -44,8 +52,13 @@ export default function Deck({overlayTopLeft, overlay, dispatchGameState}) {
     }
   }
   return (
-    <div id="deck" className={hideDeck ? "hidden" : ""}>
-      {deckDivs}
+    <div id="deckAndRemaining">
+      <div id="deckRemaining" className={hideDeck ? "" : "hidden"}>{`${
+        deck.length - 1
+      }\nleft`}</div>
+      <div id="deck" className={hideDeck ? "hidden" : ""}>
+        {deckDivs}
+      </div>
     </div>
   );
 }

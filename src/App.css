@@ -184,8 +184,17 @@ button {
   background-color: rgb(60 59 59);
 }
 
-#deck {
+#deckAndRemaining {
   grid-area: deck;
+  display: grid;
+}
+
+#deckAndRemaining > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+
+#deck {
   display: grid;
   grid-template-columns: repeat(2, var(--quad));
   grid-template-rows: repeat(2, var(--quad));
@@ -193,6 +202,18 @@ button {
   border: 2px solid white;
   width: fit-content;
   align-self: center;
+}
+
+#deckRemaining {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+#deckRemaining.hidden {
+  display: none;
 }
 
 #deck.hidden,
