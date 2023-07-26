@@ -86,21 +86,29 @@ export function gameReducer(currentGameState, payload) {
 
     // Calculate the score in certain cases:
     let newScores = cloneDeep(currentGameState.scores);
+    let newIsTie = currentGameState.isTie;
     if (!newDeck.length) {
-      // - Calculate the score(s) this this is the last turn
+      // Calculate the score(s) if this is the last turn
+      // If neither player has scored AND the scores are tied, this is a tie
+      // (if a player has already scored, ties count as a win for that player)
+      const canBeTie = Object.values(newScores).every(
+        (color) => color === undefined,
+      );
       for (const color in newScores) {
         if (newScores[color] === undefined) {
           const score = calculateScore(color, newPlayed);
           newScores[color] = score;
         }
       }
+      newIsTie =
+        canBeTie && Object.values(newScores)[0] === Object.values(newScores)[1];
     } else if (payload.andScore) {
-      // - Calculate the score if the player requested
+      // Calculate the score if the player requested
       const score = calculateScore(playerColor, newPlayed);
       newScores[playerColor] = score;
     } else if (newScores[opponentColor] != undefined) {
-      // - Calculate the score if the opponent has scored
-      //   AND the current players score is >= the opponent's score
+      // Calculate the score if the opponent has scored
+      //  AND the current players score is > the opponent's score
       const potentialScore = calculateScore(playerColor, newPlayed);
       if (potentialScore > newScores[opponentColor]) {
         newScores[playerColor] = potentialScore;
@@ -116,6 +124,7 @@ export function gameReducer(currentGameState, payload) {
       played: newPlayed,
       isBlueTurn: !currentGameState.isBlueTurn,
       scores: newScores,
+      isTie: newIsTie,
     };
   } else {
     console.error(`unhandled action: ${payload.action}`);

@@ -1,8 +1,5 @@
 # Future work
 
-- whoever scores first wins unless the other player beats their score
-
-- in terminal, write "drag to move; tap to rotate"
 - add rules to control bar
 - in gameinit, read in and return saved state
 

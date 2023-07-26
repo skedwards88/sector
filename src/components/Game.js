@@ -40,7 +40,7 @@ export default function Game({
       </div>
 
       {gameOver ? (
-        <GameOver scores={gameState.scores}></GameOver>
+        <GameOver scores={gameState.scores} isTie={gameState.isTie}></GameOver>
       ) : (
         <PlayerControls
           isBlueTurn={gameState.isBlueTurn}

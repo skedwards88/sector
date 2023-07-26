@@ -40,6 +40,7 @@ export function gameInit({expanseSize = 10, useSaved = true}) {
       red: undefined,
       blue: undefined,
     },
+    isTie: false,
     lastBreakingChange: "20230706",
   };
 }
