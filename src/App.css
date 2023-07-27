@@ -146,6 +146,9 @@ button {
   background-color: black;
 }
 
+.overlay {
+  border: solid white;
+}
 .overlay.red {
   background-color: rgb(255 0 0 / 70%);
 }
@@ -156,6 +159,19 @@ button {
 
 .overlay.black {
   background-color: rgb(0 0 0 / 70%);
+}
+
+.overlay.topRight {
+  border-width: 2px 2px 0 0;
+}
+.overlay.bottomRight {
+  border-width: 0 2px 2px 0;
+}
+.overlay.bottomLeft {
+  border-width: 0 0 2px 2px;
+}
+.overlay.topLeft {
+  border-width: 2px 0 0 2px;
 }
 
 #board {

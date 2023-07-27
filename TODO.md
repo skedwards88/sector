@@ -1,7 +1,9 @@
 # Future work
 
+- for end game, do 4 vs 3 instead of stating colors; just put higher one first. make text a bit smaller and move a bit lower.
 - add rules to control bar
 - in gameinit, read in and return saved state
+- adjust size to acomodate url bar
 
 - set up jest tests or remove jest script and dev dependency
 - update deploy workflow run tests and to bump version

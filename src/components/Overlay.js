@@ -57,6 +57,24 @@ export default function Overlay({
   // And make the quadrant draggable in addition to being a drop target
   if (overlayTopLeft != undefined) {
     for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
+      let cornerClass = "";
+      switch (overlayIndex) {
+        case 0:
+          cornerClass = "topLeft"
+          break;
+        case 1:
+          cornerClass = "topRight"
+          break;
+        case 2:
+          cornerClass = "bottomLeft"
+          break;
+        case 3:
+          cornerClass = "bottomRight"
+          break;
+      
+        default:
+          break;
+      }
       const adjustedIndex =
         overlayIndex < 2
           ? overlayTopLeft + overlayIndex
@@ -80,7 +98,7 @@ export default function Overlay({
           }
           onClick={() => dispatchGameState({action: "rotate"})}
           onDragEnd={() => console.log("drag end")}
-          className={`square overlay ${overlay[overlayIndex].color || ""} ${
+          className={`square overlay ${cornerClass} ${overlay[overlayIndex].color || ""} ${
             overlay[overlayIndex].shape || ""
           }`}
           key={`overlay${overlayIndex}`}
