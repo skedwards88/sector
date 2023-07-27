@@ -343,7 +343,7 @@ button {
   height: 100%;
   text-align: center;
   justify-content: center;
-  font-size: calc(var(--default-font-size) * 1.7);
+  font-size: calc(var(--default-font-size) * 1.5);
 }
 
 #gameOver.red {
