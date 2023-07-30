@@ -7,8 +7,8 @@ if (process.env.NODE_ENV !== "development" && "serviceWorker" in navigator) {
   const path =
     location.hostname === "localhost"
       ? "/service-worker.js"
-      : "/sector/service-worker.js";
-  const scope = location.hostname === "localhost" ? "" : "/sector/";
+      : "/sector-new/service-worker.js";
+  const scope = location.hostname === "localhost" ? "" : "/sector-new/";
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register(path, {scope: scope})
