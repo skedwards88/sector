@@ -2,7 +2,6 @@
 
 - add rules to control bar
 - in gameinit, read in and return saved state
-- adjust size to acomodate url bar
 
 - set up jest tests or remove jest script and dev dependency
 - update deploy workflow run tests and to bump version

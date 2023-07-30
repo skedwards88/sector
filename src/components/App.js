@@ -3,6 +3,7 @@ import {gameInit} from "../logic/gameInit";
 import {gameReducer} from "../logic/gameReducer";
 import Game from "./Game";
 import Heart from "./Heart";
+import Rules from "./Rules";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
@@ -51,7 +52,8 @@ export default function App() {
   switch (display) {
     case "heart":
       return <Heart setDisplay={setDisplay}></Heart>;
-
+    case "rules":
+      return <Rules setDisplay={setDisplay}></Rules>;
     default:
       return (
         <Game

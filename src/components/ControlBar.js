@@ -19,6 +19,7 @@ export default function ControlBar({
         }}
       ></button>
       <button id="heartButton" onClick={() => setDisplay("heart")}></button>
+      <button id="rulesButton" onClick={() => setDisplay("rules")}></button>
       {showInstallButton && installPromptEvent ? (
         <button
           id="installButton"
