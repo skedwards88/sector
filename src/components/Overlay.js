@@ -60,18 +60,18 @@ export default function Overlay({
       let cornerClass = "";
       switch (overlayIndex) {
         case 0:
-          cornerClass = "topLeft"
+          cornerClass = "topLeft";
           break;
         case 1:
-          cornerClass = "topRight"
+          cornerClass = "topRight";
           break;
         case 2:
-          cornerClass = "bottomLeft"
+          cornerClass = "bottomLeft";
           break;
         case 3:
-          cornerClass = "bottomRight"
+          cornerClass = "bottomRight";
           break;
-      
+
         default:
           break;
       }
@@ -98,9 +98,9 @@ export default function Overlay({
           }
           onClick={() => dispatchGameState({action: "rotate"})}
           onDragEnd={() => console.log("drag end")}
-          className={`square overlay ${cornerClass} ${overlay[overlayIndex].color || ""} ${
-            overlay[overlayIndex].shape || ""
-          }`}
+          className={`square overlay ${cornerClass} ${
+            overlay[overlayIndex].color || ""
+          } ${overlay[overlayIndex].shape || ""}`}
           key={`overlay${overlayIndex}`}
         ></div>
       );

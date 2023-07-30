@@ -16,6 +16,9 @@ export default function GameOver({scores, isTie}) {
     <div
       id="gameOver"
       className={winner}
-    >{`\n\n${winner.toUpperCase()} wins!\n\n${Math.max(redScore, blueScore)} vs ${Math.min(redScore, blueScore)}`}</div>
+    >{`\n\n${winner.toUpperCase()} wins!\n\n${Math.max(
+      redScore,
+      blueScore,
+    )} vs ${Math.min(redScore, blueScore)}`}</div>
   );
 }
