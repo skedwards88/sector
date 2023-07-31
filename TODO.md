@@ -5,7 +5,7 @@
 
 - set up jest tests or remove jest script and dev dependency
 - update deploy workflow run tests and to bump version
-- make PWA
+- make PWA -- done, but lighthouse error?
 - Exchange the gtag in index.html
 
 - port over to old repo (or just do repo renames)

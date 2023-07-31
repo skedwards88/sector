@@ -30,7 +30,7 @@ const rules = [
     text: [
       "a sector is any connected set of quadrants of the same color",
       "a sector is worth one point per quadrant, plus one point per unique icon",
-      "in this example, there is TODO",
+      "in this example, there is a 4 point red sector, 3 point red sector, and 8 point blue sector",
     ],
     image: "example_sectors",
   },
