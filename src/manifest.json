@@ -11,6 +11,19 @@
   "theme_color": "#000000",
   "shortcuts": [],
   "categories": ["games", "entertainment"],
-  "icons": [],
+  "icons": [
+    {
+      "src": "icon_512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
   "screenshots": []
 }
