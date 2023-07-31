@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function GameOver({scores, isTie}) {
+export default function GameOver({scores, isTie, dispatchGameState}) {
   const redScore = scores.red;
   const blueScore = scores.blue;
 
@@ -13,12 +13,20 @@ export default function GameOver({scores, isTie}) {
   const winner = redScore > blueScore ? "red" : "blue";
 
   return (
-    <div
-      id="gameOver"
-      className={winner}
-    >{`\n\n${winner.toUpperCase()} wins!\n\n${Math.max(
-      redScore,
-      blueScore,
-    )} vs ${Math.min(redScore, blueScore)}`}</div>
+    <div id="gameOver" className={winner}>
+      <div>{`\n\n${winner.toUpperCase()} wins!\n\n${Math.max(
+        redScore,
+        blueScore,
+      )} vs ${Math.min(redScore, blueScore)}`}</div>
+      <button
+        onClick={() => {
+          dispatchGameState({
+            action: "newGame",
+          });
+        }}
+      >
+        new game
+      </button>
+    </div>
   );
 }

@@ -356,6 +356,12 @@ button {
   text-align: center;
   justify-content: center;
   font-size: calc(var(--default-font-size) * 1.5);
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#gameOver > * {
+  margin-bottom: calc(0.5 * var(--quad));
 }
 
 #gameOver.red {
@@ -417,10 +423,11 @@ button {
   display: grid;
   grid-area: buttons;
   grid-template-columns: 1fr 1fr 1fr;
-  width: calc(var(--quad) * 10);;
+  width: calc(var(--quad) * 10);
 }
 
-#ruleButtons > button {
+#ruleButtons > button,
+#gameOver > button {
   border-radius: 5px;
   border: 0;
   margin: 5px;
