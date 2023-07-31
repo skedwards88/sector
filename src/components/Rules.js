@@ -19,9 +19,8 @@ const rules = [
   },
   {
     text: [
-      "the new tile can completely or partially overlap another tile",
-      "however, blue and red cannot overlap each other",
       "at least one quadrant of the new tile must be adjacent to or overlap another tile",
+      "however, blue and red cannot overlap each other",
       "if a placement is not legal, the 'end turn' button will be dark",
     ],
     image: "legal_moves",
