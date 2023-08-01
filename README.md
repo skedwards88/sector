@@ -6,8 +6,6 @@ Strategically place tiles to build the greatest galactic empire.
 
 **Time:** 15 minutes
 
-:construction: This project is under construction, but you can play the original version:
-
 [Play Now!](https://skedwards88.github.io/sector/)
 
 ![Game icon](./src/images/favicon.png)
