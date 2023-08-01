@@ -26,4 +26,4 @@ To deploy, push to `main` or manually trigger the `.github/workflows/deploy.yml`
 
 Since this app doesn't have a custom domain, asset links for the Google Play Store are stored at https://github.com/skedwards88/.well-known (https://skedwards88.github.io/.well-known/assetlinks.json).
 
-![Status](https://github.com/skedwards88/sector/actions/workflows/deploy.yml/badge.svg)
+![Status](https://github.com/skedwards88/sector/actions/workflows/deploy.yaml/badge.svg)
