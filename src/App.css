@@ -329,13 +329,6 @@ button {
   text-shadow: 0 0 5px #fefa00;
 }
 
-#playerControls > button:disabled {
-  color: rgb(161 161 161);
-  touch-action: none;
-  text-shadow: none;
-  box-shadow: inset 0 0 0.5rem #000;
-}
-
 #endTurn {
   grid-area: endTurn;
 }
@@ -454,6 +447,13 @@ button {
 
 #ruleButtons > button:disabled {
   color: rgb(225 223 223);
+  touch-action: none;
+  text-shadow: none;
+  box-shadow: inset 0 0 0.5rem #000;
+}
+
+#playerControls > button:disabled {
+  color: rgb(161 161 161);
   touch-action: none;
   text-shadow: none;
   box-shadow: inset 0 0 0.5rem #000;
