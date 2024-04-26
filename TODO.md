@@ -13,3 +13,5 @@
 - use the deepclone method instead of json hack
 
 - make player v computer
+- add gtag
+- 

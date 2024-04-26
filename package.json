@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --config=jest.config.cjs",
-    "lint": "npx prettier --write . && npx eslint --ignore-path .gitignore . --fix && npx stylelint '**/*.css'",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "dev": "webpack-dev-server --mode development",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "eslint": "npx eslint --ignore-path .gitignore . --fix",
+    "prettier": "npx prettier --write .",
+    "style": "npx stylelint '**/*.css' --fix",
+    "lint": "npm run eslint && npm run prettier && npm run style"
   },
   "repository": {
     "type": "git",

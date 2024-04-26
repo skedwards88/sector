@@ -2,8 +2,8 @@ module.exports = {
   env: {
     node: true,
     browser: true,
-    es2021: true,
     "shared-node-browser": true,
+    es2021: true,
     jest: true,
   },
   extends: [
@@ -11,12 +11,13 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
   ],
+  overrides: [],
   parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: "latest",
-    sourceType: "module",
   },
   plugins: ["react"],
   rules: {
