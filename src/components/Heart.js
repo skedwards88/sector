@@ -10,8 +10,14 @@ export default function Heart({setDisplay}) {
       <h1>Sector</h1>
       <div className="heartText">
         {"Like this game? Share it with your friends.\n\n"}
-        {<Share text={"Check out this quick spatial strategy game!"}></Share>}
-        {`\n\n`}
+        {
+          <Share
+            appName={"Sector"}
+            url={"https://skedwards88.github.io/sector/"}
+            text={"Check out this quick spatial strategy game!"}
+          ></Share>
+        }
+        {`\n`}
         {<hr></hr>}
         {`\n`}
         {`Want more games? Check `}
