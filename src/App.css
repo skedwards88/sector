@@ -8,7 +8,7 @@ body {
   font-weight: bold;
   background-color: var(--dark-color);
   color: var(--light-color);
-  background-image: url("./images/stars.svg");
+  background-image: url("./images/icons/stars.svg");
   font-size: var(--default-font-size);
   display: flex;
   justify-content: center;
@@ -73,19 +73,19 @@ button {
 }
 
 #newGameButton {
-  background-image: url("./images/new_game.svg");
+  background-image: url("./images/icons/new_game.svg");
 }
 
 #heartButton {
-  background-image: url("./images/heart.svg");
+  background-image: url("./images/icons/heart.svg");
 }
 
 #rulesButton {
-  background-image: url("./images/info.svg");
+  background-image: url("./images/icons/info.svg");
 }
 
 #installButton {
-  background-image: url("./images/install.svg");
+  background-image: url("./images/icons/install.svg");
 }
 
 /* Heart */
@@ -125,19 +125,19 @@ button {
 }
 
 .moon {
-  background-image: url("./images/moon.svg");
+  background-image: url("./images/icons/moon.svg");
 }
 
 .planet {
-  background-image: url("./images/planet.svg");
+  background-image: url("./images/icons/planet.svg");
 }
 
 .star {
-  background-image: url("./images/star.svg");
+  background-image: url("./images/icons/star.svg");
 }
 
 .whirl {
-  background-image: url("./images/whirl.svg");
+  background-image: url("./images/icons/whirl.svg");
 }
 
 .square.offer {
@@ -396,19 +396,19 @@ button {
 }
 
 .ruleImage#example_tile {
-  background-image: url("./images/example_tile.png");
+  background-image: url("./images/rules/example_tile.webp");
 }
 
 .ruleImage#symbols {
-  background-image: url("./images/symbols.png");
+  background-image: url("./images/rules/symbols.webp");
 }
 
 .ruleImage#legal_moves {
-  background-image: url("./images/legal_moves.png");
+  background-image: url("./images/rules/legal_moves.webp");
 }
 
 .ruleImage#example_sectors {
-  background-image: url("./images/example_sectors.png");
+  background-image: url("./images/rules/example_sectors.webp");
 }
 
 #ruleControls {
