@@ -1,11 +1,8 @@
-import sendAnalytics from "./sendAnalytics";
 import {deck} from "./deck";
 import {shuffleArray} from "./shuffleArray";
 
 export function gameInit({expanseSize = 10}) {
   const shuffledDeck = shuffleArray(deck);
-
-  sendAnalytics("new_game");
 
   // The played quadrants are empty except for a single tile in the middle of the board
   const played = Array.from({length: expanseSize * expanseSize}, () => ({
@@ -42,5 +39,10 @@ export function gameInit({expanseSize = 10}) {
     },
     isTie: false,
     lastBreakingChange: "20230706",
+    analyticsToLog: [
+      {
+        eventName: "new_game",
+      },
+    ],
   };
 }

@@ -1,5 +1,3 @@
-import sendAnalytics from "./sendAnalytics";
-
 export function assembleShareLink({url, seed}) {
   const fullUrl = seed ? `${url}?id=${seed}` : url;
   return fullUrl;
@@ -18,7 +16,6 @@ export function handleShare({appName, text, url, seed}) {
     .catch((error) => {
       console.log("Error sharing", error);
     });
-  sendAnalytics("share");
 }
 
 export function handleCopy({text, url, seed}) {

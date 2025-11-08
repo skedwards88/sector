@@ -8,6 +8,10 @@ import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
 } from "../logic/handleInstall";
+import {getUserId} from "@skedwards88/shared-components/src/logic/getUserId";
+import {v4 as uuidv4} from "uuid";
+import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
+import {isRunningStandalone} from "@skedwards88/shared-components/src/logic/isRunningStandalone";
 
 export default function App() {
   const [display, setDisplay] = React.useState("game");
@@ -48,6 +52,52 @@ export default function App() {
   React.useEffect(() => {
     window.localStorage.setItem("sectorState", JSON.stringify(gameState));
   }, [gameState]);
+
+  // ******
+  // Start analytics setup
+  // ******
+
+  // Store userID so I don't have to read local storage every time
+  const userId = getUserId("sector_uid");
+
+  // Store sessionID as a ref so I have the same session ID until app refresh
+  const sessionIdRef = React.useRef(uuidv4());
+  const sessionId = sessionIdRef.current;
+
+  // Send analytics on load
+  React.useEffect(() => {
+    sendAnalyticsCF({
+      userId,
+      sessionId,
+      analyticsToLog: [
+        {
+          eventName: "app_load",
+          // os, browser, and isMobile are parsed on the server from the user agent headers
+          screenWidth: window.screen.width,
+          screenHeight: window.screen.height,
+          isStandalone: isRunningStandalone(),
+          devicePixelRatio: window.devicePixelRatio,
+        },
+      ],
+    });
+    // Just run once on app load
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Send analytics following reducer updates, if needed
+  React.useEffect(() => {
+    const analyticsToLog = gameState.analyticsToLog;
+
+    if (!analyticsToLog || !analyticsToLog.length) {
+      return;
+    }
+
+    sendAnalyticsCF({userId, sessionId, analyticsToLog});
+  }, [gameState?.analyticsToLog, sessionId, userId]);
+
+  // ******
+  // End analytics setup
+  // ******
 
   switch (display) {
     case "heart":
