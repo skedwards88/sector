@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/skedwards88/sector#readme",
   "dependencies": {
-    "@skedwards88/shared-components": "^0.0.24",
+    "@skedwards88/shared-components": "latest",
     "lodash.clonedeep": "^4.5.0",
     "mobile-drag-drop": "^2.3.0-rc.2",
     "react": "^18.2.0",

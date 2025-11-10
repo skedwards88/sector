@@ -1,5 +1,6 @@
 import {deck} from "./deck";
 import {shuffleArray} from "./shuffleArray";
+import {v4 as uuidv4} from "uuid";
 
 export function gameInit({expanseSize = 10}) {
   const shuffledDeck = shuffleArray(deck);
@@ -27,6 +28,8 @@ export function gameInit({expanseSize = 10}) {
   const overlay = shuffledDeck.pop();
 
   return {
+    id: uuidv4(), // just a random ID to track when the user generates a new puzzle
+
     played,
     deck: shuffledDeck,
     overlay,
@@ -39,10 +42,5 @@ export function gameInit({expanseSize = 10}) {
     },
     isTie: false,
     lastBreakingChange: "20230706",
-    analyticsToLog: [
-      {
-        eventName: "new_game",
-      },
-    ],
   };
 }
