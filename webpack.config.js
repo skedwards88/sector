@@ -130,7 +130,7 @@ module.exports = (env, argv) => {
     },
     resolve: {extensions: ["*", ".js", ".jsx"]},
     output: {
-      publicPath: "",
+      publicPath: "/",
       filename: "[name].[contenthash].js",
       chunkFilename: "[name].[contenthash].js",
       path: path.resolve(__dirname, "dist"),
