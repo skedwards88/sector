@@ -1,6 +1,6 @@
 body {
   --quad: 9vmin;
-  --default-font-size: calc(var(--quad) * 0.5);
+  --default-font-size: calc(var(--quad) * 0.4);
   --dark-color: #000;
   --light-color: rgb(239 239 239);
 

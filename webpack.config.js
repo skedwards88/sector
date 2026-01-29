@@ -29,6 +29,21 @@ module.exports = (env, argv) => {
   const htmlPlugin = new HtmlWebpackPlugin({
     // Need to use template because need 'root' div for react injection. templateContent doesn't play nice with title, so just use a template file instead.
     template: "./src/index.html",
+    chunks: ["app"],
+  });
+
+  const boardGamePlugin = new HtmlWebpackPlugin({
+    // Need to use template because need 'root' div for react injection. templateContent doesn't play nice with title, so just use a template file instead.
+    template: "./src/index.html",
+    chunks: ["boardGame"],
+    filename: "boardGame/index.html",
+  });
+
+  const boardGameRulesPlugin = new HtmlWebpackPlugin({
+    // Need to use template because need 'root' div for react injection. templateContent doesn't play nice with title, so just use a template file instead.
+    template: "./src/index.html",
+    chunks: ["boardGameRules"],
+    filename: "boardGameRules/index.html",
   });
 
   const privacyHtmlPlugin = new HtmlWebpackPlugin({
@@ -65,18 +80,31 @@ module.exports = (env, argv) => {
 
   const plugins =
     argv.mode === "development"
-      ? [definePlugin, htmlPlugin, privacyHtmlPlugin, copyPlugin]
+      ? [
+          definePlugin,
+          htmlPlugin,
+          boardGamePlugin,
+          boardGameRulesPlugin,
+          privacyHtmlPlugin,
+          copyPlugin,
+        ]
       : [
           definePlugin,
           htmlPlugin,
+          boardGamePlugin,
+          boardGameRulesPlugin,
           privacyHtmlPlugin,
           copyPlugin,
           serviceWorkerPlugin,
         ];
 
   return {
-    entry: "./src/index.js",
-    mode: "production",
+    entry: {
+      app: "./src/index.js",
+      boardGame: "./src/boardGameIndex.js",
+      boardGameRules: "./src/boardGameRulesIndex.js",
+    },
+    mode: argv.mode,
     module: {
       rules: [
         {
@@ -103,7 +131,8 @@ module.exports = (env, argv) => {
     resolve: {extensions: ["*", ".js", ".jsx"]},
     output: {
       publicPath: "",
-      filename: "bundle.[fullhash].js",
+      filename: "[name].[contenthash].js",
+      chunkFilename: "[name].[contenthash].js",
       path: path.resolve(__dirname, "dist"),
       clean: true, // removes unused files from output dir
     },
