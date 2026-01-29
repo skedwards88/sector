@@ -1,0 +1,43 @@
+.boardGame {
+  white-space: pre-line;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-items:   center;
+  align-items: center;
+  height: 90vh; /* fallback if svh isn't handled */
+  height: 98svh;
+  width: calc(var(--quad) * 10);
+  overflow: auto;
+  justify-content: start;
+}
+
+.boardGameButton {
+  text-decoration: none;
+  background-color: var(--light-color);
+  border: 1px solid var(--light-color);
+  border-radius: 2px;
+  color: var(--dark-color);
+  padding: 10px;
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.boardGameRules {
+  background-color: var(--dark-color);
+  overflow: auto;
+}
+
+.boardGameRules > p::first-letter {
+  text-transform: uppercase;
+}
+
+.boardGameRules > hr {
+  background-color: var(--light-color);
+  height: 5px;
+  width: 90%;
+}
+
+.boardGameRules > .ruleImage {
+  min-width: 80%;
+}
