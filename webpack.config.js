@@ -39,13 +39,6 @@ module.exports = (env, argv) => {
     filename: "boardGame/index.html",
   });
 
-  const boardGameRulesPlugin = new HtmlWebpackPlugin({
-    // Need to use template because need 'root' div for react injection. templateContent doesn't play nice with title, so just use a template file instead.
-    template: "./src/index.html",
-    chunks: ["boardGameRules"],
-    filename: "boardGameRules/index.html",
-  });
-
   const privacyHtmlPlugin = new HtmlWebpackPlugin({
     filename: "privacy.html",
     template: require.resolve(
@@ -64,6 +57,10 @@ module.exports = (env, argv) => {
       {from: "./src/images/icon_512.png", to: "./assets/icon_512.png"},
       {from: "./src/images/maskable_192.png", to: "./assets/maskable_192.png"},
       {from: "./src/manifest.json", to: "./assets/manifest.json"},
+      {
+        from: "./src/images/rules/boardGameRules.pdf",
+        to: "./boardGameRules.pdf",
+      },
     ],
     options: {
       concurrency: 100,
@@ -84,7 +81,6 @@ module.exports = (env, argv) => {
           definePlugin,
           htmlPlugin,
           boardGamePlugin,
-          boardGameRulesPlugin,
           privacyHtmlPlugin,
           copyPlugin,
         ]
@@ -92,7 +88,6 @@ module.exports = (env, argv) => {
           definePlugin,
           htmlPlugin,
           boardGamePlugin,
-          boardGameRulesPlugin,
           privacyHtmlPlugin,
           copyPlugin,
           serviceWorkerPlugin,
@@ -102,7 +97,6 @@ module.exports = (env, argv) => {
     entry: {
       app: "./src/index.js",
       boardGame: "./src/boardGameIndex.js",
-      boardGameRules: "./src/boardGameRulesIndex.js",
     },
     mode: argv.mode,
     module: {

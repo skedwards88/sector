@@ -22,22 +22,3 @@
   width: 80%;
   margin-bottom: 20px;
 }
-
-.boardGameRules {
-  background-color: var(--dark-color);
-  overflow: auto;
-}
-
-.boardGameRules > p::first-letter {
-  text-transform: uppercase;
-}
-
-.boardGameRules > hr {
-  background-color: var(--light-color);
-  height: 5px;
-  width: 90%;
-}
-
-.boardGameRules > .ruleImage {
-  min-width: 80%;
-}

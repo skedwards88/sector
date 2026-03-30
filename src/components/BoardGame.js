@@ -11,10 +11,7 @@ export default function BoardGame() {
   return (
     <div className="boardGame">
       <h1>Sector Board Game</h1>
-      <BoardGameButton
-        link="/boardGameRules"
-        text="Detailed rules (Coming soon)"
-      />
+      <BoardGameButton link="/boardGameRules.pdf" text="Detailed rules (PDF)" />
       <BoardGameButton link="/" text="Play online" />
       <BoardGameButton
         link="https://www.thegamecrafter.com/"
