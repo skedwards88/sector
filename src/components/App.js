@@ -70,6 +70,10 @@ export default function App() {
     previousStateRef.current = gameState;
   }, [gameState, sessionId, userId]);
 
+  if (gameState && !gameState.isBlueTurn) {
+    dispatchGameState({action: "playBot"});
+  }
+
   switch (display) {
     case "heart":
       return <Heart setDisplay={setDisplay}></Heart>;

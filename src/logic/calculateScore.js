@@ -1,5 +1,3 @@
-import cloneDeep from "lodash.clonedeep";
-
 class Sector {
   constructor({indexes = new Set(), shapes = new Set()}) {
     this.indexes = indexes;
@@ -22,7 +20,7 @@ function partitionArray(array, partitionSize) {
 function findSectors(color, played) {
   // split the played indexes into rows to make it
   // easier to see top/bottom/left/right neighbors
-  const playedCopy = cloneDeep(played);
+  const playedCopy = structuredClone(played);
   const playedRows = partitionArray(playedCopy, Math.sqrt(playedCopy.length));
 
   let sectors = [];
@@ -41,9 +39,7 @@ function findSectors(color, played) {
         while (coordinatesToSearch.length > 0) {
           let [search_row, search_column] = coordinatesToSearch.pop();
           // Record this square in the sector
-          currentSector.indexes.add(
-            JSON.stringify([search_row, search_column]),
-          );
+          currentSector.indexes.add(`${search_row},${search_column}`);
           if (playedRows[search_row][search_column].shape) {
             currentSector.shapes.add(
               playedRows[search_row][search_column].shape,

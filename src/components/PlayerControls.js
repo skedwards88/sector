@@ -78,7 +78,9 @@ export default function PlayerControls({
         <button
           id="endTurn"
           disabled={!placementIsLegal}
-          onClick={() => dispatchGameState({action: "endTurn"})}
+          onClick={() =>
+            dispatchGameState({action: "endTurn", overlay, overlayTopLeft})
+          }
           className={currentColor}
         >
           {`end turn`}
@@ -89,7 +91,12 @@ export default function PlayerControls({
             disabled={!placementIsLegal}
             className={currentColor}
             onClick={() =>
-              dispatchGameState({action: "endTurn", andScore: true})
+              dispatchGameState({
+                action: "endTurn",
+                overlay,
+                overlayTopLeft,
+                andScore: true,
+              })
             }
           >
             {`end turn; score ${potentialScore}`}
