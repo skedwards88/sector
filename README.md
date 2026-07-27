@@ -10,7 +10,7 @@ Strategically place tiles to build the greatest galactic empire.
 
 ![Game icon](./src/images/favicon.png)
 
-Want more games? Visit [SECT Games](https://skedwards88.github.io/).
+Want more games? Visit [Twisted Trail Games](https://twistedtrailgames.com/).
 
 Do you have feedback or ideas for improvement? [Open an issue](https://github.com/skedwards88/sector/issues/new).
 
