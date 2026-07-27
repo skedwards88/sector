@@ -70,7 +70,9 @@ export default function App() {
     previousStateRef.current = gameState;
   }, [gameState, sessionId, userId]);
 
-  if (gameState && !gameState.isBlueTurn) {
+  const gameOver =
+    gameState.scores.blue != undefined && gameState.scores.red != undefined;
+  if (gameState && !gameState.isBlueTurn && !gameOver) {
     dispatchGameState({action: "playBot"});
   }
 
