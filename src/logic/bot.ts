@@ -135,6 +135,7 @@ function getLikelyMaxPlacement(
   scores: Scores,
   botColor: PlayerColor,
   opponentColor: PlayerColor,
+  numTileRemaining: number,
 ): {
   bestOverlay: Tile;
   bestOverlayTopLeft: number;
@@ -144,8 +145,9 @@ function getLikelyMaxPlacement(
   const numBotLowScores = 4; // x2
   const numOpponentTopScores = 4; // x3
   const numOpponentLowScores = 4; // x4
-  const varW = 4; // w todo get better var name
+  const varW = 3; // w todo get better var name
   const varY = 4; // y todo get better var name
+  const numTilesRemainingAdjustment = 8;
 
   const maxOverlayIndex = getMaxOverlayIndex(played);
 
@@ -324,10 +326,10 @@ function getLikelyMaxPlacement(
 
           if (
             varW * simulatedScore >
-            sumArray(topBotNextScores) +
-              sumArray(lowBotNextScores) -
-              sumArray(topOpponentNextScores) -
-              sumArray(lowOpponentNextScores)
+            sumArray(topOpponentNextScores) +
+              sumArray(lowOpponentNextScores) -
+              numTilesRemainingAdjustment +
+              numTileRemaining
           ) {
             andScore = true;
           } else {
@@ -373,7 +375,9 @@ export function playBot(currentGameState: GameState): {
   const opponentScore = currentGameState.scores[opponentColor];
   const botScore = currentGameState.scores[botColor];
 
-  const isBotLastTurn = currentGameState.deck.length <= 2;
+  const numTileRemaining = currentGameState.deck.length;
+
+  const isBotLastTurn = numTileRemaining <= 2;
   const opponentHasScored = opponentScore != undefined;
   const botHasScored = botScore != undefined;
   const neitherPlayerHasScored = !opponentHasScored && !botHasScored;
@@ -405,6 +409,7 @@ export function playBot(currentGameState: GameState): {
     currentGameState.scores,
     botColor,
     opponentColor,
+    numTileRemaining,
   );
 
   return {
