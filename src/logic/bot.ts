@@ -1,9 +1,24 @@
-import type {GameState, PlayerColor, Scores, Square, Tile} from "../Types";
+import type {GameState, PlayerColor, Square, Tile} from "../Types";
 import {calculateScore} from "./calculateScore";
 import {canEndTurnQ} from "./canEndTurnQ";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 import {rotateTile} from "./rotateTile";
 import {sumArray} from "./sumArray";
+
+type Placement = {
+  botScore: number;
+  opponentScore: number;
+  overlay: Tile;
+  overlayTopLeft: number;
+};
+
+const Scenario = {
+  OpponentScored: "opponentScored",
+  BotScored: "botScored",
+  NeitherScored: "neitherScored",
+} as const;
+
+type Scenario = (typeof Scenario)[keyof typeof Scenario];
 
 function updateTrackedScores(
   newScore: number,
@@ -42,40 +57,48 @@ function getMaxOverlayIndex(played: Square[]): number {
   );
 }
 
-type Placement = {
-  botScore: number;
-  opponentScore: number;
-  overlay: Tile;
-  overlayTopLeft: number;
-};
-
-function scoreDiff(placement: Placement): number {
-  if (placement.botScore === undefined || placement.opponentScore === undefined)
-    return -Infinity;
-  return placement.botScore - placement.opponentScore;
+function getPlacementValue(scenario: Scenario, placement: Placement): number {
+  switch (scenario) {
+    case Scenario.OpponentScored:
+      // Care about higher bot score
+      return placement.botScore;
+    case Scenario.BotScored:
+      // Care about lower opponent score (hence the negative)
+      return -placement.opponentScore;
+    case Scenario.NeitherScored:
+      // Care about higher bot-opponent score diff
+      return placement.botScore - placement.opponentScore;
+  }
 }
 
-// Returns a list with 2 items:
-// 1: The placement with the highest bot score (not considering opponent score)
-// 2: A list of the placements (up to numPlacementsToFind) with the highest bot minus opponent score, ordered high to low
+function sortPlacements(scenario: Scenario, placements: Placement[]): void {
+  placements.sort(
+    (placementA, placementB) =>
+      getPlacementValue(scenario, placementA) -
+      getPlacementValue(scenario, placementB),
+  );
+}
+
+// Returns a list of the top N (maxPlacementsToFind) placements, ordered worst to best:
+//   If opponent has scored, the returned placements have the lowest opponent scores
+//   If bot has scored, the returned placements have the highest bot scores
+//   If neither has scored, the returned placements have the highest bot minus opponent score
 function findBestPlacements({
   tileToPlay,
   played,
   botColor,
   opponentColor,
-  numPlacementsToFind,
+  maxPlacementsToFind,
+  scenario,
 }: {
   tileToPlay: Tile;
   played: Square[];
   botColor: PlayerColor;
   opponentColor: PlayerColor;
-  numPlacementsToFind: number;
-}): [Omit<Placement, "opponentScore">, Placement[]] {
-  let currentMaxScore = -Infinity;
-  let currentMaxOverlay; // the tile to play, in the desired rotation
-  let currentMaxOverlayTopLeft; // the position to play at
-
-  const currentBestPlacements: Placement[] = [];
+  maxPlacementsToFind: number;
+  scenario: Scenario;
+}): Placement[] {
+  const bestPlacements: Placement[] = [];
 
   const rotatedTiles = getRotations(tileToPlay);
 
@@ -119,16 +142,11 @@ function findBestPlacements({
       });
 
       const simulatedBotScore = calculateScore(botColor, simulatedPlayed);
+
       const simulatedOpponentScore = calculateScore(
         opponentColor,
         simulatedPlayed,
       );
-
-      if (simulatedBotScore > currentMaxScore) {
-        currentMaxScore = simulatedBotScore;
-        currentMaxOverlay = simulatedTile;
-        currentMaxOverlayTopLeft = boardIndex;
-      }
 
       const currentPlacement = {
         botScore: simulatedBotScore,
@@ -138,46 +156,27 @@ function findBestPlacements({
       };
 
       // If we haven't found all of the placements yet, just append to the list
-      if (currentBestPlacements.length < numPlacementsToFind) {
-        currentBestPlacements.push(currentPlacement);
-      }
-      // otherwise only add the placement if it is larger than one of the found scores
-      else if (
-        scoreDiff(currentBestPlacements[0]) <
-        simulatedBotScore - simulatedOpponentScore
-      ) {
-        // Sort so smallest bot-opponent score first
-        currentBestPlacements.sort(
-          (placementA, placementB) =>
-            scoreDiff(placementA) - scoreDiff(placementB),
-        );
+      if (bestPlacements.length < maxPlacementsToFind) {
+        bestPlacements.push(currentPlacement);
 
-        currentBestPlacements[0] = currentPlacement;
+        // Sort worst to best if now at the max list length (so that we can just look at the first item for future updates)
+        if (bestPlacements.length === maxPlacementsToFind) {
+          sortPlacements(scenario, bestPlacements);
+        }
+      }
+      // otherwise only add the placement if it is better than one of the found placements
+      // then sort so worst is first (so that we can just look at the first item for future updates)
+      else if (
+        getPlacementValue(scenario, currentPlacement) >
+        getPlacementValue(scenario, bestPlacements[0])
+      ) {
+        bestPlacements[0] = currentPlacement;
+        sortPlacements(scenario, bestPlacements);
       }
     }
   }
 
-  // Sort so largest bot-opponent score first
-  currentBestPlacements.sort(
-    (placementA, placementB) => scoreDiff(placementB) - scoreDiff(placementA),
-  );
-
-  // this should only happen if there were no legal moves
-  if (
-    currentMaxOverlayTopLeft === undefined ||
-    currentMaxOverlay === undefined
-  ) {
-    throw new Error("Did not find a legal move");
-  }
-
-  return [
-    {
-      botScore: currentMaxScore,
-      overlay: currentMaxOverlay,
-      overlayTopLeft: currentMaxOverlayTopLeft,
-    },
-    currentBestPlacements,
-  ];
+  return bestPlacements;
 }
 
 function findBestPlacementsWithSecondary({
@@ -185,15 +184,15 @@ function findBestPlacementsWithSecondary({
   botColor,
   opponentColor,
   numTileRemaining,
-  scores,
   primaryPlacements,
+  scenario,
 }: {
   played: Square[];
   botColor: PlayerColor;
   opponentColor: PlayerColor;
   numTileRemaining: number;
-  scores: Scores;
   primaryPlacements: Placement[];
+  scenario: Scenario;
 }): {
   bestOverlay: Tile;
   bestOverlayTopLeft: number;
@@ -203,16 +202,13 @@ function findBestPlacementsWithSecondary({
   const numBotLowScores = 4; // x2
   const numOpponentTopScores = 4; // x3
   const numOpponentLowScores = 4; // x4
-  const varW = 3; // w todo get better var name
-  const varY = 4; // y todo get better var name
-  const numTilesRemainingAdjustment = 8;
+  const weightW = 3; // w todo get better var name
+  const weightY = 4; // y todo get better var name
+  const numTilesRemainingWeight = 8;
 
   const maxOverlayIndex = getMaxOverlayIndex(played);
 
-  const botScore = scores[botColor];
-  const opponentScore = scores[opponentColor];
-
-  let currentBestScore = 0;
+  let currentBestScore;
   let currentBestOverlay; // the tile to play, in the desired rotation
   let currentBestOverlayTopLeft; // the position to play at
   let andScore = false;
@@ -316,57 +312,43 @@ function findBestPlacementsWithSecondary({
       }
     }
 
-    // If bot has already scored, optimize for lowest opponent score
-    if (botScore != undefined) {
-      const conglomerateScore =
-        sumArray(topOpponentNextScores) + sumArray(lowOpponentNextScores);
-
-      if (conglomerateScore < (currentBestScore || Infinity)) {
-        currentBestScore = conglomerateScore;
-        currentBestOverlay = simulatedTile;
-        currentBestOverlayTopLeft = simulatedOverlay;
-      }
+    let conglomerateScore;
+    switch (scenario) {
+      case Scenario.OpponentScored:
+        // Care about higher bot score
+        conglomerateScore =
+          weightY * simulatedScore +
+          sumArray(topBotNextScores) +
+          sumArray(lowBotNextScores);
+        break;
+      case Scenario.BotScored:
+        // Care about lower opponent score (hence the negative)
+        conglomerateScore = -(
+          sumArray(topOpponentNextScores) + sumArray(lowOpponentNextScores)
+        );
+        break;
+      case Scenario.NeitherScored:
+        // Care about higher bot-opponent score diff
+        conglomerateScore =
+          weightY * simulatedScore +
+          sumArray(topBotNextScores) +
+          sumArray(lowBotNextScores) -
+          sumArray(topOpponentNextScores) -
+          sumArray(lowOpponentNextScores);
     }
 
-    // If opponent has already scored, optimize for highest bot score
-    else if (opponentScore != undefined) {
-      const conglomerateScore =
-        varY * simulatedScore +
-        sumArray(topBotNextScores) +
-        sumArray(lowBotNextScores);
+    if (conglomerateScore > (currentBestScore ?? -Infinity)) {
+      currentBestScore = conglomerateScore;
+      currentBestOverlay = simulatedTile;
+      currentBestOverlayTopLeft = simulatedOverlay;
 
-      if (conglomerateScore > (currentBestScore || -Infinity)) {
-        currentBestScore = conglomerateScore;
-        currentBestOverlay = simulatedTile;
-        currentBestOverlayTopLeft = simulatedOverlay;
-      }
-    }
-
-    // Otherwise, optimize for highest bot/lowest opponent score
-    else {
-      const conglomerateScore =
-        varY * simulatedScore +
-        sumArray(topBotNextScores) +
-        sumArray(lowBotNextScores) -
-        sumArray(topOpponentNextScores) -
-        sumArray(lowOpponentNextScores);
-
-      if (conglomerateScore > (currentBestScore || -Infinity)) {
-        currentBestScore = conglomerateScore;
-        currentBestOverlay = simulatedTile;
-        currentBestOverlayTopLeft = simulatedOverlay;
-
-        if (
-          varW * simulatedScore >
+      if (scenario === Scenario.NeitherScored) {
+        andScore =
+          weightW * simulatedScore >
           sumArray(topOpponentNextScores) +
             sumArray(lowOpponentNextScores) -
-            numTilesRemainingAdjustment +
-            numTileRemaining
-        ) {
-          andScore = true;
-        } else {
-          andScore = false;
-        }
+            numTilesRemainingWeight +
+            numTileRemaining;
       }
     }
   }
@@ -391,45 +373,56 @@ export function playBot(currentGameState: GameState): {
   botOverlayTopLeft: number;
   andScore: boolean;
 } {
-  const numPlacementsToFind = 10;
+  const maxPlacementsToFind = 10;
 
   const botColor = "red";
   const opponentColor = "blue";
 
-  const opponentScore = currentGameState.scores[opponentColor];
-  const botScore = currentGameState.scores[botColor];
-
   const numTileRemaining = currentGameState.deck.length;
 
   const isBotLastTurn = numTileRemaining <= 2;
-  const opponentHasScored = opponentScore != undefined;
-  const botHasScored = botScore != undefined;
-  const neitherPlayerHasScored = !opponentHasScored && !botHasScored;
 
-  const [bestBotPlacement, bestBotVsOppPlacements] = findBestPlacements({
+  const opponentScore = currentGameState.scores[opponentColor];
+  const botScore = currentGameState.scores[botColor];
+
+  let scenario;
+  if (opponentScore != undefined) {
+    scenario = Scenario.OpponentScored;
+  } else if (botScore != undefined) {
+    scenario = Scenario.BotScored;
+  } else {
+    scenario = Scenario.NeitherScored;
+  }
+
+  const bestPlacements = findBestPlacements({
     tileToPlay: currentGameState.overlay,
     played: currentGameState.played,
     botColor,
     opponentColor,
-    numPlacementsToFind,
+    maxPlacementsToFind,
+    scenario,
   });
+  const bestPlacement = bestPlacements[bestPlacements.length - 1];
 
   // If opponent has scored and bot can score higher,
   // place for highest current score, then score
-  if (opponentHasScored && bestBotPlacement.botScore > opponentScore) {
+  if (
+    scenario === Scenario.OpponentScored &&
+    bestPlacement.botScore > opponentScore
+  ) {
     return {
-      botOverlay: bestBotPlacement.overlay,
-      botOverlayTopLeft: bestBotPlacement.overlayTopLeft,
+      botOverlay: bestPlacement.overlay,
+      botOverlayTopLeft: bestPlacement.overlayTopLeft,
       andScore: true,
     };
   }
 
   // If neither player has scored and this is the bot's last turn,
   // place for highest score difference, then score
-  if (neitherPlayerHasScored && isBotLastTurn) {
+  if (scenario === Scenario.NeitherScored && isBotLastTurn) {
     return {
-      botOverlay: bestBotVsOppPlacements[0].overlay,
-      botOverlayTopLeft: bestBotVsOppPlacements[0].overlayTopLeft,
+      botOverlay: bestPlacement.overlay,
+      botOverlayTopLeft: bestPlacement.overlayTopLeft,
       andScore: true,
     };
   }
@@ -441,9 +434,9 @@ export function playBot(currentGameState: GameState): {
       played: currentGameState.played,
       botColor,
       opponentColor,
-      scores: currentGameState.scores,
       numTileRemaining,
-      primaryPlacements: bestBotVsOppPlacements,
+      primaryPlacements: bestPlacements,
+      scenario,
     });
 
   return {
