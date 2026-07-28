@@ -42,18 +42,40 @@ function getMaxOverlayIndex(played: Square[]): number {
   );
 }
 
-function getMaxPlacement(
-  tileToPlay: Tile,
-  played: Square[],
-  botColor: PlayerColor,
-): {
-  bestScore: number;
-  bestOverlay: Tile;
-  bestOverlayTopLeft: number;
-} {
-  let currentMaxScore = 0;
+type Placement = {
+  botScore: number;
+  opponentScore: number;
+  overlay: Tile;
+  overlayTopLeft: number;
+};
+
+function scoreDiff(placement: Placement): number {
+  if (placement.botScore === undefined || placement.opponentScore === undefined)
+    return -Infinity;
+  return placement.botScore - placement.opponentScore;
+}
+
+// Returns a list with 2 items:
+// 1: The placement with the highest bot score (not considering opponent score)
+// 2: A list of the placements (up to numPlacementsToFind) with the highest bot minus opponent score, ordered high to low
+function findBestPlacements({
+  tileToPlay,
+  played,
+  botColor,
+  opponentColor,
+  numPlacementsToFind,
+}: {
+  tileToPlay: Tile;
+  played: Square[];
+  botColor: PlayerColor;
+  opponentColor: PlayerColor;
+  numPlacementsToFind: number;
+}): [Omit<Placement, "opponentScore">, Placement[]] {
+  let currentMaxScore = -Infinity;
   let currentMaxOverlay; // the tile to play, in the desired rotation
   let currentMaxOverlayTopLeft; // the position to play at
+
+  const currentBestPlacements: Placement[] = [];
 
   const rotatedTiles = getRotations(tileToPlay);
 
@@ -96,23 +118,49 @@ function getMaxPlacement(
         overlayTopLeft: boardIndex, // location of current tile to play
       });
 
-      const simulatedScore = calculateScore(botColor, simulatedPlayed);
+      const simulatedBotScore = calculateScore(botColor, simulatedPlayed);
+      const simulatedOpponentScore = calculateScore(
+        opponentColor,
+        simulatedPlayed,
+      );
 
-      if (simulatedScore > currentMaxScore) {
-        currentMaxScore = simulatedScore;
+      if (simulatedBotScore > currentMaxScore) {
+        currentMaxScore = simulatedBotScore;
         currentMaxOverlay = simulatedTile;
         currentMaxOverlayTopLeft = boardIndex;
       }
-      // If haven't stored a best play yet, store the first legal move so that the bot at least plays something
+
+      const currentPlacement = {
+        botScore: simulatedBotScore,
+        opponentScore: simulatedOpponentScore,
+        overlay: simulatedTile,
+        overlayTopLeft: boardIndex,
+      };
+
+      // If we haven't found all of the placements yet, just append to the list
+      if (currentBestPlacements.length < numPlacementsToFind) {
+        currentBestPlacements.push(currentPlacement);
+      }
+      // otherwise only add the placement if it is larger than one of the found scores
       else if (
-        currentMaxOverlayTopLeft === undefined ||
-        currentMaxOverlay === undefined
+        scoreDiff(currentBestPlacements[0]) <
+        simulatedBotScore - simulatedOpponentScore
       ) {
-        currentMaxOverlay = simulatedTile;
-        currentMaxOverlayTopLeft = boardIndex;
+        // Sort so smallest bot-opponent score first
+        currentBestPlacements.sort(
+          (placementA, placementB) =>
+            scoreDiff(placementA) - scoreDiff(placementB),
+        );
+
+        currentBestPlacements[0] = currentPlacement;
       }
     }
   }
+
+  // Sort so largest bot-opponent score first
+  currentBestPlacements.sort(
+    (placementA, placementB) => scoreDiff(placementB) - scoreDiff(placementA),
+  );
 
   // this should only happen if there were no legal moves
   if (
@@ -122,21 +170,31 @@ function getMaxPlacement(
     throw new Error("Did not find a legal move");
   }
 
-  return {
-    bestScore: currentMaxScore,
-    bestOverlay: currentMaxOverlay,
-    bestOverlayTopLeft: currentMaxOverlayTopLeft,
-  };
+  return [
+    {
+      botScore: currentMaxScore,
+      overlay: currentMaxOverlay,
+      overlayTopLeft: currentMaxOverlayTopLeft,
+    },
+    currentBestPlacements,
+  ];
 }
 
-function getLikelyMaxPlacement(
-  tileToPlay: Tile,
-  played: Square[],
-  scores: Scores,
-  botColor: PlayerColor,
-  opponentColor: PlayerColor,
-  numTileRemaining: number,
-): {
+function findBestPlacementsWithSecondary({
+  played,
+  botColor,
+  opponentColor,
+  numTileRemaining,
+  scores,
+  primaryPlacements,
+}: {
+  played: Square[];
+  botColor: PlayerColor;
+  opponentColor: PlayerColor;
+  numTileRemaining: number;
+  scores: Scores;
+  primaryPlacements: Placement[];
+}): {
   bestOverlay: Tile;
   bestOverlayTopLeft: number;
   andScore: boolean;
@@ -159,7 +217,6 @@ function getLikelyMaxPlacement(
   let currentBestOverlayTopLeft; // the position to play at
   let andScore = false;
 
-  const tileRotations = getRotations(tileToPlay);
   const nextTileRotations = getRotations([
     {color: "black", shape: null},
     {color: "red", shape: null},
@@ -167,184 +224,149 @@ function getLikelyMaxPlacement(
     {color: "black", shape: null},
   ]);
 
-  for (
-    let currentTileBoardIndex = 0;
-    currentTileBoardIndex < maxOverlayIndex;
-    currentTileBoardIndex++
-  ) {
-    currentTileRotationLoop: for (
-      let currentTileRotationNumber = 0;
-      currentTileRotationNumber < 4;
-      currentTileRotationNumber++
+  for (const placement of primaryPlacements) {
+    const simulatedTile = placement.overlay;
+    const simulatedOverlay = placement.overlayTopLeft;
+
+    const simulatedPlayed = mergeOverlayAndPlayed({
+      played: played,
+      overlay: simulatedTile,
+      overlayTopLeft: placement.overlayTopLeft,
+    });
+
+    const simulatedScore = placement.botScore; // z
+
+    let topBotNextScores = Array.from({length: numBotTopScores}, () => 0);
+    let lowBotNextScores = Array.from({length: numBotLowScores}, () => 0);
+    let topOpponentNextScores = Array.from(
+      {length: numOpponentTopScores},
+      () => 0,
+    );
+    let lowOpponentNextScores = Array.from(
+      {length: numOpponentLowScores},
+      () => 0,
+    );
+
+    for (
+      let nextTileBoardIndex = 0;
+      nextTileBoardIndex < maxOverlayIndex;
+      nextTileBoardIndex++
     ) {
-      const simulatedTile = tileRotations[currentTileRotationNumber];
-
-      const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
-        overlay: simulatedTile,
-        overlayTopLeft: currentTileBoardIndex,
-        played: played,
-      });
-
-      if (
-        illegalPlacementInfo ===
-        "the tile must make contact with the existing tiles"
+      nextTileRotationLoop: for (
+        let nextTileRotationNumber = 0;
+        nextTileRotationNumber < 4;
+        nextTileRotationNumber++
       ) {
-        // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
-        break currentTileRotationLoop;
-      }
+        const simulatedNextTile = nextTileRotations[nextTileRotationNumber];
 
-      if (!placementIsLegal) {
-        // If placement is not legal for some other reason, skip to the next rotation at this board position
-        continue currentTileRotationLoop;
-      }
+        const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
+          overlay: simulatedNextTile,
+          overlayTopLeft: nextTileBoardIndex,
+          played: simulatedPlayed,
+        });
 
-      const simulatedPlayed = mergeOverlayAndPlayed({
-        played: played,
-        overlay: simulatedTile,
-        overlayTopLeft: currentTileBoardIndex,
-      });
-
-      const simulatedScore = calculateScore(botColor, simulatedPlayed); // z
-
-      let topBotNextScores = Array.from({length: numBotTopScores}, () => 0);
-      let lowBotNextScores = Array.from({length: numBotLowScores}, () => 0);
-      let topOpponentNextScores = Array.from(
-        {length: numOpponentTopScores},
-        () => 0,
-      );
-      let lowOpponentNextScores = Array.from(
-        {length: numOpponentLowScores},
-        () => 0,
-      );
-
-      for (
-        let nextTileBoardIndex = 0;
-        nextTileBoardIndex < maxOverlayIndex;
-        nextTileBoardIndex++
-      ) {
-        nextTileRotationLoop: for (
-          let nextTileRotationNumber = 0;
-          nextTileRotationNumber < 4;
-          nextTileRotationNumber++
+        if (
+          illegalPlacementInfo ===
+          "the tile must make contact with the existing tiles"
         ) {
-          const simulatedNextTile = nextTileRotations[nextTileRotationNumber];
-
-          const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
-            overlay: simulatedNextTile,
-            overlayTopLeft: nextTileBoardIndex,
-            played: simulatedPlayed,
-          });
-
-          if (
-            illegalPlacementInfo ===
-            "the tile must make contact with the existing tiles"
-          ) {
-            // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
-            break nextTileRotationLoop;
-          }
-
-          if (!placementIsLegal) {
-            // If placement is not legal for some other reason, skip to the next rotation at this board position
-            continue nextTileRotationLoop;
-          }
-
-          const simulatedNextPlayed = mergeOverlayAndPlayed({
-            played: simulatedPlayed,
-            overlay: simulatedNextTile,
-            overlayTopLeft: nextTileBoardIndex,
-          });
-
-          const simulatedNextBotScore = calculateScore(
-            botColor,
-            simulatedNextPlayed,
-          );
-          const simulatedNextOpponentScore = calculateScore(
-            opponentColor,
-            simulatedNextPlayed,
-          );
-
-          topBotNextScores = updateTrackedScores(
-            simulatedNextBotScore,
-            topBotNextScores,
-            (oldScore, newScore) => newScore > oldScore,
-          );
-          lowBotNextScores = updateTrackedScores(
-            simulatedNextBotScore,
-            lowBotNextScores,
-            (oldScore, newScore) => newScore < oldScore,
-          );
-          topOpponentNextScores = updateTrackedScores(
-            simulatedNextOpponentScore,
-            topOpponentNextScores,
-            (oldScore, newScore) => newScore > oldScore,
-          );
-          lowOpponentNextScores = updateTrackedScores(
-            simulatedNextOpponentScore,
-            lowOpponentNextScores,
-            (oldScore, newScore) => newScore < oldScore,
-          );
+          // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
+          break nextTileRotationLoop;
         }
-      }
 
-      // If bot has already scored, optimize for lowest opponent score
-      if (botScore != undefined) {
-        const conglomerateScore =
-          sumArray(topOpponentNextScores) + sumArray(lowOpponentNextScores);
-
-        if (conglomerateScore < (currentBestScore || Infinity)) {
-          currentBestScore = conglomerateScore;
-          currentBestOverlay = simulatedTile;
-          currentBestOverlayTopLeft = currentTileBoardIndex;
+        if (!placementIsLegal) {
+          // If placement is not legal for some other reason, skip to the next rotation at this board position
+          continue nextTileRotationLoop;
         }
+
+        const simulatedNextPlayed = mergeOverlayAndPlayed({
+          played: simulatedPlayed,
+          overlay: simulatedNextTile,
+          overlayTopLeft: nextTileBoardIndex,
+        });
+
+        const simulatedNextBotScore = calculateScore(
+          botColor,
+          simulatedNextPlayed,
+        );
+        const simulatedNextOpponentScore = calculateScore(
+          opponentColor,
+          simulatedNextPlayed,
+        );
+
+        topBotNextScores = updateTrackedScores(
+          simulatedNextBotScore,
+          topBotNextScores,
+          (oldScore, newScore) => newScore > oldScore,
+        );
+        lowBotNextScores = updateTrackedScores(
+          simulatedNextBotScore,
+          lowBotNextScores,
+          (oldScore, newScore) => newScore < oldScore,
+        );
+        topOpponentNextScores = updateTrackedScores(
+          simulatedNextOpponentScore,
+          topOpponentNextScores,
+          (oldScore, newScore) => newScore > oldScore,
+        );
+        lowOpponentNextScores = updateTrackedScores(
+          simulatedNextOpponentScore,
+          lowOpponentNextScores,
+          (oldScore, newScore) => newScore < oldScore,
+        );
       }
-      // If opponent has already scored, optimize for highest bot score
-      else if (opponentScore != undefined) {
-        const conglomerateScore =
-          varY * simulatedScore +
-          sumArray(topBotNextScores) +
-          sumArray(lowBotNextScores);
+    }
 
-        if (conglomerateScore > (currentBestScore || -Infinity)) {
-          currentBestScore = conglomerateScore;
-          currentBestOverlay = simulatedTile;
-          currentBestOverlayTopLeft = currentTileBoardIndex;
-        }
-      }
-      // Otherwise, optimize for highest bot/lowest opponent score
-      else {
-        const conglomerateScore =
-          varY * simulatedScore +
-          sumArray(topBotNextScores) +
-          sumArray(lowBotNextScores) -
-          sumArray(topOpponentNextScores) -
-          sumArray(lowOpponentNextScores);
+    // If bot has already scored, optimize for lowest opponent score
+    if (botScore != undefined) {
+      const conglomerateScore =
+        sumArray(topOpponentNextScores) + sumArray(lowOpponentNextScores);
 
-        if (conglomerateScore > (currentBestScore || -Infinity)) {
-          currentBestScore = conglomerateScore;
-          currentBestOverlay = simulatedTile;
-          currentBestOverlayTopLeft = currentTileBoardIndex;
-
-          if (
-            varW * simulatedScore >
-            sumArray(topOpponentNextScores) +
-              sumArray(lowOpponentNextScores) -
-              numTilesRemainingAdjustment +
-              numTileRemaining
-          ) {
-            andScore = true;
-          } else {
-            andScore = false;
-          }
-        }
-      }
-
-      // If haven't stored a best play yet, store the first legal move so that the bot at least plays something
-      if (
-        currentBestOverlayTopLeft === undefined ||
-        currentBestOverlay === undefined
-      ) {
+      if (conglomerateScore < (currentBestScore || Infinity)) {
+        currentBestScore = conglomerateScore;
         currentBestOverlay = simulatedTile;
-        currentBestOverlayTopLeft = currentTileBoardIndex;
+        currentBestOverlayTopLeft = simulatedOverlay;
+      }
+    }
+
+    // If opponent has already scored, optimize for highest bot score
+    else if (opponentScore != undefined) {
+      const conglomerateScore =
+        varY * simulatedScore +
+        sumArray(topBotNextScores) +
+        sumArray(lowBotNextScores);
+
+      if (conglomerateScore > (currentBestScore || -Infinity)) {
+        currentBestScore = conglomerateScore;
+        currentBestOverlay = simulatedTile;
+        currentBestOverlayTopLeft = simulatedOverlay;
+      }
+    }
+
+    // Otherwise, optimize for highest bot/lowest opponent score
+    else {
+      const conglomerateScore =
+        varY * simulatedScore +
+        sumArray(topBotNextScores) +
+        sumArray(lowBotNextScores) -
+        sumArray(topOpponentNextScores) -
+        sumArray(lowOpponentNextScores);
+
+      if (conglomerateScore > (currentBestScore || -Infinity)) {
+        currentBestScore = conglomerateScore;
+        currentBestOverlay = simulatedTile;
+        currentBestOverlayTopLeft = simulatedOverlay;
+
+        if (
+          varW * simulatedScore >
+          sumArray(topOpponentNextScores) +
+            sumArray(lowOpponentNextScores) -
+            numTilesRemainingAdjustment +
+            numTileRemaining
+        ) {
+          andScore = true;
+        } else {
+          andScore = false;
+        }
       }
     }
   }
@@ -369,6 +391,8 @@ export function playBot(currentGameState: GameState): {
   botOverlayTopLeft: number;
   andScore: boolean;
 } {
+  const numPlacementsToFind = 10;
+
   const botColor = "red";
   const opponentColor = "blue";
 
@@ -382,35 +406,45 @@ export function playBot(currentGameState: GameState): {
   const botHasScored = botScore != undefined;
   const neitherPlayerHasScored = !opponentHasScored && !botHasScored;
 
-  if ((isBotLastTurn && neitherPlayerHasScored) || opponentHasScored) {
-    const {bestScore, bestOverlay, bestOverlayTopLeft} = getMaxPlacement(
-      currentGameState.overlay,
-      currentGameState.played,
-      botColor,
-    );
-
-    // If this is the bot's last turn
-    // OR
-    // if opponent has scored AND bot can score higher
-    // place for highest current score, then score
-    if (isBotLastTurn || (opponentHasScored && bestScore > opponentScore)) {
-      return {
-        botOverlay: bestOverlay,
-        botOverlayTopLeft: bestOverlayTopLeft,
-        andScore: true,
-      };
-    }
-  }
-
-  // Otherwise, try to predict the best placement
-  const {bestOverlay, bestOverlayTopLeft, andScore} = getLikelyMaxPlacement(
-    currentGameState.overlay,
-    currentGameState.played,
-    currentGameState.scores,
+  const [bestBotPlacement, bestBotVsOppPlacements] = findBestPlacements({
+    tileToPlay: currentGameState.overlay,
+    played: currentGameState.played,
     botColor,
     opponentColor,
-    numTileRemaining,
-  );
+    numPlacementsToFind,
+  });
+
+  // If opponent has scored and bot can score higher,
+  // place for highest current score, then score
+  if (opponentHasScored && bestBotPlacement.botScore > opponentScore) {
+    return {
+      botOverlay: bestBotPlacement.overlay,
+      botOverlayTopLeft: bestBotPlacement.overlayTopLeft,
+      andScore: true,
+    };
+  }
+
+  // If neither player has scored and this is the bot's last turn,
+  // place for highest score difference, then score
+  if (neitherPlayerHasScored && isBotLastTurn) {
+    return {
+      botOverlay: bestBotVsOppPlacements[0].overlay,
+      botOverlayTopLeft: bestBotVsOppPlacements[0].overlayTopLeft,
+      andScore: true,
+    };
+  }
+
+  // Otherwise, try to predict the best placement by approximating the next turn
+  // for the best current moves found above
+  const {bestOverlay, bestOverlayTopLeft, andScore} =
+    findBestPlacementsWithSecondary({
+      played: currentGameState.played,
+      botColor,
+      opponentColor,
+      scores: currentGameState.scores,
+      numTileRemaining,
+      primaryPlacements: bestBotVsOppPlacements,
+    });
 
   return {
     botOverlay: bestOverlay,
