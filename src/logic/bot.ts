@@ -19,6 +19,28 @@ const Scenario = {
 
 type Scenario = (typeof Scenario)[keyof typeof Scenario];
 
+export function isOnBoard(
+  boardIndex: number,
+  tileDiameter: number,
+  boardDiameter: number,
+): boolean {
+  // If the tile would go off the bottom of the board, return false
+  const row = Math.floor(boardIndex / boardDiameter);
+
+  if (row + tileDiameter > boardDiameter) {
+    return false;
+  }
+
+  // If the tile would go off the right side of the board, return false
+  const column = boardIndex - row * boardDiameter;
+
+  if (column + tileDiameter > boardDiameter) {
+    return false;
+  }
+
+  return true;
+}
+
 function dropInfinitiesAndSumArray(array: number[]): number {
   const noInfinities = array.filter((i) => i != Infinity && i != -Infinity);
   return noInfinities.reduce(
@@ -33,17 +55,6 @@ function getRotations(tile: Tile): [Tile, Tile, Tile, Tile] {
   const r2 = rotateTile(r1);
   const r3 = rotateTile(r2);
   return [r0, r1, r2, r3];
-}
-
-function getMaxOverlayIndex(played: Square[]): number {
-  const overlayDiameter = 2;
-  const expanseDiameter = Math.sqrt(played.length);
-
-  return (
-    played.length -
-    (overlayDiameter / 2) * expanseDiameter -
-    overlayDiameter / 2
-  );
 }
 
 function getPlacementValue(scenario: Scenario, placement: Placement): number {
@@ -91,12 +102,20 @@ function findBestPlacements({
 
   const rotatedTiles = getRotations(tileToPlay);
 
+  // Tile and board are both square
+  const tileDiameter = Math.sqrt(tileToPlay.length);
+  const boardDiameter = Math.sqrt(played.length);
+
   // for each position on the board, for each rotation at that board position
-  for (
+  boardLoop: for (
     let boardIndex = 0;
-    boardIndex < getMaxOverlayIndex(played);
+    boardIndex < played.length;
     boardIndex++
   ) {
+    if (!isOnBoard(boardIndex, tileDiameter, boardDiameter)) {
+      continue boardLoop;
+    }
+
     rotationLoop: for (
       let rotationNumber = 0;
       rotationNumber < 4;
@@ -198,26 +217,30 @@ function findBestPlacementsWithSecondary({
   const weightY = 4; // y todo get better var name
   const numTilesRemainingWeight = 8;
 
-  const maxOverlayIndex = getMaxOverlayIndex(played);
-
   let currentBestScore;
   let currentBestOverlay; // the tile to play, in the desired rotation
   let currentBestOverlayTopLeft; // the position to play at
   let andScore = false;
 
-  const nextTileRotationsA = getRotations([
+  const nextTileA: Tile = [
     {color: "black", shape: null},
     {color: "red", shape: null},
     {color: "blue", shape: null},
     {color: "black", shape: null},
-  ]);
+  ];
+  const nextTileB: Tile = [
+    {color: "red", shape: null},
+    {color: "red", shape: null},
+    {color: "blue", shape: null},
+    {color: "blue", shape: null},
+  ];
 
-  const nextTileRotationsB = getRotations([
-    {color: "red", shape: null},
-    {color: "red", shape: null},
-    {color: "blue", shape: null},
-    {color: "blue", shape: null},
-  ]);
+  const nextTileRotationsA = getRotations(nextTileA);
+  const nextTileRotationsB = getRotations(nextTileB);
+
+  // Tile and board are both square
+  const tileDiameter = Math.sqrt(nextTileA.length);
+  const boardDiameter = Math.sqrt(played.length);
 
   for (const placement of primaryPlacements) {
     const simulatedTile = placement.overlay;
@@ -248,11 +271,14 @@ function findBestPlacementsWithSecondary({
       () => Infinity,
     );
 
-    for (
+    boardLoop: for (
       let nextTileBoardIndex = 0;
-      nextTileBoardIndex < maxOverlayIndex;
+      nextTileBoardIndex < played.length;
       nextTileBoardIndex++
     ) {
+      if (!isOnBoard(nextTileBoardIndex, tileDiameter, boardDiameter)) {
+        continue boardLoop;
+      }
       nextTileRotationLoop: for (
         let nextTileRotationNumber = 0;
         nextTileRotationNumber < 4;
