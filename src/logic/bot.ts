@@ -3,7 +3,6 @@ import {calculateScore} from "./calculateScore";
 import {canEndTurnQ} from "./canEndTurnQ";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 import {rotateTile} from "./rotateTile";
-import {sumArray} from "./sumArray";
 
 type Placement = {
   botScore: number;
@@ -20,22 +19,12 @@ const Scenario = {
 
 type Scenario = (typeof Scenario)[keyof typeof Scenario];
 
-function updateTrackedScores(
-  newScore: number,
-  scores: number[],
-  comparator: (oldScore: number, newScore: number) => boolean,
-): number[] {
-  const indexToUpdate = scores.findIndex((score) =>
-    comparator(score, newScore),
+function dropInfinitiesAndSumArray(array: number[]): number {
+  const noInfinities = array.filter((i) => i != Infinity && i != -Infinity);
+  return noInfinities.reduce(
+    (currentSum, currentValue) => currentSum + currentValue,
+    0,
   );
-
-  if (indexToUpdate < 0) {
-    return scores;
-  }
-
-  const newScores = [...scores];
-  newScores[indexToUpdate] = newScore;
-  return newScores;
 }
 
 function getRotations(tile: Tile): [Tile, Tile, Tile, Tile] {
@@ -176,6 +165,9 @@ function findBestPlacements({
     }
   }
 
+  // need to sort before returning in case we found less than maxPlacementsToFind and therefore never sorted the list
+  sortPlacements(scenario, bestPlacements);
+
   return bestPlacements;
 }
 
@@ -213,11 +205,18 @@ function findBestPlacementsWithSecondary({
   let currentBestOverlayTopLeft; // the position to play at
   let andScore = false;
 
-  const nextTileRotations = getRotations([
+  const nextTileRotationsA = getRotations([
     {color: "black", shape: null},
     {color: "red", shape: null},
     {color: "blue", shape: null},
     {color: "black", shape: null},
+  ]);
+
+  const nextTileRotationsB = getRotations([
+    {color: "red", shape: null},
+    {color: "red", shape: null},
+    {color: "blue", shape: null},
+    {color: "blue", shape: null},
   ]);
 
   for (const placement of primaryPlacements) {
@@ -232,15 +231,21 @@ function findBestPlacementsWithSecondary({
 
     const simulatedScore = placement.botScore; // z
 
-    let topBotNextScores = Array.from({length: numBotTopScores}, () => 0);
-    let lowBotNextScores = Array.from({length: numBotLowScores}, () => 0);
-    let topOpponentNextScores = Array.from(
-      {length: numOpponentTopScores},
-      () => 0,
+    const topBotNextScores = Array.from(
+      {length: numBotTopScores},
+      () => -Infinity,
     );
-    let lowOpponentNextScores = Array.from(
+    const lowBotNextScores = Array.from(
+      {length: numBotLowScores},
+      () => Infinity,
+    );
+    const topOpponentNextScores = Array.from(
+      {length: numOpponentTopScores},
+      () => -Infinity,
+    );
+    const lowOpponentNextScores = Array.from(
       {length: numOpponentLowScores},
-      () => 0,
+      () => Infinity,
     );
 
     for (
@@ -253,62 +258,78 @@ function findBestPlacementsWithSecondary({
         nextTileRotationNumber < 4;
         nextTileRotationNumber++
       ) {
-        const simulatedNextTile = nextTileRotations[nextTileRotationNumber];
+        nextTileLoop: for (const nextTileRotations of [
+          nextTileRotationsA,
+          nextTileRotationsB,
+        ]) {
+          const simulatedNextTile = nextTileRotations[nextTileRotationNumber];
 
-        const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
-          overlay: simulatedNextTile,
-          overlayTopLeft: nextTileBoardIndex,
-          played: simulatedPlayed,
-        });
+          const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
+            overlay: simulatedNextTile,
+            overlayTopLeft: nextTileBoardIndex,
+            played: simulatedPlayed,
+          });
 
-        if (
-          illegalPlacementInfo ===
-          "the tile must make contact with the existing tiles"
-        ) {
-          // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
-          break nextTileRotationLoop;
+          if (
+            illegalPlacementInfo ===
+            "the tile must make contact with the existing tiles"
+          ) {
+            // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
+            break nextTileRotationLoop;
+          }
+
+          if (!placementIsLegal) {
+            // If placement is not legal for some other reason, skip to the next rotation at this board position
+            continue nextTileLoop;
+          }
+
+          const simulatedNextPlayed = mergeOverlayAndPlayed({
+            played: simulatedPlayed,
+            overlay: simulatedNextTile,
+            overlayTopLeft: nextTileBoardIndex,
+          });
+
+          const simulatedNextBotScore = calculateScore(
+            botColor,
+            simulatedNextPlayed,
+          );
+          const simulatedNextOpponentScore = calculateScore(
+            opponentColor,
+            simulatedNextPlayed,
+          );
+
+          if (simulatedNextBotScore > topBotNextScores[0]) {
+            // replace the lowest score
+            topBotNextScores[0] = simulatedNextBotScore;
+
+            // sort so the list stays low -> high
+            topBotNextScores.sort((a, b) => a - b);
+          }
+
+          if (simulatedNextBotScore < lowBotNextScores[0]) {
+            // replace the highest score
+            lowBotNextScores[0] = simulatedNextBotScore;
+
+            // sort so the list stays high -> low
+            lowBotNextScores.sort((a, b) => b - a);
+          }
+
+          if (simulatedNextOpponentScore > topOpponentNextScores[0]) {
+            // replace the lowest score
+            topOpponentNextScores[0] = simulatedNextOpponentScore;
+
+            // sort so the list stays low -> high
+            topOpponentNextScores.sort((a, b) => a - b);
+          }
+
+          if (simulatedNextOpponentScore < lowOpponentNextScores[0]) {
+            // replace the highest score
+            lowOpponentNextScores[0] = simulatedNextOpponentScore;
+
+            // sort so the list stays high -> low
+            lowOpponentNextScores.sort((a, b) => b - a);
+          }
         }
-
-        if (!placementIsLegal) {
-          // If placement is not legal for some other reason, skip to the next rotation at this board position
-          continue nextTileRotationLoop;
-        }
-
-        const simulatedNextPlayed = mergeOverlayAndPlayed({
-          played: simulatedPlayed,
-          overlay: simulatedNextTile,
-          overlayTopLeft: nextTileBoardIndex,
-        });
-
-        const simulatedNextBotScore = calculateScore(
-          botColor,
-          simulatedNextPlayed,
-        );
-        const simulatedNextOpponentScore = calculateScore(
-          opponentColor,
-          simulatedNextPlayed,
-        );
-
-        topBotNextScores = updateTrackedScores(
-          simulatedNextBotScore,
-          topBotNextScores,
-          (oldScore, newScore) => newScore > oldScore,
-        );
-        lowBotNextScores = updateTrackedScores(
-          simulatedNextBotScore,
-          lowBotNextScores,
-          (oldScore, newScore) => newScore < oldScore,
-        );
-        topOpponentNextScores = updateTrackedScores(
-          simulatedNextOpponentScore,
-          topOpponentNextScores,
-          (oldScore, newScore) => newScore > oldScore,
-        );
-        lowOpponentNextScores = updateTrackedScores(
-          simulatedNextOpponentScore,
-          lowOpponentNextScores,
-          (oldScore, newScore) => newScore < oldScore,
-        );
       }
     }
 
@@ -318,23 +339,24 @@ function findBestPlacementsWithSecondary({
         // Care about higher bot score
         conglomerateScore =
           weightY * simulatedScore +
-          sumArray(topBotNextScores) +
-          sumArray(lowBotNextScores);
+          dropInfinitiesAndSumArray(topBotNextScores) +
+          dropInfinitiesAndSumArray(lowBotNextScores);
         break;
       case Scenario.BotScored:
         // Care about lower opponent score (hence the negative)
         conglomerateScore = -(
-          sumArray(topOpponentNextScores) + sumArray(lowOpponentNextScores)
+          dropInfinitiesAndSumArray(topOpponentNextScores) +
+          dropInfinitiesAndSumArray(lowOpponentNextScores)
         );
         break;
       case Scenario.NeitherScored:
         // Care about higher bot-opponent score diff
         conglomerateScore =
           weightY * simulatedScore +
-          sumArray(topBotNextScores) +
-          sumArray(lowBotNextScores) -
-          sumArray(topOpponentNextScores) -
-          sumArray(lowOpponentNextScores);
+          dropInfinitiesAndSumArray(topBotNextScores) +
+          dropInfinitiesAndSumArray(lowBotNextScores) -
+          dropInfinitiesAndSumArray(topOpponentNextScores) -
+          dropInfinitiesAndSumArray(lowOpponentNextScores);
     }
 
     if (conglomerateScore > (currentBestScore ?? -Infinity)) {
@@ -345,8 +367,8 @@ function findBestPlacementsWithSecondary({
       if (scenario === Scenario.NeitherScored) {
         andScore =
           weightW * simulatedScore >
-          sumArray(topOpponentNextScores) +
-            sumArray(lowOpponentNextScores) -
+          dropInfinitiesAndSumArray(topOpponentNextScores) +
+            dropInfinitiesAndSumArray(lowOpponentNextScores) -
             numTilesRemainingWeight +
             numTileRemaining;
       }
