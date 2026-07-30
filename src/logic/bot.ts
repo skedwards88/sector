@@ -19,6 +19,17 @@ const Scenario = {
 
 type Scenario = (typeof Scenario)[keyof typeof Scenario];
 
+export type BotParameters = {
+  numBotTopScores: number; // x1
+  numBotLowScores: number; // x2
+  numOpponentTopScores: number; // x3
+  numOpponentLowScores: number; // x4
+  weightW: number;
+  weightY: number;
+  numTilesRemainingWeight: number;
+  maxPlacementsToFind: number;
+};
+
 export function isOnBoard(
   boardIndex: number,
   tileDiameter: number,
@@ -197,6 +208,7 @@ function findBestPlacementsWithSecondary({
   numTileRemaining,
   primaryPlacements,
   scenario,
+  botParameters,
 }: {
   played: Square[];
   botColor: PlayerColor;
@@ -204,18 +216,21 @@ function findBestPlacementsWithSecondary({
   numTileRemaining: number;
   primaryPlacements: Placement[];
   scenario: Scenario;
+  botParameters: BotParameters;
 }): {
   bestOverlay: Tile;
   bestOverlayTopLeft: number;
   andScore: boolean;
 } {
-  const numBotTopScores = 4; // x1
-  const numBotLowScores = 4; // x2
-  const numOpponentTopScores = 4; // x3
-  const numOpponentLowScores = 4; // x4
-  const weightW = 3; // w todo get better var name
-  const weightY = 4; // y todo get better var name
-  const numTilesRemainingWeight = 8;
+  const {
+    numBotTopScores,
+    numBotLowScores,
+    numOpponentTopScores,
+    numOpponentLowScores,
+    weightW,
+    weightY,
+    numTilesRemainingWeight,
+  } = botParameters;
 
   let currentBestScore;
   let currentBestOverlay; // the tile to play, in the desired rotation
@@ -416,15 +431,25 @@ function findBestPlacementsWithSecondary({
   };
 }
 
-export function playBot(currentGameState: GameState): {
+export function playBot(
+  currentGameState: GameState,
+  botColor: PlayerColor,
+  botParameters: BotParameters = {
+    numBotTopScores: 4,
+    numBotLowScores: 4,
+    numOpponentTopScores: 4,
+    numOpponentLowScores: 4,
+    weightW: 3,
+    weightY: 4,
+    numTilesRemainingWeight: 10,
+    maxPlacementsToFind: 25,
+  },
+): {
   botOverlay: Tile;
   botOverlayTopLeft: number;
   andScore: boolean;
 } {
-  const maxPlacementsToFind = 10;
-
-  const botColor = "red";
-  const opponentColor = "blue";
+  const opponentColor: PlayerColor = botColor === "red" ? "blue" : "red";
 
   const numTileRemaining = currentGameState.deck.length;
 
@@ -447,7 +472,7 @@ export function playBot(currentGameState: GameState): {
     played: currentGameState.played,
     botColor,
     opponentColor,
-    maxPlacementsToFind,
+    maxPlacementsToFind: botParameters.maxPlacementsToFind,
     scenario,
   });
   const bestPlacement = bestPlacements[bestPlacements.length - 1];
@@ -485,6 +510,7 @@ export function playBot(currentGameState: GameState): {
       numTileRemaining,
       primaryPlacements: bestPlacements,
       scenario,
+      botParameters,
     });
 
   return {

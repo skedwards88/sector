@@ -122,7 +122,10 @@ export function gameReducer(currentGameState, payload) {
       isTie: newIsTie,
     };
   } else if (payload.action === "playBot") {
-    const {botOverlay, botOverlayTopLeft, andScore} = playBot(currentGameState);
+    const {botOverlay, botOverlayTopLeft, andScore} = playBot(
+      currentGameState,
+      "blue",
+    );
 
     // then call the reducer with the endTurn action
     return gameReducer(currentGameState, {
