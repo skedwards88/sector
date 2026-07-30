@@ -13,7 +13,7 @@ export default function Heart({setDisplay}) {
         {
           <Share
             appName={"Sector"}
-            url={"https://skedwards88.github.io/sector/"}
+            url={"https://sector.twistedtrailgames.com/"}
             text={"Check out this quick spatial strategy game!"}
           ></Share>
         }
@@ -21,7 +21,7 @@ export default function Heart({setDisplay}) {
         {<hr></hr>}
         {`\n`}
         {`Want more games? Check `}
-        <a href="https://skedwards88.github.io/">these</a>
+        <a href="https://twistedtrailgames.com">these</a>
         {` out. `}
         {`\n\n`}
         {<hr></hr>}
