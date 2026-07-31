@@ -21,7 +21,6 @@ export default function GameText({
   illegalPlacementInfo,
   playerScore,
   opponentScore,
-  currentColor,
 }) {
   let feedback = "";
   if (overlayTopLeft === undefined) {
@@ -37,15 +36,5 @@ export default function GameText({
     }
   }
 
-  return (
-    <div id="gameText">
-      <div id="redScore" className="score">
-        {currentColor === "red" ? playerScore : opponentScore}
-      </div>
-      <div id="blueScore" className="score">
-        {currentColor === "blue" ? playerScore : opponentScore}
-      </div>
-      <div id="terminal">{feedback}</div>
-    </div>
-  );
+  return <div id="terminal">{feedback}</div>;
 }

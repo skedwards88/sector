@@ -67,7 +67,6 @@ export default function Game({
         illegalPlacementInfo={illegalPlacementInfo}
         playerScore={playerScore}
         opponentScore={opponentScore}
-        currentColor={currentColor}
       ></GameText>
 
       <Board
