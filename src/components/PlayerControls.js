@@ -1,67 +1,70 @@
 import React from "react";
-import {calculateScore} from "../logic/calculateScore";
-import {mergeOverlayAndPlayed} from "../logic/mergeOverlayAndPlayed";
 import Deck from "./Deck";
-import {canEndTurnQ} from "../logic/canEndTurnQ";
 
-function PlayerGoal({playerScore, opponentScore, potentialScore}) {
-  if (playerScore === undefined && opponentScore === undefined) {
-    return "goal: maximize your score";
-  }
+function EndTurnButton({
+  placementIsLegal,
+  opponentScore,
+  potentialScore,
+  dispatchGameState,
+}) {
+  // Disable if the placement is invalid (obviously)
+  // and if the current score is more than the opponent score (because you should end+score instead)
+  const isDisabled =
+    !placementIsLegal ||
+    (opponentScore != undefined && potentialScore > opponentScore);
+
+  return (
+    <button
+      id="endTurn"
+      disabled={isDisabled}
+      onClick={() => dispatchGameState({action: "endTurn"})}
+    >
+      end turn
+    </button>
+  );
+}
+
+function EndTurnAndScoreButton({
+  placementIsLegal,
+  opponentScore,
+  playerScore,
+  potentialScore,
+  dispatchGameState,
+}) {
+  // Don't show the button if the player has already scored
   if (playerScore != undefined) {
-    return `goal: prevent your opponent from ending their turn with more than ${playerScore} points`;
+    return <></>;
   }
 
-  if (opponentScore != undefined) {
-    return `goal: end your turn with more than ${opponentScore} points\n\n> current points: ${potentialScore}`;
-  }
+  // Disable if the placement is invalid (obviously)
+  // and if the current score is less than or equal to the opponent score
+  // (because scoring would automatically lose)
+  const isDisabled =
+    !placementIsLegal ||
+    (opponentScore != undefined && potentialScore <= opponentScore);
 
-  return "";
+  return (
+    <button
+      id="endAndScore"
+      disabled={isDisabled}
+      onClick={() => dispatchGameState({action: "endTurn", andScore: true})}
+    >
+      {`end turn; score ${potentialScore}`}
+    </button>
+  );
 }
 
 export default function PlayerControls({
-  isBlueTurn,
-  scores,
   overlayTopLeft,
   dispatchGameState,
-  played,
   overlay,
   deck,
+  placementIsLegal,
+  currentColor,
+  playerScore,
+  opponentScore,
+  potentialScore,
 }) {
-  const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
-    overlayTopLeft: overlayTopLeft,
-    played: played,
-    overlay: overlay,
-  });
-
-  const currentColor = isBlueTurn ? "blue" : "red";
-  const opponentColor = isBlueTurn ? "red" : "blue";
-  const playerScore = scores[currentColor];
-  const opponentScore = scores[opponentColor];
-
-  const potentialScore = calculateScore(
-    currentColor,
-    overlayTopLeft === undefined
-      ? played
-      : mergeOverlayAndPlayed({
-          played: played,
-          overlay: overlay,
-          overlayTopLeft: overlayTopLeft,
-        }),
-  );
-
-  let feedback = "> drag to move; tap to rotate\n\n";
-  if (overlayTopLeft === undefined) {
-    feedback += `> move the tile into the expanse\n\n`;
-  } else if (!placementIsLegal) {
-    feedback += `> ${illegalPlacementInfo}\n\n`;
-  }
-  feedback += `> ${PlayerGoal({
-    playerScore,
-    opponentScore,
-    potentialScore,
-  })}\n\n`;
-
   return (
     <div id="playerScreen">
       <div id="playerControls" className={currentColor}>
@@ -75,29 +78,19 @@ export default function PlayerControls({
             deck={deck}
           ></Deck>
         )}
-        <button
-          id="endTurn"
-          disabled={!placementIsLegal}
-          onClick={() => dispatchGameState({action: "endTurn"})}
-          className={currentColor}
-        >
-          {`end turn`}
-        </button>
-        {playerScore === undefined && opponentScore === undefined ? (
-          <button
-            id="endAndScore"
-            disabled={!placementIsLegal}
-            className={currentColor}
-            onClick={() =>
-              dispatchGameState({action: "endTurn", andScore: true})
-            }
-          >
-            {`end turn; score ${potentialScore}`}
-          </button>
-        ) : (
-          <div></div>
-        )}
-        <div id="terminal">{feedback}</div>
+        <EndTurnButton
+          placementIsLegal={placementIsLegal}
+          opponentScore={opponentScore}
+          potentialScore={potentialScore}
+          dispatchGameState={dispatchGameState}
+        ></EndTurnButton>
+        <EndTurnAndScoreButton
+          placementIsLegal={placementIsLegal}
+          opponentScore={opponentScore}
+          playerScore={playerScore}
+          potentialScore={potentialScore}
+          dispatchGameState={dispatchGameState}
+        ></EndTurnAndScoreButton>
       </div>
 
       <div id="sheen"></div>

@@ -1,32 +1,61 @@
 import React from "react";
+import ControlBar from "./ControlBar";
+import Board from "./Board";
 
-export default function GameOver({scores, isTie, dispatchGameState}) {
-  const redScore = scores.red;
-  const blueScore = scores.blue;
+export default function GameOver({
+  gameState,
+  dispatchGameState,
+  setDisplay,
+  setInstallPromptEvent,
+  showInstallButton,
+  installPromptEvent,
+}) {
+  const redScore = gameState.scores.red;
+  const blueScore = gameState.scores.blue;
 
-  if (isTie) {
-    return (
-      <div id="gameOver">{`Tie!\n\nRed: ${redScore}\n\nBlue: ${blueScore}`}</div>
-    );
-  }
-
+  const isTie = gameState.isTie;
   const winner = redScore > blueScore ? "red" : "blue";
 
   return (
-    <div id="gameOver" className={winner}>
-      <div>{`\n\n${winner.toUpperCase()} wins!\n\n${Math.max(
-        redScore,
-        blueScore,
-      )} vs ${Math.min(redScore, blueScore)}`}</div>
-      <button
-        onClick={() => {
-          dispatchGameState({
-            action: "newGame",
-          });
-        }}
-      >
-        new game
-      </button>
+    <div id="app">
+      <ControlBar
+        dispatchGameState={dispatchGameState}
+        setDisplay={setDisplay}
+        setInstallPromptEvent={setInstallPromptEvent}
+        showInstallButton={showInstallButton}
+        installPromptEvent={installPromptEvent}
+      ></ControlBar>
+
+      <div id="gameOver" className={winner}>
+        <div>{isTie ? "Tie!" : `${winner.toUpperCase()} wins!`}</div>
+        <div>
+          {`${Math.max(redScore, blueScore)} vs ${Math.min(
+            redScore,
+            blueScore,
+          )}`}
+        </div>
+      </div>
+
+      <Board
+        dispatchGameState={dispatchGameState}
+        gameState={gameState}
+      ></Board>
+
+      <div id="playerScreen">
+        <div id="playerControls" className={winner}>
+          <button
+            id="gameOverNewGame"
+            onClick={() => {
+              dispatchGameState({
+                action: "newGame",
+              });
+            }}
+          >
+            new game
+          </button>
+        </div>
+        <div id="sheen"></div>
+      </div>
     </div>
   );
 }
