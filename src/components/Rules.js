@@ -53,12 +53,10 @@ export default function Rules({setDisplay}) {
 
   return (
     <div id="app" className="rules">
-      <div id="ruleControlsPlaceholder"></div>
-
       <div id="rulesBoardPlaceholder">
         <div className="ruleImage" id={rules[ruleNumber].image}></div>
       </div>
-
+      <div id="rulesTerminal">{formattedRuleText}</div>
       <div id="playerScreen">
         <div id="ruleControls">
           <div id="ruleButtons">
@@ -80,8 +78,6 @@ export default function Rules({setDisplay}) {
               Next
             </button>
           </div>
-
-          <div id="terminal">{formattedRuleText}</div>
         </div>
 
         <div id="sheen"></div>
