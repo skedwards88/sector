@@ -1,14 +1,16 @@
 body {
   --quad: 9vmin;
-  --default-font-size: calc(var(--quad) * 0.4);
-  --dark-color: #000;
+  --default-font-size: calc(var(--quad) * 0.45);
+  --dark-color: rgb(0 0 0);
   --light-color: rgb(239 239 239);
+  --blue-color: rgb(0 0 255);
+  --red-color: rgb(255 0 0);
+  --border-radius: 5px;
 
   font-family: monospace;
   font-weight: bold;
   background-color: var(--dark-color);
   color: var(--light-color);
-  background-image: url("./images/icons/stars.svg");
   font-size: var(--default-font-size);
   display: flex;
   justify-content: center;
@@ -22,10 +24,11 @@ body {
   justify-items: center;
   display: grid;
   grid-template-areas:
-    "controls"
+    "controlBar"
+    "terminal"
     "board"
-    "subBoard";
-  grid-template-rows: auto auto 1fr;
+    "playerControls";
+  grid-template-rows: auto 1fr auto calc(var(--quad) * 2.5);
 }
 
 button {
@@ -46,19 +49,14 @@ button {
 
 /* Controls */
 
-#controls,
-#ruleControlsPlaceholder {
+#controls {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  grid-area: controls;
+  grid-area: controlBar;
   width: 100%;
   height: var(--quad);
   margin-bottom: 5px;
-}
-
-#ruleControlsPlaceholder {
-  background-color: rgb(0 0 0 / 0%);
 }
 
 #controls > button {
@@ -145,11 +143,11 @@ button {
 }
 
 .square.red {
-  background-color: red;
+  background-color: var(--red-color);
 }
 
 .square.blue {
-  background-color: blue;
+  background-color: var(--blue-color);
 }
 
 .square.black {
@@ -219,6 +217,10 @@ button {
   display: grid;
 }
 
+#gameOverNewGame {
+    grid-area: deck;
+}
+
 #deckAndRemaining > * {
   grid-column-start: 1;
   grid-row-start: 1;
@@ -240,20 +242,17 @@ button {
   justify-content: center;
   text-align: center;
   white-space: pre-wrap;
+  background-color: black;
 }
 
 #deckRemaining.hidden {
   display: none;
 }
 
-#deck.hidden,
-.hidden {
-  border: 0;
-}
-
 #playerScreen {
-  grid-area: subBoard;
+  grid-area: playerControls;
   display: grid;
+  width: 100%;
 }
 
 #playerScreen > * {
@@ -261,72 +260,36 @@ button {
   grid-row-start: 1;
 }
 
-#sheen {
+#sheen,#gameOver {
   width: 100%;
   height: 100%;
   pointer-events: none;
   background: linear-gradient(
-      173deg,
+      179deg,
+      rgb(250 250 250 / 80%),
+      rgb(250 250 250 / 0%) 20px
+    ),
+    linear-gradient(
+      98deg,
       rgb(250 250 250 / 80%),
       rgb(250 250 250 / 0%) 5%
-    ),
-    linear-gradient(91deg, rgb(250 250 250 / 80%), rgb(250 250 250 / 0%) 5%);
-
-  /* background: linear-gradient(180deg, rgba(250, 250, 250, 0.8), rgba(250, 250, 250, 0) 10%); */
-
-  /* background: linear-gradient(135deg, rgba(250, 250, 250, 0.8), rgba(250, 250, 250, 0) 30%); */
-
-  /* background: radial-gradient(
-    ellipse farthest-corner at 90% 90%,
-    rgba(43, 0, 255, 0) 60%,
-    rgba(247, 248, 248, 0.7)
-  ); */
+      );
 }
 
 #playerControls {
   display: grid;
   grid-template-areas:
-    "endTurn deck endAndScore"
-    "terminal terminal terminal";
-  grid-template-rows: auto 1fr;
+    "endTurn deck endAndScore";
   grid-template-columns: 1fr auto 1fr;
+  padding: 10px 0;
 }
 
 #playerControls.red {
-  background-color: red;
+  background-color: var(--red-color);
 }
 
 #playerControls.blue {
-  background-color: rgb(7 7 246);
-}
-
-#playerControls > button {
-  border-radius: 5px;
-  border: 0;
-  margin: 5px;
-  padding: 5px;
-  color: white;
-  height: calc(var(--quad) * 1.1);
-  align-self: center;
-}
-
-#playerControls > button.blue {
-  background-color: rgb(51 0 255);
-  box-shadow:
-    0 0 0.5rem #00ddfe,
-    inset 0 0 0.5rem #00ddfe;
-  text-shadow:
-    0 0 5px #00ddfe,
-    0 0 5px #00ddfe;
-}
-
-#playerControls > button.red {
-  background-color: rgb(255 0 0);
-  box-shadow:
-    0 0 0.5rem #fefa00,
-    inset 0 0 0.5rem #fefa00;
-  font-weight: lighter;
-  text-shadow: 0 0 5px #fefa00;
+  background-color: var(--blue-color);
 }
 
 #endTurn {
@@ -341,9 +304,16 @@ button {
   grid-area: terminal;
   white-space: pre-wrap;
   text-align: left;
-  background-color: black;
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+}
+
+#rulesTerminal {
+  grid-area: terminal;
+  white-space: pre-wrap;
+  text-align: left;
   margin: 5px;
-  padding: 15px;
 }
 
 #gameOver {
@@ -354,19 +324,19 @@ button {
   text-align: center;
   font-size: calc(var(--default-font-size) * 1.5);
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 #gameOver > * {
-  margin-bottom: calc(0.5 * var(--quad));
+  margin: calc(0.5 * var(--quad));
 }
 
 #gameOver.red {
-  background: linear-gradient(rgb(255 0 0 / 60%) 40%, rgb(0 0 0 / 20%));
+  background-color: var(--red-color);
 }
 
 #gameOver.blue {
-  background: linear-gradient(rgb(0 0 255 / 60%) 40%, rgb(0 0 0 / 20%));
+  background-color: var(--blue-color);
 }
 
 .rules {
@@ -411,20 +381,11 @@ button {
   background-image: url("./images/rules/example_sectors.webp");
 }
 
-#ruleControls {
-  display: grid;
-  grid-template-areas:
-    "buttons"
-    "terminal";
-  grid-template-rows: auto 1fr;
-  background-color: rgb(135 135 149);
-}
-
 #ruleButtons {
   display: grid;
-  grid-area: buttons;
+  background-color: rgb(135 135 149);
   grid-template-columns: 1fr 1fr 1fr;
-  width: calc(var(--quad) * 10);
+  padding: 10px 0;
 }
 
 #ruleButtons > button,
@@ -445,6 +406,27 @@ button {
     0 0 5px #bac5c7;
 }
 
+#playerControls > button {
+  border-radius: 5px;
+  border: 0;
+  margin: 10px;
+  padding: 5px 10px;
+  color: white;
+  height: calc(var(--quad) * 1.1);
+  align-self: center;
+  box-shadow:
+    0 0 0.5rem rgb(123 123 123),
+    inset 0 0 0.9rem rgb(47 47 47);
+}
+
+#playerControls.blue > button {
+  color: var(--blue-color);
+}
+
+#playerControls.red > button {
+  color: var(--red-color);
+}
+
 #ruleButtons > button:disabled {
   color: rgb(225 223 223);
   touch-action: none;
@@ -453,7 +435,8 @@ button {
 }
 
 #playerControls > button:disabled {
-  color: rgb(161 161 161);
+  background-color: rgb(161 161 161);
+  color: rgb(81 76 76);
   touch-action: none;
   text-shadow: none;
   box-shadow: inset 0 0 0.5rem #000;
@@ -465,15 +448,3 @@ button {
     --quad: 50px;
   }
 }
-
-/* wider screens */
-
-/* @media (orientation: landscape) {
-  #app {
-    grid-template: ". controls" auto "matrix result" auto "matrix clues" 1fr / auto 1fr;
-  }
-
-  .matrix {
-    align-self: self-start;
-  }
-} */

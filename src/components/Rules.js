@@ -53,35 +53,29 @@ export default function Rules({setDisplay}) {
 
   return (
     <div id="app" className="rules">
-      <div id="ruleControlsPlaceholder"></div>
-
       <div id="rulesBoardPlaceholder">
         <div className="ruleImage" id={rules[ruleNumber].image}></div>
       </div>
-
+      <div id="rulesTerminal">{formattedRuleText}</div>
       <div id="playerScreen">
-        <div id="ruleControls">
-          <div id="ruleButtons">
-            <button
-              disabled={ruleNumber === 0}
-              onClick={() => setRuleNumber(Math.max(0, ruleNumber - 1))}
-            >
-              Previous
-            </button>
-            <button className="close" onClick={() => setDisplay("game")}>
-              Close
-            </button>
-            <button
-              disabled={ruleNumber === rules.length - 1}
-              onClick={() =>
-                setRuleNumber(Math.min(ruleNumber + 1, rules.length - 1))
-              }
-            >
-              Next
-            </button>
-          </div>
-
-          <div id="terminal">{formattedRuleText}</div>
+        <div id="ruleButtons">
+          <button
+            disabled={ruleNumber === 0}
+            onClick={() => setRuleNumber(Math.max(0, ruleNumber - 1))}
+          >
+            Previous
+          </button>
+          <button className="close" onClick={() => setDisplay("game")}>
+            Close
+          </button>
+          <button
+            disabled={ruleNumber === rules.length - 1}
+            onClick={() =>
+              setRuleNumber(Math.min(ruleNumber + 1, rules.length - 1))
+            }
+          >
+            Next
+          </button>
         </div>
 
         <div id="sheen"></div>
