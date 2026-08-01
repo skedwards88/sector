@@ -214,18 +214,13 @@ button {
   background-color: rgb(60 59 59);
 }
 
-#deckAndRemaining {
-  grid-area: deck;
-  display: grid;
-}
-
 #gameOverNewGame {
     grid-area: deck;
 }
 
-#deckAndRemaining > * {
-  grid-column-start: 1;
-  grid-row-start: 1;
+#deck,#deckRemaining {
+  grid-area: deck;
+  border: 2px solid white;
 }
 
 #deck {
@@ -233,22 +228,19 @@ button {
   grid-template-columns: repeat(2, var(--quad));
   grid-template-rows: repeat(2, var(--quad));
   justify-content: center;
-  border: 2px solid white;
   width: fit-content;
   align-self: center;
 }
 
 #deckRemaining {
   display: flex;
+  width: calc(var(--quad) * 2);
+  height: calc(var(--quad) * 2);
   align-items: center;
   justify-content: center;
   text-align: center;
   white-space: pre-wrap;
   background-color: black;
-}
-
-#deckRemaining.hidden {
-  display: none;
 }
 
 #playerScreen {
