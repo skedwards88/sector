@@ -1,16 +1,11 @@
 import React from "react";
-import {polyfill} from "mobile-drag-drop";
 
-polyfill();
+function handlePointerDown({event, overlayIndex, dispatchGameState}) {
+  // Release pointer capture so that pointer events can fire on other elements
+  event.currentTarget.releasePointerCapture(event.pointerId);
 
-function handleDragStart({event, overlayIndex, dispatchGameState}) {
-  const canvas = document.querySelector("canvas");
-  event.dataTransfer.setDragImage(canvas, 0, 0);
+  event.preventDefault();
 
-  // Since we want to know the overlayIndex in the dragEnter event,
-  // store that info in the game state
-  // instead of using `event.dataTransfer.setData`
-  // since the dragEnter event can't use `event.dataTransfer.getData`
   dispatchGameState({action: "dragStart", draggedOverlayIndex: overlayIndex});
 }
 
@@ -37,16 +32,14 @@ export default function Deck({
     for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
       deckDivs.push(
         <div
-          draggable
-          onDragStart={(event) =>
-            handleDragStart({event, overlayIndex, dispatchGameState})
+          onPointerDown={(event) =>
+            handlePointerDown({event, overlayIndex, dispatchGameState})
           }
           onClick={() => dispatchGameState({action: "rotate"})}
           className={`square overlay ${overlay[overlayIndex].color || ""} ${
             overlay[overlayIndex].shape || ""
           }`}
           key={`overlay${overlayIndex}`}
-          onDragEnd={() => console.log("drag end")}
         ></div>,
       );
     }

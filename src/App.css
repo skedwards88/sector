@@ -128,6 +128,7 @@ button {
   padding: 5px;
   background-origin: content-box;
   box-sizing: border-box;
+  touch-action: none;
 }
 
 .moon {
@@ -214,6 +215,7 @@ button {
   border: 1px solid white;
   width: fit-content;
   align-self: center;
+  touch-action: none;
 }
 
 #played {
