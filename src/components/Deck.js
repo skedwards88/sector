@@ -30,7 +30,7 @@ function DeckAsTile({overlay, dispatchGameState}) {
 }
 
 function DeckAsNumRemaining({deck}) {
-  return <div id="deckRemaining">{`${deck.length - 1}\nleft`}</div>;
+  return <div id="deckRemaining">{`${deck.length}\nleft`}</div>;
 }
 
 export default function Deck({
