@@ -45,7 +45,7 @@ export default function GameOver({
           <button
             id="gameOverNewGame"
             onClick={() => {
-              setDisplay("home")
+              setDisplay("home");
             }}
           >
             new game

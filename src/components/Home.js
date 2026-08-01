@@ -1,11 +1,10 @@
 import React from "react";
-import logo from "../images/logo.svg"
+import logo from "../images/logo.svg";
 
 export default function Home({dispatchGameState, setDisplay}) {
   return (
     <div className="app" id="home">
-
-      <img src={logo} alt="Sector logo" id="logo"/>
+      <img src={logo} alt="Sector logo" id="logo" />
 
       <button
         onClick={() => {
@@ -23,7 +22,7 @@ export default function Home({dispatchGameState, setDisplay}) {
       >
         human vs bot
       </button>
-      <button onClick={() =>setDisplay("rules")}>rules</button>
+      <button onClick={() => setDisplay("rules")}>rules</button>
     </div>
   );
 }

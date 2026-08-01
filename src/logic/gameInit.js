@@ -2,7 +2,7 @@ import {deck} from "./deck";
 import {shuffleArray} from "./shuffleArray";
 import {v4 as uuidv4} from "uuid";
 
-export function gameInit({expanseSize = 10, isVsBot= false}) {
+export function gameInit({expanseSize = 10, isVsBot = false}) {
   const shuffledDeck = shuffleArray(deck);
 
   // The played quadrants are empty except for a single tile in the middle of the board

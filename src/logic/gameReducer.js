@@ -39,8 +39,7 @@ function updateDraggedOverlayIndex({
 
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
-    return gameInit({isVsBot: payload.isVsBot
-    });
+    return gameInit({isVsBot: payload.isVsBot});
   } else if (payload.action === "rotate") {
     let newOverlay = rotateTile(currentGameState.overlay);
     return {

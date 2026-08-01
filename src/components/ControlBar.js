@@ -12,7 +12,7 @@ export default function ControlBar({
       <button
         id="newGameButton"
         onClick={() => {
-          setDisplay("home")
+          setDisplay("home");
         }}
       ></button>
       <button id="heartButton" onClick={() => setDisplay("heart")}></button>
