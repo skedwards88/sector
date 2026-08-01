@@ -11,9 +11,10 @@ import {
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {inferEventsToLog} from "../logic/inferEventsToLog";
+import Home from "./Home";
 
 export default function App() {
-  const [display, setDisplay] = React.useState("game");
+  const [display, setDisplay] = React.useState("home");
   const [installPromptEvent, setInstallPromptEvent] = React.useState();
   const [showInstallButton, setShowInstallButton] = React.useState(true);
 
@@ -70,11 +71,24 @@ export default function App() {
     previousStateRef.current = gameState;
   }, [gameState, sessionId, userId]);
 
+  const gameOver =
+    gameState.scores.blue != undefined && gameState.scores.red != undefined;
+  if (gameState && gameState.isVsBot && !gameState.isBlueTurn && !gameOver) {
+    dispatchGameState({action: "playBot"});
+  }
+
   switch (display) {
     case "heart":
       return <Heart setDisplay={setDisplay}></Heart>;
     case "rules":
       return <Rules setDisplay={setDisplay}></Rules>;
+    case "home":
+      return (
+        <Home
+          dispatchGameState={dispatchGameState}
+          setDisplay={setDisplay}
+        ></Home>
+      );
     default:
       return (
         <Game

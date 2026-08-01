@@ -6,6 +6,8 @@ function EndTurnButton({
   opponentScore,
   potentialScore,
   dispatchGameState,
+  overlay,
+  overlayTopLeft,
 }) {
   // Disable if the placement is invalid (obviously)
   // and if the current score is more than the opponent score (because you should end+score instead)
@@ -17,7 +19,9 @@ function EndTurnButton({
     <button
       id="endTurn"
       disabled={isDisabled}
-      onClick={() => dispatchGameState({action: "endTurn"})}
+      onClick={() =>
+        dispatchGameState({action: "endTurn", overlay, overlayTopLeft})
+      }
     >
       end turn
     </button>
@@ -30,6 +34,8 @@ function EndTurnAndScoreButton({
   playerScore,
   potentialScore,
   dispatchGameState,
+  overlay,
+  overlayTopLeft,
 }) {
   // Don't show the button if the player has already scored
   if (playerScore != undefined) {
@@ -47,7 +53,14 @@ function EndTurnAndScoreButton({
     <button
       id="endAndScore"
       disabled={isDisabled}
-      onClick={() => dispatchGameState({action: "endTurn", andScore: true})}
+      onClick={() =>
+        dispatchGameState({
+          action: "endTurn",
+          overlay,
+          overlayTopLeft,
+          andScore: true,
+        })
+      }
     >
       {`end turn; score ${potentialScore}`}
     </button>
@@ -83,6 +96,8 @@ export default function PlayerControls({
           opponentScore={opponentScore}
           potentialScore={potentialScore}
           dispatchGameState={dispatchGameState}
+          overlay={overlay}
+          overlayTopLeft={overlayTopLeft}
         ></EndTurnButton>
         <EndTurnAndScoreButton
           placementIsLegal={placementIsLegal}
@@ -90,6 +105,8 @@ export default function PlayerControls({
           playerScore={playerScore}
           potentialScore={potentialScore}
           dispatchGameState={dispatchGameState}
+          overlay={overlay}
+          overlayTopLeft={overlayTopLeft}
         ></EndTurnAndScoreButton>
       </div>
 

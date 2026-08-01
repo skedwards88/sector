@@ -8,12 +8,13 @@ export function canEndTurnQ({overlay, overlayTopLeft, played}) {
 
   const expanseSize = Math.sqrt(played.length);
 
-  // If blue is on red or vice versa, placement is invalid
+  let contactFound = false;
   for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
     const adjustedIndex =
       overlayIndex < 2
         ? overlayTopLeft + overlayIndex
         : overlayTopLeft + expanseSize + overlayIndex - 2;
+    // If blue is on red or vice versa, placement is invalid
     if (
       (played[adjustedIndex].color === "red" &&
         overlay[overlayIndex].color === "blue") ||
@@ -22,15 +23,7 @@ export function canEndTurnQ({overlay, overlayTopLeft, played}) {
     ) {
       return [false, "red and blue may not overlap"];
     }
-  }
 
-  // If the overlay doesn't overlap or share an edge with any played spaces, placement is invalid
-  let contactFound = false;
-  for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
-    const adjustedIndex =
-      overlayIndex < 2
-        ? overlayTopLeft + overlayIndex
-        : overlayTopLeft + expanseSize + overlayIndex - 2;
     if (
       played[adjustedIndex].color ||
       played[adjustedIndex - expanseSize]?.color ||
@@ -39,10 +32,10 @@ export function canEndTurnQ({overlay, overlayTopLeft, played}) {
       played[adjustedIndex + 1]?.color
     ) {
       contactFound = true;
-      break;
     }
   }
 
+  // If the overlay doesn't overlap or share an edge with any played spaces, placement is invalid
   if (!contactFound) {
     return [false, "the tile must make contact with the existing tiles"];
   }

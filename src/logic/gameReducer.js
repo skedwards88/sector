@@ -1,7 +1,8 @@
-import cloneDeep from "lodash.clonedeep";
 import {calculateScore} from "./calculateScore.js";
 import {gameInit} from "./gameInit.js";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
+import {rotateTile} from "./rotateTile.js";
+import {playBot} from "./bot";
 
 function updateDraggedOverlayIndex({
   draggedOverlayIndex,
@@ -38,19 +39,9 @@ function updateDraggedOverlayIndex({
 
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
-    return gameInit({
-      ...currentGameState,
-      ...payload,
-      useSaved: false,
-    });
+    return gameInit({isVsBot: payload.isVsBot});
   } else if (payload.action === "rotate") {
-    let oldOverlay = currentGameState.overlay;
-    let newOverlay = [
-      oldOverlay[2],
-      oldOverlay[0],
-      oldOverlay[3],
-      oldOverlay[1],
-    ];
+    let newOverlay = rotateTile(currentGameState.overlay);
     return {
       ...currentGameState,
       overlay: newOverlay,
@@ -89,23 +80,23 @@ export function gameReducer(currentGameState, payload) {
     };
   } else if (payload.action === "endTurn") {
     // In all cases, update the board
-    let newPlayed = mergeOverlayAndPlayed({
+    const newPlayed = mergeOverlayAndPlayed({
       played: currentGameState.played,
-      overlay: currentGameState.overlay,
-      overlayTopLeft: currentGameState.overlayTopLeft,
+      overlay: payload.overlay,
+      overlayTopLeft: payload.overlayTopLeft,
     });
 
     // Draw the next tile from the deck
     // If this was the last turn, the deck is empty and
     //   the drawn tile will be `undefined`
-    let newDeck = cloneDeep(currentGameState.deck);
+    let newDeck = structuredClone(currentGameState.deck);
     const playerColor = currentGameState.isBlueTurn ? "blue" : "red";
     const opponentColor = currentGameState.isBlueTurn ? "red" : "blue";
 
     const newOverlay = newDeck.pop();
 
     // Calculate the score in certain cases:
-    let newScores = cloneDeep(currentGameState.scores);
+    let newScores = structuredClone(currentGameState.scores);
     let newIsTie = currentGameState.isTie;
     if (!newDeck.length) {
       // Calculate the score(s) if this is the last turn
@@ -146,6 +137,19 @@ export function gameReducer(currentGameState, payload) {
       scores: newScores,
       isTie: newIsTie,
     };
+  } else if (payload.action === "playBot") {
+    const {botOverlay, botOverlayTopLeft, andScore} = playBot(
+      currentGameState,
+      "red",
+    );
+
+    // then call the reducer with the endTurn action
+    return gameReducer(currentGameState, {
+      action: "endTurn",
+      andScore,
+      overlay: botOverlay,
+      overlayTopLeft: botOverlayTopLeft,
+    });
   } else {
     console.error(`unhandled action: ${payload.action}`);
     return currentGameState;

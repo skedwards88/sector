@@ -2,7 +2,6 @@ import React from "react";
 import {handleInstall} from "../logic/handleInstall";
 
 export default function ControlBar({
-  dispatchGameState,
   setDisplay,
   setInstallPromptEvent,
   showInstallButton,
@@ -13,9 +12,7 @@ export default function ControlBar({
       <button
         id="newGameButton"
         onClick={() => {
-          dispatchGameState({
-            action: "newGame",
-          });
+          setDisplay("home");
         }}
       ></button>
       <button id="heartButton" onClick={() => setDisplay("heart")}></button>
