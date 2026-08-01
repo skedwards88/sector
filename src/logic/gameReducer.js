@@ -6,10 +6,7 @@ import {playBot} from "./bot";
 
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
-    return gameInit({
-      ...currentGameState,
-      ...payload,
-      useSaved: false,
+    return gameInit({isVsBot: payload.isVsBot
     });
   } else if (payload.action === "rotate") {
     let newOverlay = rotateTile(currentGameState.overlay);

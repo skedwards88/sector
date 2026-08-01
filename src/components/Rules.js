@@ -52,7 +52,7 @@ export default function Rules({setDisplay}) {
   );
 
   return (
-    <div id="app" className="rules">
+    <div className="app" id="rules">
       <div id="rulesBoardPlaceholder">
         <div className="ruleImage" id={rules[ruleNumber].image}></div>
       </div>

@@ -17,16 +17,15 @@ export default function GameOver({
   const winner = redScore > blueScore ? "red" : "blue";
 
   return (
-    <div id="app">
+    <div className="app" id="gameOver">
       <ControlBar
-        dispatchGameState={dispatchGameState}
         setDisplay={setDisplay}
         setInstallPromptEvent={setInstallPromptEvent}
         showInstallButton={showInstallButton}
         installPromptEvent={installPromptEvent}
       ></ControlBar>
 
-      <div id="gameOver" className={winner}>
+      <div id="gameOverResult" className={winner}>
         <div>{isTie ? "Tie!" : `${winner.toUpperCase()} wins!`}</div>
         <div>
           {`${Math.max(redScore, blueScore)} vs ${Math.min(
@@ -46,9 +45,7 @@ export default function GameOver({
           <button
             id="gameOverNewGame"
             onClick={() => {
-              dispatchGameState({
-                action: "newGame",
-              });
+              setDisplay("home")
             }}
           >
             new game

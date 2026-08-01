@@ -52,9 +52,8 @@ export default function Game({
   });
 
   return (
-    <div id="app">
+    <div className="app" id="game">
       <ControlBar
-        dispatchGameState={dispatchGameState}
         setDisplay={setDisplay}
         setInstallPromptEvent={setInstallPromptEvent}
         showInstallButton={showInstallButton}
