@@ -3,6 +3,39 @@ import {calculateScore} from "./calculateScore.js";
 import {gameInit} from "./gameInit.js";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 
+function updateDraggedOverlayIndex({
+  draggedOverlayIndex,
+  dropIndex,
+  boardDimension,
+  tileDimension,
+}) {
+  // Convert the index where the overlay was dropped to a row/column
+  const dropRow = Math.floor(dropIndex / boardDimension);
+  const dropColumn = dropIndex - dropRow * boardDimension;
+
+  // Convert the overlay quadrant index that the user dragged to a row/column
+  const overlayRow = Math.floor(draggedOverlayIndex / tileDimension);
+  const overlayColumn = draggedOverlayIndex - overlayRow * tileDimension;
+
+  // Adjust the index where the overlay was dropped
+  // to reflect the index where the top left of the overlay ended up
+  // but don't let the overlay go off the board
+  const adjustedDropRow = Math.min(
+    Math.max(0, dropRow - overlayRow),
+    boardDimension - 2,
+  );
+  const adjustedDropColumn = Math.min(
+    Math.max(0, dropColumn - overlayColumn),
+    boardDimension - 2,
+  );
+
+  // Convert the row/column back to the index where the top left of the overlay ended up
+  const newOverlayTopLeft =
+    adjustedDropColumn + boardDimension * adjustedDropRow;
+
+  return newOverlayTopLeft;
+}
+
 export function gameReducer(currentGameState, payload) {
   if (payload.action === "newGame") {
     return gameInit({
@@ -25,47 +58,34 @@ export function gameReducer(currentGameState, payload) {
   } else if (payload.action === "dragStart") {
     // Store the quadrant that the player is dragging
     // in the game state instead of in the event data
-    // so that we can access the data from the dragEnter event
+    // so that we can access the data from a different event
     return {
       ...currentGameState,
       draggedOverlayIndex: payload.draggedOverlayIndex,
     };
-  } else if (payload.action === "drop" || payload.action === "dragEnter") {
-    // Drop/move a piece on the overlay, but don't update the played pieces yet (that is taken care of by the 'end turn' action)
+  } else if (payload.action === "dragEnter") {
+    // Update the overlay, but don't update the played pieces yet (that is taken care of by the 'end turn' action)
 
-    // Convert the index where the overlay was dropped to a row/column
-    const expanseSize = Math.sqrt(currentGameState.played.length);
-    const dropIndex = payload.dropIndex;
-    const dropRow = Math.floor(dropIndex / expanseSize);
-    const dropColumn = dropIndex - dropRow * expanseSize;
+    const draggedOverlayIndex = currentGameState.draggedOverlayIndex;
+    if (draggedOverlayIndex === undefined) {
+      return currentGameState;
+    }
 
-    // Convert the overlay quadrant index that the user dragged t oa row/column
-    const overlayIndex = currentGameState.draggedOverlayIndex;
-    const overlayRow = Math.floor(
-      overlayIndex / (currentGameState.overlay.length / 2),
-    );
-    const overlayColumn =
-      overlayIndex - overlayRow * (currentGameState.overlay.length / 2);
-
-    // Adjust the index where the overlay was dropped
-    // to reflect the index where the top left of the overlay ended up
-    // but don't let the overlay go off the board
-    const adjustedDropRow = Math.min(
-      Math.max(0, dropRow - overlayRow),
-      expanseSize - 2,
-    );
-    const adjustedDropColumn = Math.min(
-      Math.max(0, dropColumn - overlayColumn),
-      expanseSize - 2,
-    );
-
-    // Convert the row/column back to the index where the top left of the overlay ended up
-    const newOverlayTopLeft =
-      adjustedDropColumn + expanseSize * adjustedDropRow;
+    const newOverlayTopLeft = updateDraggedOverlayIndex({
+      draggedOverlayIndex,
+      dropIndex: payload.dropIndex,
+      boardDimension: Math.sqrt(currentGameState.played.length),
+      tileDimension: Math.sqrt(currentGameState.overlay.length),
+    });
 
     return {
       ...currentGameState,
       overlayTopLeft: newOverlayTopLeft,
+    };
+  } else if (payload.action === "drop") {
+    return {
+      ...currentGameState,
+      draggedOverlayIndex: undefined,
     };
   } else if (payload.action === "endTurn") {
     // In all cases, update the board
