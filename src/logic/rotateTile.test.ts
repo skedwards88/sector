@@ -1,8 +1,9 @@
+import type {Tile} from "../Types";
 import {rotateTile} from "./rotateTile";
 
 describe("rotateTile", () => {
   test("rotates the tile 90 degrees", () => {
-    const inputTile = [
+    const inputTile: Tile = [
       {color: "red", shape: "whirl"},
       {color: "red", shape: "star"},
       {color: "blue", shape: "planet"},
@@ -22,7 +23,7 @@ describe("rotateTile", () => {
   });
 
   test("does not mutate the input tile", () => {
-    const inputTile = [
+    const inputTile: Tile = [
       {color: "red", shape: "whirl"},
       {color: "red", shape: "star"},
       {color: "blue", shape: "planet"},

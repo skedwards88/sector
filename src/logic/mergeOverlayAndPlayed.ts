@@ -1,5 +1,15 @@
-export function mergeOverlayAndPlayed({played, overlay, overlayTopLeft}) {
-  let newPlayed = structuredClone(played);
+import type {Square, Tile} from "../Types";
+
+export function mergeOverlayAndPlayed({
+  played,
+  overlay,
+  overlayTopLeft,
+}: {
+  played: Square[];
+  overlay: Tile;
+  overlayTopLeft: number;
+}): Square[] {
+  const newPlayed = structuredClone(played);
   const expanseSize = Math.sqrt(played.length);
 
   for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {

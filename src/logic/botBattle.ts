@@ -1,5 +1,5 @@
 import {gameInit} from "./gameInit.js";
-import {gameReducer} from "./gameReducer.js";
+import {gameReducer} from "./gameReducer";
 import {type BotParameters, playBot} from "./bot";
 import type {GameState, Scores} from "../Types.js";
 

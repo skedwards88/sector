@@ -1,15 +1,35 @@
 import {calculateScore} from "./calculateScore.js";
 import {gameInit} from "./gameInit.js";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
-import {rotateTile} from "./rotateTile.js";
+import {rotateTile} from "./rotateTile";
 import {playBot} from "./bot";
+import type {GameState, Tile} from "../Types.js";
+
+export type ReducerPayload =
+  | {action: "newGame"; isVsBot: boolean}
+  | {action: "rotate"}
+  | {action: "dragStart"; draggedOverlayIndex: number}
+  | {action: "dragEnter"; dropIndex: number}
+  | {action: "drop"}
+  | {
+      action: "endTurn";
+      overlay: Tile;
+      overlayTopLeft: number;
+      andScore: boolean;
+    }
+  | {action: "playBot"};
 
 function updateDraggedOverlayIndex({
   draggedOverlayIndex,
   dropIndex,
   boardDimension,
   tileDimension,
-}) {
+}: {
+  draggedOverlayIndex: number;
+  dropIndex: number;
+  boardDimension: number;
+  tileDimension: number;
+}): number {
   // Convert the index where the overlay was dropped to a row/column
   const dropRow = Math.floor(dropIndex / boardDimension);
   const dropColumn = dropIndex - dropRow * boardDimension;
@@ -37,12 +57,19 @@ function updateDraggedOverlayIndex({
   return newOverlayTopLeft;
 }
 
-export function gameReducer(currentGameState, payload) {
+export function gameReducer(
+  currentGameState: GameState,
+  payload: ReducerPayload,
+): GameState {
   if (payload.action === "newGame") {
-    return gameInit({isVsBot: payload.isVsBot
-    });
+    return gameInit({isVsBot: payload.isVsBot});
   } else if (payload.action === "rotate") {
-    let newOverlay = rotateTile(currentGameState.overlay);
+    const overlay = currentGameState.overlay;
+    if (overlay === undefined) {
+      return currentGameState;
+    }
+
+    const newOverlay = rotateTile(overlay);
     return {
       ...currentGameState,
       overlay: newOverlay,
@@ -58,8 +85,11 @@ export function gameReducer(currentGameState, payload) {
   } else if (payload.action === "dragEnter") {
     // Update the overlay, but don't update the played pieces yet (that is taken care of by the 'end turn' action)
 
+    const overlay = currentGameState.overlay;
+
     const draggedOverlayIndex = currentGameState.draggedOverlayIndex;
-    if (draggedOverlayIndex === undefined) {
+
+    if (draggedOverlayIndex === undefined || overlay === undefined) {
       return currentGameState;
     }
 
@@ -67,7 +97,7 @@ export function gameReducer(currentGameState, payload) {
       draggedOverlayIndex,
       dropIndex: payload.dropIndex,
       boardDimension: Math.sqrt(currentGameState.played.length),
-      tileDimension: Math.sqrt(currentGameState.overlay.length),
+      tileDimension: Math.sqrt(overlay.length),
     });
 
     return {
@@ -90,16 +120,16 @@ export function gameReducer(currentGameState, payload) {
     // Draw the next tile from the deck
     // If this was the last turn, the deck is empty and
     //   the drawn tile will be `undefined`
-    let newDeck = structuredClone(currentGameState.deck);
+    const newDeck = structuredClone(currentGameState.deck);
     const playerColor = currentGameState.isBlueTurn ? "blue" : "red";
     const opponentColor = currentGameState.isBlueTurn ? "red" : "blue";
 
     const newOverlay = newDeck.pop();
 
     // Calculate the score in certain cases:
-    let newScores = structuredClone(currentGameState.scores);
+    const newScores = structuredClone(currentGameState.scores);
     let newIsTie = currentGameState.isTie;
-    if (!newDeck.length) {
+    if (newOverlay === undefined) {
       // Calculate the score(s) if this is the last turn
       // If neither player has scored AND the scores are tied, this is a tie
       // (if a player has already scored, ties count as a win for that player)
@@ -152,7 +182,9 @@ export function gameReducer(currentGameState, payload) {
       overlayTopLeft: botOverlayTopLeft,
     });
   } else {
-    console.error(`unhandled action: ${payload.action}`);
+    console.log(
+      `unknown action: ${(payload as unknown as {action: string}).action}`,
+    );
     return currentGameState;
   }
 }

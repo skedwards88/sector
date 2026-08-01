@@ -18,7 +18,9 @@ export type GameState = {
   lastBreakingChange: string;
   played: Square[];
   deck: Tile[];
-  overlay: Tile;
+  overlay: Tile|undefined;
+  draggedOverlayIndex: number | undefined;
+  overlayTopLeft: number | undefined;
   isBlueTurn: boolean;
   isTie: boolean;
   scores: Scores;
