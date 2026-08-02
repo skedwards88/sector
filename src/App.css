@@ -94,6 +94,11 @@ button {
   background-image: url("@skedwards88/shared-components/src/images/icons/install.svg");
 }
 
+#shareButton {
+    background-image: url("@skedwards88/shared-components/src/images/icons/share.svg");
+
+}
+
 /* Heart */
 
 .heart {

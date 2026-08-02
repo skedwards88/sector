@@ -4,6 +4,7 @@ import {
 } from "@skedwards88/shared-components/src/logic/handleInstall";
 import type {DisplayState} from "../Types";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
+import Share from "@skedwards88/shared-components/src/components/Share";
 
 export default function ControlBar({
   setDisplay,
@@ -30,6 +31,15 @@ export default function ControlBar({
       ></button>
       <button id="heartButton" onClick={() => setDisplay("heart")}></button>
       <button id="rulesButton" onClick={() => setDisplay("rules")}></button>
+      <Share
+        id="shareButton"
+        appName="Sector"
+        text="Check out this quick spatial strategy game!"
+        url="https://sector.twistedtrailgames.com"
+        origin="control bar"
+        userId={userId}
+        sessionId={sessionId}
+      ></Share>
       {showInstallButton && installPromptEvent ? (
         <button
           id="installButton"
