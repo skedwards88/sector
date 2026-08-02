@@ -21,14 +21,12 @@ function PlayerGoal({
 
 export default function GameText({
   overlayTopLeft,
-  placementIsLegal,
-  illegalPlacementInfo,
+  turnInvalidReason,
   playerScore,
   opponentScore,
 }: {
   overlayTopLeft: number | undefined;
-  placementIsLegal: boolean;
-  illegalPlacementInfo: string;
+  turnInvalidReason: string|null;
   playerScore: number | undefined;
   opponentScore: number | undefined;
 }): React.JSX.Element {
@@ -41,8 +39,8 @@ export default function GameText({
       playerScore,
       opponentScore,
     })}\n\n`;
-    if (!placementIsLegal) {
-      feedback += `> ${illegalPlacementInfo}\n\n`;
+    if (turnInvalidReason) {
+      feedback += `> ${turnInvalidReason}\n\n`;
     }
   }
 

@@ -1,7 +1,7 @@
 import type {Square, Tile} from "../Types";
 
 // Determine whether the overlay placement is legal
-export function canEndTurnQ({
+export function getEndTurnInvalidReason({
   overlay,
   overlayTopLeft,
   played,
@@ -9,10 +9,10 @@ export function canEndTurnQ({
   overlay: Tile;
   overlayTopLeft: number | undefined;
   played: Square[];
-}): [boolean, string | undefined] {
+}): string | null {
   // If the overlay is not on the board, return
   if (overlayTopLeft === undefined) {
-    return [false, undefined];
+    return "the tile must be on the board";
   }
 
   const expanseSize = Math.sqrt(played.length);
@@ -30,7 +30,7 @@ export function canEndTurnQ({
       (played[adjustedIndex].color === "blue" &&
         overlay[overlayIndex].color === "red")
     ) {
-      return [false, "red and blue may not overlap"];
+      return "red and blue may not overlap";
     }
 
     if (
@@ -46,8 +46,8 @@ export function canEndTurnQ({
 
   // If the overlay doesn't overlap or share an edge with any played spaces, placement is invalid
   if (!contactFound) {
-    return [false, "the tile must make contact with the existing tiles"];
+    return "the tile must make contact with the existing tiles";
   }
 
-  return [true, undefined];
+  return null;
 }

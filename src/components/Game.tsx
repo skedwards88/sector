@@ -2,7 +2,7 @@ import ControlBar from "./ControlBar";
 import PlayerControls from "./PlayerControls";
 import GameOver from "./GameOver";
 import GameText from "./GameText";
-import {canEndTurnQ} from "../logic/canEndTurnQ";
+import {getEndTurnInvalidReason} from "../logic/getEndTurnInvalidReason";
 import {calculateScore} from "../logic/calculateScore";
 import {mergeOverlayAndPlayed} from "../logic/mergeOverlayAndPlayed";
 import Board from "./Board";
@@ -57,7 +57,7 @@ export default function Game({
         }),
   );
 
-  const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
+  const turnInvalidReason = getEndTurnInvalidReason({
     overlayTopLeft: gameState.overlayTopLeft,
     played: gameState.played,
     overlay: gameState.overlay,
@@ -74,8 +74,7 @@ export default function Game({
 
       <GameText
         overlayTopLeft={gameState.overlayTopLeft}
-        placementIsLegal={placementIsLegal}
-        illegalPlacementInfo={illegalPlacementInfo}
+        turnInvalidReason={turnInvalidReason}
         playerScore={playerScore}
         opponentScore={opponentScore}
       ></GameText>
@@ -90,7 +89,7 @@ export default function Game({
         dispatchGameState={dispatchGameState}
         overlay={gameState.overlay}
         deck={gameState.deck}
-        placementIsLegal={placementIsLegal}
+        placementIsLegal={turnInvalidReason === null}
         currentColor={currentColor}
         playerScore={playerScore}
         opponentScore={opponentScore}

@@ -1,6 +1,6 @@
 import type {GameState, PlayerColor, Square, Tile} from "../Types";
 import {calculateScore} from "./calculateScore";
-import {canEndTurnQ} from "./canEndTurnQ";
+import {getEndTurnInvalidReason} from "./getEndTurnInvalidReason";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 import {rotateTile} from "./rotateTile";
 
@@ -134,21 +134,21 @@ function findBestPlacements({
     ) {
       const simulatedTile = rotatedTiles[rotationNumber];
 
-      const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
+      const turnInvalidReason = getEndTurnInvalidReason({
         overlay: simulatedTile,
         overlayTopLeft: boardIndex,
         played: played,
       });
 
       if (
-        illegalPlacementInfo ===
+        turnInvalidReason ===
         "the tile must make contact with the existing tiles"
       ) {
         // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
         break rotationLoop;
       }
 
-      if (!placementIsLegal) {
+      if (turnInvalidReason != null) {
         // If placement is not legal for some other reason, skip to the next rotation at this board position
         continue rotationLoop;
       }
@@ -305,21 +305,21 @@ function findBestPlacementsWithSecondary({
         ]) {
           const simulatedNextTile = nextTileRotations[nextTileRotationNumber];
 
-          const [placementIsLegal, illegalPlacementInfo] = canEndTurnQ({
+          const turnInvalidReason = getEndTurnInvalidReason({
             overlay: simulatedNextTile,
             overlayTopLeft: nextTileBoardIndex,
             played: simulatedPlayed,
           });
 
           if (
-            illegalPlacementInfo ===
+            turnInvalidReason ===
             "the tile must make contact with the existing tiles"
           ) {
             // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
             break nextTileRotationLoop;
           }
 
-          if (!placementIsLegal) {
+          if (turnInvalidReason != null) {
             // If placement is not legal for some other reason, skip to the next rotation at this board position
             continue nextTileLoop;
           }
