@@ -19,6 +19,7 @@ body {
 .app {
   height: 90vh; /* fallback if svh isn't handled */
   height: 98svh;
+  width: 100vw;
 }
 
 #game, #gameOver, #rules {
@@ -390,11 +391,10 @@ button {
   padding: 10px 0;
 }
 
-#home> button {
+#home > button {
   border-radius: 5px;
   border: 0;
   margin: 15px;
-  width: 80vw;
   color: white;
   height: calc(var(--quad) * 1.5);
   background-color: rgb(113 112 116);
@@ -462,12 +462,16 @@ button {
 
 #logo {
   align-self: center;
-  width: 60vw;
+  width: 60%;
 }
 
 /* larger screens */
-@media (width >= 768px) {
+@media (height >= 600px) and (width >= 936px), (width >= 600px) and (height >= 936px) {
   body {
     --quad: 50px;
+  }
+
+  .app {
+    width: calc(var(--quad) * 10);
   }
 }
