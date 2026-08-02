@@ -1,4 +1,4 @@
-name: Lint
+name: Lint and test
 
 on:
   pull_request:
@@ -22,5 +22,11 @@ jobs:
       - name: ES lint
         run: npx eslint --ignore-path .gitignore .
 
+      - name: ES lint
+        run: npx tsc --noEmit
+
       - name: Stylelint
         run: npx stylelint '**/*.css'
+
+      - name: Tests
+        run: npm run test
