@@ -79,19 +79,19 @@ button {
 }
 
 #newGameButton {
-  background-image: url("./images/icons/new_game.svg");
+  background-image: url("@skedwards88/shared-components/src/images/icons/new_game.svg");
 }
 
 #heartButton {
-  background-image: url("./images/icons/heart.svg");
+  background-image: url("@skedwards88/shared-components/src/images/icons/heart.svg");
 }
 
 #rulesButton {
-  background-image: url("./images/icons/info.svg");
+  background-image: url("@skedwards88/shared-components/src/images/icons/question_mark.svg");
 }
 
 #installButton {
-  background-image: url("./images/icons/install.svg");
+  background-image: url("@skedwards88/shared-components/src/images/icons/install.svg");
 }
 
 /* Heart */
