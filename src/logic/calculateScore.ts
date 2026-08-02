@@ -1,43 +1,46 @@
+import {partitionArray} from "@skedwards88/word_logic";
+import type {PlayerColor, Square} from "../Types";
+
 class Sector {
-  constructor({indexes = new Set(), shapes = new Set()}) {
+  indexes: Set<string>;
+  shapes: Set<string>;
+
+  constructor({
+    indexes = new Set<string>(),
+    shapes = new Set<string>(),
+  }: {indexes?: Set<string>; shapes?: Set<string>} = {}) {
     this.indexes = indexes;
     this.shapes = shapes;
   }
 
-  get score() {
+  get score(): number {
     return this.indexes.size + this.shapes.size;
   }
 }
 
-function partitionArray(array, partitionSize) {
-  let partitioned = [];
-  for (let i = 0; i < array.length; i += partitionSize) {
-    partitioned.push(array.slice(i, i + partitionSize));
-  }
-  return partitioned;
-}
-
-function findSectors(color, played) {
+function findSectors(color: PlayerColor, played: Square[]): Sector[] {
   // split the played indexes into rows to make it
   // easier to see top/bottom/left/right neighbors
   const playedCopy = structuredClone(played);
   const playedRows = partitionArray(playedCopy, Math.sqrt(playedCopy.length));
 
-  let sectors = [];
-  let row_deltas = [-1, 1, 0, 0];
-  let column_deltas = [0, 0, -1, 1];
+  const sectors: Sector[] = [];
+  const row_deltas = [-1, 1, 0, 0];
+  const column_deltas = [0, 0, -1, 1];
 
   playedRows.forEach((row, row_index) =>
     row.forEach((square, column_index) => {
       // If the square's color matches the color that we are scoring
       // start a sector and search around that square
       if (square.color == color) {
-        let currentSector = new Sector({});
-        let coordinatesToSearch = [[row_index, column_index]];
+        const currentSector = new Sector({});
+        const coordinatesToSearch = [[row_index, column_index]];
         // Semi-iteratively search around each coordinate of interest
         // for squares of the same color
-        while (coordinatesToSearch.length > 0) {
-          let [search_row, search_column] = coordinatesToSearch.pop();
+        //   while ((idToCheck = idsToCheck.pop()) !== undefined) {
+        let searchCoordinates: number[] | undefined;
+        while ((searchCoordinates = coordinatesToSearch.pop()) != undefined) {
+          const [search_row, search_column] = searchCoordinates;
           // Record this square in the sector
           currentSector.indexes.add(`${search_row},${search_column}`);
           if (playedRows[search_row][search_column].shape) {
@@ -50,7 +53,7 @@ function findSectors(color, played) {
           // Search up/down/left right for squares of the same color
           // If one is found, add it to the list of coordinates to search
           row_deltas.forEach((row_delta, delta_index) => {
-            let column_delta = column_deltas[delta_index];
+            const column_delta = column_deltas[delta_index];
             if (
               playedRows[search_row + row_delta]?.[search_column + column_delta]
                 ?.color === color
@@ -70,7 +73,7 @@ function findSectors(color, played) {
   return sectors;
 }
 
-export function calculateScore(color, played) {
+export function calculateScore(color: PlayerColor, played: Square[]): number {
   const sectors = findSectors(color, played);
 
   if (!sectors.length) {

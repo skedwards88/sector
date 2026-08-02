@@ -2,6 +2,7 @@ import ControlBar from "./ControlBar";
 import Board from "./Board";
 import {type ReducerPayload} from "../logic/gameReducer";
 import type {DisplayState, GameState} from "../Types";
+import {type BeforeInstallPromptEvent} from "@skedwards88/shared-components/src/logic/handleInstall";
 
 export default function GameOver({
   gameState,
@@ -14,12 +15,14 @@ export default function GameOver({
   gameState: GameState;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
-  setInstallPromptEvent;
-  showInstallButton;
-  installPromptEvent;
+  setInstallPromptEvent: React.Dispatch<
+    React.SetStateAction<BeforeInstallPromptEvent | null>
+  >;
+  showInstallButton: boolean;
+  installPromptEvent: BeforeInstallPromptEvent | null;
 }): React.JSX.Element {
-  const redScore = gameState.scores.red;
-  const blueScore = gameState.scores.blue;
+  const redScore = gameState.scores.red ?? 0;
+  const blueScore = gameState.scores.blue ?? 0;
 
   const isTie = gameState.isTie;
   const winner = redScore > blueScore ? "red" : "blue";

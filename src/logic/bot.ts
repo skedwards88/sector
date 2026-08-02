@@ -449,6 +449,10 @@ export function playBot(
   botOverlayTopLeft: number;
   andScore: boolean;
 } {
+  if (currentGameState.overlay === undefined) {
+    throw new Error("No tiles remaining to play");
+  }
+
   const opponentColor: PlayerColor = botColor === "red" ? "blue" : "red";
 
   const numTileRemaining = currentGameState.deck.length;
@@ -481,6 +485,7 @@ export function playBot(
   // place for highest current score, then score
   if (
     scenario === Scenario.OpponentScored &&
+    opponentScore != undefined && // TS is too dumb to remember that this is only true if scenario === Scenario.OpponentScored, so check again
     bestPlacement.botScore > opponentScore
   ) {
     return {

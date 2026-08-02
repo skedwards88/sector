@@ -26,7 +26,7 @@ export default function GameText({
   opponentScore,
 }: {
   overlayTopLeft: number | undefined;
-  turnInvalidReason: string|null;
+  turnInvalidReason: string | null;
   playerScore: number | undefined;
   opponentScore: number | undefined;
 }): React.JSX.Element {

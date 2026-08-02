@@ -25,7 +25,7 @@ export default function Game({
     React.SetStateAction<BeforeInstallPromptEvent | null>
   >;
   showInstallButton: boolean;
-  installPromptEvent: BeforeInstallPromptEvent;
+  installPromptEvent: BeforeInstallPromptEvent | null;
 }): React.JSX.Element {
   const currentColor = gameState.isBlueTurn ? "blue" : "red";
   const opponentColor = gameState.isBlueTurn ? "red" : "blue";

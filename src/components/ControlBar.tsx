@@ -16,7 +16,7 @@ export default function ControlBar({
     React.SetStateAction<BeforeInstallPromptEvent | null>
   >;
   showInstallButton: boolean;
-  installPromptEvent: BeforeInstallPromptEvent;
+  installPromptEvent: BeforeInstallPromptEvent | null;
 }): React.JSX.Element {
   const {userId, sessionId} = useMetadataContext();
 

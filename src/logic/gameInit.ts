@@ -1,7 +1,6 @@
 import type {GameState, Square} from "../Types";
 import {deck} from "./deck";
-import {shuffleArray} from "./shuffleArray";
-import {v4 as uuidv4} from "uuid";
+import {shuffleArray} from "@skedwards88/word_logic";
 
 export function gameInit({isVsBot = false}: {isVsBot?: boolean}): GameState {
   const expanseSize = 10;
@@ -18,6 +17,11 @@ export function gameInit({isVsBot = false}: {isVsBot?: boolean}): GameState {
   );
   const firstTileTopLeft = 44; // todo could calc from expanse size
   const firstTile = shuffledDeck.pop();
+
+  if (firstTile === undefined) {
+    throw new Error("deck is empty");
+  }
+
   for (
     let quadrantIndex = 0;
     quadrantIndex < firstTile.length;
@@ -34,7 +38,7 @@ export function gameInit({isVsBot = false}: {isVsBot?: boolean}): GameState {
   const overlay = shuffledDeck.pop();
 
   return {
-    id: uuidv4(), // just a random ID to track when the user generates a new puzzle
+    id: crypto.randomUUID(), // just a random ID to track when the user generates a new puzzle
     isVsBot,
     played,
     deck: shuffledDeck,

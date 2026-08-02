@@ -49,7 +49,7 @@ export default function Rules({
 }: {
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
 }): React.JSX.Element {
-  const [ruleNumber, setRuleNumber] = React.useState(0);
+  const [ruleNumber, setRuleNumber] = React.useState<number>(0);
 
   let formattedRuleText = "";
   rules[ruleNumber].text.forEach(

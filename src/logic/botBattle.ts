@@ -134,7 +134,8 @@ function battleBots(
 
     // Ties go to blue
     // (This slightly biases towards the bot that gets more turns playing as blue, but ties are fairly rare)
-    const winningColor = scores.red > scores.blue ? "red" : "blue";
+    const winningColor =
+      (scores.red ?? 0) > (scores.blue ?? 0) ? "red" : "blue";
     if (
       (winningColor === "blue" && botAIsBlue) ||
       (winningColor === "red" && !botAIsBlue)

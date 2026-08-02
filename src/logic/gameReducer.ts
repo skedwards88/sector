@@ -3,7 +3,7 @@ import {gameInit} from "./gameInit";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 import {rotateTile} from "./rotateTile";
 import {playBot} from "./bot";
-import type {GameState, Tile} from "../Types";
+import type {GameState, PlayerColor, Tile} from "../Types";
 
 export type ReducerPayload =
   | {action: "newGame"; isVsBot: boolean}
@@ -137,9 +137,9 @@ export function gameReducer(
         (color) => color === undefined,
       );
       for (const color in newScores) {
-        if (newScores[color] === undefined) {
-          const score = calculateScore(color, newPlayed);
-          newScores[color] = score;
+        if (newScores[color as PlayerColor] === undefined) {
+          const score = calculateScore(color as PlayerColor, newPlayed);
+          newScores[color as PlayerColor] = score;
         }
       }
       newIsTie =
