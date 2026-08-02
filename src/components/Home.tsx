@@ -1,7 +1,14 @@
-import React from "react";
 import logo from "../images/logo.svg";
+import {type ReducerPayload} from "../logic/gameReducer";
+import type {DisplayState} from "../Types";
 
-export default function Home({dispatchGameState, setDisplay}) {
+export default function Home({
+  dispatchGameState,
+  setDisplay,
+}: {
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+}): React.JSX.Element {
   return (
     <div className="app" id="home">
       <img src={logo} alt="Sector logo" id="logo" />

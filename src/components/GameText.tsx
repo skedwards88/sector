@@ -1,6 +1,10 @@
-import React from "react";
-
-function PlayerGoal({playerScore, opponentScore}) {
+function PlayerGoal({
+  playerScore,
+  opponentScore,
+}: {
+  playerScore: number | undefined;
+  opponentScore: number | undefined;
+}): string {
   if (playerScore === undefined && opponentScore === undefined) {
     return "goal: maximize your score";
   }
@@ -21,7 +25,13 @@ export default function GameText({
   illegalPlacementInfo,
   playerScore,
   opponentScore,
-}) {
+}: {
+  overlayTopLeft: number | undefined;
+  placementIsLegal: boolean;
+  illegalPlacementInfo: string;
+  playerScore: number | undefined;
+  opponentScore: number | undefined;
+}): React.JSX.Element {
   let feedback = "";
   if (overlayTopLeft === undefined) {
     feedback =

@@ -1,9 +1,9 @@
-import {calculateScore} from "./calculateScore.js";
-import {gameInit} from "./gameInit.js";
+import {calculateScore} from "./calculateScore";
+import {gameInit} from "./gameInit";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 import {rotateTile} from "./rotateTile";
 import {playBot} from "./bot";
-import type {GameState, Tile} from "../Types.js";
+import type {GameState, Tile} from "../Types";
 
 export type ReducerPayload =
   | {action: "newGame"; isVsBot: boolean}

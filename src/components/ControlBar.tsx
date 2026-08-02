@@ -1,12 +1,17 @@
-import React from "react";
 import {handleInstall} from "../logic/handleInstall";
+import type {DisplayState} from "../Types";
 
 export default function ControlBar({
   setDisplay,
   setInstallPromptEvent,
   showInstallButton,
   installPromptEvent,
-}) {
+}: {
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  setInstallPromptEvent;
+  showInstallButton;
+  installPromptEvent;
+}): React.JSX.Element {
   return (
     <div id="controls">
       <button

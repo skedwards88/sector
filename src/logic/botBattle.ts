@@ -1,7 +1,7 @@
-import {gameInit} from "./gameInit.js";
+import {gameInit} from "./gameInit";
 import {gameReducer} from "./gameReducer";
 import {type BotParameters, playBot} from "./bot";
-import type {GameState, Scores} from "../Types.js";
+import type {GameState, Scores} from "../Types";
 
 // For tweaking the bot algorithm
 

@@ -1,6 +1,7 @@
-import React from "react";
 import ControlBar from "./ControlBar";
 import Board from "./Board";
+import {type ReducerPayload} from "../logic/gameReducer";
+import type {DisplayState, GameState} from "../Types";
 
 export default function GameOver({
   gameState,
@@ -9,7 +10,14 @@ export default function GameOver({
   setInstallPromptEvent,
   showInstallButton,
   installPromptEvent,
-}) {
+}: {
+  gameState: GameState;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  setInstallPromptEvent;
+  showInstallButton;
+  installPromptEvent;
+}): React.JSX.Element {
   const redScore = gameState.scores.red;
   const blueScore = gameState.scores.blue;
 

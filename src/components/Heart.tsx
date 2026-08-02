@@ -1,8 +1,12 @@
-import React from "react";
 import Share from "./Share";
 import packageJson from "../../package.json";
+import type {DisplayState} from "../Types";
 
-export default function Heart({setDisplay}) {
+export default function Heart({
+  setDisplay,
+}: {
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+}): React.JSX.Element {
   const feedbackLink = `https://github.com/skedwards88/sector/issues/new?body=Sector+version+${packageJson.version}`;
 
   return (

@@ -1,4 +1,5 @@
-import React from "react";
+import {type ReducerPayload} from "../logic/gameReducer";
+import type {PlayerColor, Tile} from "../Types";
 import Deck from "./Deck";
 
 function EndTurnButton({
@@ -8,7 +9,14 @@ function EndTurnButton({
   dispatchGameState,
   overlay,
   overlayTopLeft,
-}) {
+}: {
+  placementIsLegal: boolean;
+  opponentScore: number | undefined;
+  potentialScore: number;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+  overlay: Tile;
+  overlayTopLeft: number;
+}): React.JSX.Element {
   // Disable if the placement is invalid (obviously)
   // and if the current score is more than the opponent score (because you should end+score instead)
   const isDisabled =
@@ -20,7 +28,12 @@ function EndTurnButton({
       id="endTurn"
       disabled={isDisabled}
       onClick={() =>
-        dispatchGameState({action: "endTurn", overlay, overlayTopLeft})
+        dispatchGameState({
+          action: "endTurn",
+          overlay,
+          overlayTopLeft,
+          andScore: false,
+        })
       }
     >
       end turn
@@ -36,7 +49,15 @@ function EndTurnAndScoreButton({
   dispatchGameState,
   overlay,
   overlayTopLeft,
-}) {
+}: {
+  placementIsLegal: boolean;
+  opponentScore: number | undefined;
+  playerScore: number | undefined;
+  potentialScore: number;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+  overlay: Tile;
+  overlayTopLeft: number;
+}): React.JSX.Element {
   // Don't show the button if the player has already scored
   if (playerScore != undefined) {
     return <></>;
@@ -77,7 +98,17 @@ export default function PlayerControls({
   playerScore,
   opponentScore,
   potentialScore,
-}) {
+}: {
+  overlayTopLeft: number;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+  overlay: Tile;
+  deck: Tile[];
+  placementIsLegal: boolean;
+  currentColor: PlayerColor;
+  playerScore: number | undefined;
+  opponentScore: number | undefined;
+  potentialScore: number;
+}): React.JSX.Element {
   return (
     <div id="playerScreen">
       <div id="playerControls" className={currentColor}>

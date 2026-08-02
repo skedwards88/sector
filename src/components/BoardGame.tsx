@@ -1,13 +1,17 @@
-import React from "react";
-
-function BoardGameButton({text, link}) {
+function BoardGameButton({
+  text,
+  link,
+}: {
+  text: string;
+  link: string;
+}): React.JSX.Element {
   return (
     <a className="boardGameButton" href={link} aria-label={text}>
       {text}
     </a>
   );
 }
-export default function BoardGame() {
+export default function BoardGame(): React.JSX.Element {
   return (
     <div className="boardGame">
       <h1>Sector Board Game</h1>

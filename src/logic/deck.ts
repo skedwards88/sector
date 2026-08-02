@@ -1,4 +1,6 @@
-export const deck = [
+import type {Tile} from "../Types";
+
+export const deck: Tile[] = [
   [
     {
       color: "blue",

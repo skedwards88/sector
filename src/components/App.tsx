@@ -12,9 +12,10 @@ import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnal
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {inferEventsToLog} from "../logic/inferEventsToLog";
 import Home from "./Home";
+import type {DisplayState} from "../Types";
 
-export default function App() {
-  const [display, setDisplay] = React.useState("home");
+export default function App(): React.JSX.Element {
+  const [display, setDisplay] = React.useState<DisplayState>("home");
   const [installPromptEvent, setInstallPromptEvent] = React.useState();
   const [showInstallButton, setShowInstallButton] = React.useState(true);
 
@@ -32,7 +33,7 @@ export default function App() {
         setShowInstallButton,
       ),
     );
-    return () =>
+    return (): void =>
       window.removeEventListener("beforeinstallprompt", (event) =>
         handleBeforeInstallPrompt(
           event,
@@ -46,7 +47,8 @@ export default function App() {
     window.addEventListener("appinstalled", () =>
       handleAppInstalled(setInstallPromptEvent, setShowInstallButton),
     );
-    return () => window.removeEventListener("appinstalled", handleAppInstalled);
+    return (): void =>
+      window.removeEventListener("appinstalled", handleAppInstalled);
   }, []);
 
   React.useEffect(() => {
@@ -73,7 +75,7 @@ export default function App() {
 
   const gameOver =
     gameState.scores.blue != undefined && gameState.scores.red != undefined;
-  if (gameState && gameState.isVsBot && !gameState.isBlueTurn && !gameOver) {
+  if (gameState.isVsBot && !gameState.isBlueTurn && !gameOver) {
     dispatchGameState({action: "playBot"});
   }
 

@@ -1,4 +1,3 @@
-import React from "react";
 import ControlBar from "./ControlBar";
 import PlayerControls from "./PlayerControls";
 import GameOver from "./GameOver";
@@ -7,6 +6,8 @@ import {canEndTurnQ} from "../logic/canEndTurnQ";
 import {calculateScore} from "../logic/calculateScore";
 import {mergeOverlayAndPlayed} from "../logic/mergeOverlayAndPlayed";
 import Board from "./Board";
+import type {DisplayState, GameState} from "../Types";
+import {type ReducerPayload} from "../logic/gameReducer";
 
 export default function Game({
   gameState,
@@ -15,7 +16,14 @@ export default function Game({
   setInstallPromptEvent,
   showInstallButton,
   installPromptEvent,
-}) {
+}: {
+  gameState: GameState;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  setInstallPromptEvent;
+  showInstallButton;
+  installPromptEvent;
+}): React.JSX.Element {
   const currentColor = gameState.isBlueTurn ? "blue" : "red";
   const opponentColor = gameState.isBlueTurn ? "red" : "blue";
   const playerScore = gameState.scores[currentColor];

@@ -1,4 +1,5 @@
 import React from "react";
+import type {DisplayState} from "../Types";
 
 const rules = [
   {
@@ -43,7 +44,11 @@ const rules = [
   },
 ];
 
-export default function Rules({setDisplay}) {
+export default function Rules({
+  setDisplay,
+}: {
+  setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+}): React.JSX.Element {
   const [ruleNumber, setRuleNumber] = React.useState(0);
 
   let formattedRuleText = "";

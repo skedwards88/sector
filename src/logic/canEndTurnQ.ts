@@ -1,9 +1,18 @@
-export function canEndTurnQ({overlay, overlayTopLeft, played}) {
-  // Determine whether the overlay placement is legal
+import type {Square, Tile} from "../Types";
 
+// Determine whether the overlay placement is legal
+export function canEndTurnQ({
+  overlay,
+  overlayTopLeft,
+  played,
+}: {
+  overlay: Tile;
+  overlayTopLeft: number;
+  played: Square[];
+}): [boolean, string | undefined] {
   // If the overlay is not on the board, return
   if (overlayTopLeft === undefined) {
-    return [false];
+    return [false, undefined];
   }
 
   const expanseSize = Math.sqrt(played.length);
@@ -40,5 +49,5 @@ export function canEndTurnQ({overlay, overlayTopLeft, played}) {
     return [false, "the tile must make contact with the existing tiles"];
   }
 
-  return [true];
+  return [true, undefined];
 }

@@ -1,6 +1,10 @@
-import React from "react";
+import type {Square} from "../Types";
 
-export default function Played({played}) {
+export default function Played({
+  played,
+}: {
+  played: Square[];
+}): React.JSX.Element {
   return (
     <div id="played">
       {played.map((data, index) => (

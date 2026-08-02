@@ -1,6 +1,15 @@
-import React from "react";
+import {type ReducerPayload} from "../logic/gameReducer";
+import type {Tile} from "../Types";
 
-function handlePointerDown({event, overlayIndex, dispatchGameState}) {
+function handlePointerDown({
+  event,
+  overlayIndex,
+  dispatchGameState,
+}: {
+  event: React.PointerEvent;
+  overlayIndex: number;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+}): void {
   // Release pointer capture so that pointer events can fire on other elements
   event.currentTarget.releasePointerCapture(event.pointerId);
 
@@ -9,16 +18,30 @@ function handlePointerDown({event, overlayIndex, dispatchGameState}) {
   dispatchGameState({action: "dragStart", draggedOverlayIndex: overlayIndex});
 }
 
-function handlePointerEnter({event, dispatchGameState, index}) {
+function handlePointerEnter({
+  event,
+  dispatchGameState,
+  index,
+}: {
+  event: React.PointerEvent;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+  index: number;
+}): void {
   event.preventDefault();
 
   dispatchGameState({action: "dragEnter", dropIndex: index});
 }
 
-function handlePointerUp({event, dispatchGameState, index}) {
+function handlePointerUp({
+  event,
+  dispatchGameState,
+}: {
+  event: React.PointerEvent;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+}): void {
   event.preventDefault();
 
-  dispatchGameState({action: "drop", dropIndex: index});
+  dispatchGameState({action: "drop"});
 }
 
 export default function Overlay({
@@ -26,8 +49,13 @@ export default function Overlay({
   overlayTopLeft,
   expanseSize,
   dispatchGameState,
-}) {
-  let overlayDivs = [];
+}: {
+  overlay: Tile | undefined;
+  overlayTopLeft: number | undefined;
+  expanseSize: number;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+}): React.JSX.Element {
+  const overlayDivs = [];
   for (let index = 0; index < expanseSize * expanseSize; index++) {
     overlayDivs.push(
       <div
@@ -35,16 +63,14 @@ export default function Overlay({
         onPointerEnter={(event) =>
           handlePointerEnter({event, dispatchGameState, index})
         }
-        onPointerUp={(event) =>
-          handlePointerUp({event, dispatchGameState, index})
-        }
+        onPointerUp={(event) => handlePointerUp({event, dispatchGameState})}
         onClick={() => dispatchGameState({action: "rotate"})}
       ></div>,
     );
   }
 
   // Replace the quadrants where the overlaid piece actually is with the quadrant color/shape
-  if (overlayTopLeft != undefined) {
+  if (overlayTopLeft != undefined && overlay != undefined) {
     for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
       let cornerClass = "";
       switch (overlayIndex) {
@@ -80,7 +106,6 @@ export default function Overlay({
             handlePointerUp({
               event,
               dispatchGameState,
-              index: adjustedIndex,
             })
           }
           onClick={() => dispatchGameState({action: "rotate"})}
