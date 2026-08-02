@@ -437,11 +437,11 @@ export function playBot(
   botParameters: BotParameters = {
     numBotTopScores: 2,
     numBotLowScores: 2,
-    numOpponentTopScores: 4,
+    numOpponentTopScores: 3,
     numOpponentLowScores: 6,
     weightW: 5,
     weightY: 5,
-    numTilesRemainingWeight: 9,
+    numTilesRemainingWeight: 8,
     maxPlacementsToFind: 25,
   },
 ): {
