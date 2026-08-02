@@ -7,8 +7,13 @@ export function mergeOverlayAndPlayed({
 }: {
   played: Square[];
   overlay: Tile;
-  overlayTopLeft: number;
+  overlayTopLeft: number | undefined;
 }): Square[] {
+  // If the overlay is not on the board, return
+  if (overlayTopLeft === undefined) {
+    return played;
+  }
+
   const newPlayed = structuredClone(played);
   const expanseSize = Math.sqrt(played.length);
 

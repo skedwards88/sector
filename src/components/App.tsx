@@ -7,7 +7,8 @@ import Rules from "./Rules";
 import {
   handleAppInstalled,
   handleBeforeInstallPrompt,
-} from "../logic/handleInstall";
+  type BeforeInstallPromptEvent,
+} from "@skedwards88/shared-components/src/logic/handleInstall";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {inferEventsToLog} from "../logic/inferEventsToLog";
@@ -15,45 +16,52 @@ import Home from "./Home";
 import type {DisplayState} from "../Types";
 
 export default function App(): React.JSX.Element {
+  // *****
+  // Install handling setup
+  // *****
+  // Set up states that will be used by the handleAppInstalled and handleBeforeInstallPrompt listeners
+  const [installPromptEvent, setInstallPromptEvent] =
+    React.useState<BeforeInstallPromptEvent | null>(null);
+  const [showInstallButton, setShowInstallButton] =
+    React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    // Need to store the function in a variable so that
+    // the add and remove actions can reference the same function
+    const listener = (event: BeforeInstallPromptEvent): void =>
+      handleBeforeInstallPrompt(
+        event,
+        setInstallPromptEvent,
+        setShowInstallButton,
+      );
+
+    window.addEventListener("beforeinstallprompt", listener);
+
+    return (): void =>
+      window.removeEventListener("beforeinstallprompt", listener);
+  }, []);
+
+  React.useEffect(() => {
+    // Need to store the function in a variable so that
+    // the add and remove actions can reference the same function
+    const listener = (): void =>
+      handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
+
+    window.addEventListener("appinstalled", listener);
+
+    return (): void => window.removeEventListener("appinstalled", listener);
+  }, []);
+  // *****
+  // End install handling setup
+  // *****
+
   const [display, setDisplay] = React.useState<DisplayState>("home");
-  const [installPromptEvent, setInstallPromptEvent] = React.useState();
-  const [showInstallButton, setShowInstallButton] = React.useState(true);
 
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
     {},
     gameInit,
   );
-
-  React.useEffect(() => {
-    window.addEventListener("beforeinstallprompt", (event) =>
-      handleBeforeInstallPrompt(
-        event,
-        setInstallPromptEvent,
-        setShowInstallButton,
-      ),
-    );
-    return (): void =>
-      window.removeEventListener("beforeinstallprompt", (event) =>
-        handleBeforeInstallPrompt(
-          event,
-          setInstallPromptEvent,
-          setShowInstallButton,
-        ),
-      );
-  }, []);
-
-  React.useEffect(() => {
-    window.addEventListener("appinstalled", () =>
-      handleAppInstalled(setInstallPromptEvent, setShowInstallButton),
-    );
-    return (): void =>
-      window.removeEventListener("appinstalled", handleAppInstalled);
-  }, []);
-
-  React.useEffect(() => {
-    window.localStorage.setItem("sectorState", JSON.stringify(gameState));
-  }, [gameState]);
 
   const {userId, sessionId} = useMetadataContext();
 

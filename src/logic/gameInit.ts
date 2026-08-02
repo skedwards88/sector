@@ -1,18 +1,21 @@
-import type { GameState, Square } from "../Types";
+import type {GameState, Square} from "../Types";
 import {deck} from "./deck";
 import {shuffleArray} from "./shuffleArray";
 import {v4 as uuidv4} from "uuid";
 
-export function gameInit({isVsBot = false}:{isVsBot?: boolean}): GameState {
+export function gameInit({isVsBot = false}: {isVsBot?: boolean}): GameState {
   const expanseSize = 10;
-  
+
   const shuffledDeck = shuffleArray(deck);
 
   // The played quadrants are empty except for a single tile in the middle of the board
-  const played: Square[] = Array.from({length: expanseSize * expanseSize}, () => ({
-    color: null,
-    shape: null,
-  }));
+  const played: Square[] = Array.from(
+    {length: expanseSize * expanseSize},
+    () => ({
+      color: null,
+      shape: null,
+    }),
+  );
   const firstTileTopLeft = 44; // todo could calc from expanse size
   const firstTile = shuffledDeck.pop();
   for (

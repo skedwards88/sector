@@ -8,6 +8,7 @@ import {mergeOverlayAndPlayed} from "../logic/mergeOverlayAndPlayed";
 import Board from "./Board";
 import type {DisplayState, GameState} from "../Types";
 import {type ReducerPayload} from "../logic/gameReducer";
+import {type BeforeInstallPromptEvent} from "@skedwards88/shared-components/src/logic/handleInstall";
 
 export default function Game({
   gameState,
@@ -20,9 +21,11 @@ export default function Game({
   gameState: GameState;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
-  setInstallPromptEvent;
-  showInstallButton;
-  installPromptEvent;
+  setInstallPromptEvent: React.Dispatch<
+    React.SetStateAction<BeforeInstallPromptEvent | null>
+  >;
+  showInstallButton: boolean;
+  installPromptEvent: BeforeInstallPromptEvent;
 }): React.JSX.Element {
   const currentColor = gameState.isBlueTurn ? "blue" : "red";
   const opponentColor = gameState.isBlueTurn ? "red" : "blue";
@@ -30,7 +33,7 @@ export default function Game({
   const opponentScore = gameState.scores[opponentColor];
   const gameOver = playerScore != undefined && opponentScore != undefined;
 
-  if (gameOver) {
+  if (gameOver || gameState.overlay === undefined) {
     return (
       <GameOver
         dispatchGameState={dispatchGameState}
@@ -42,6 +45,7 @@ export default function Game({
       ></GameOver>
     );
   }
+
   const potentialScore = calculateScore(
     currentColor,
     gameState.overlayTopLeft === undefined

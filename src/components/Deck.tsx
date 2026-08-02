@@ -54,7 +54,7 @@ export default function Deck({
   dispatchGameState,
   deck,
 }: {
-  overlayTopLeft: number;
+  overlayTopLeft: number | undefined;
   overlay: Tile;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   deck: Tile[];

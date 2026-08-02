@@ -1,5 +1,9 @@
-import {handleInstall} from "../logic/handleInstall";
+import {
+  handleInstall,
+  type BeforeInstallPromptEvent,
+} from "@skedwards88/shared-components/src/logic/handleInstall";
 import type {DisplayState} from "../Types";
+import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 
 export default function ControlBar({
   setDisplay,
@@ -8,10 +12,14 @@ export default function ControlBar({
   installPromptEvent,
 }: {
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
-  setInstallPromptEvent;
-  showInstallButton;
-  installPromptEvent;
+  setInstallPromptEvent: React.Dispatch<
+    React.SetStateAction<BeforeInstallPromptEvent | null>
+  >;
+  showInstallButton: boolean;
+  installPromptEvent: BeforeInstallPromptEvent;
 }): React.JSX.Element {
+  const {userId, sessionId} = useMetadataContext();
+
   return (
     <div id="controls">
       <button
@@ -26,7 +34,12 @@ export default function ControlBar({
         <button
           id="installButton"
           onClick={() =>
-            handleInstall(installPromptEvent, setInstallPromptEvent)
+            handleInstall(
+              installPromptEvent,
+              setInstallPromptEvent,
+              userId,
+              sessionId,
+            )
           }
         ></button>
       ) : (

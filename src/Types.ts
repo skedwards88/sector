@@ -1,6 +1,6 @@
 export type PlayerColor = "red" | "blue";
 
-export type Color = PlayerColor | "black" |null;
+export type Color = PlayerColor | "black" | null;
 
 export type Shape = "planet" | "whirl" | "moon" | "star" | null;
 
@@ -11,7 +11,7 @@ export type Square = {
 
 export type Tile = [Square, Square, Square, Square];
 
-export type Scores = Record<PlayerColor, number|undefined>;
+export type Scores = Record<PlayerColor, number | undefined>;
 
 export type GameState = {
   id: string;

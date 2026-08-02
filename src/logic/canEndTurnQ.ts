@@ -7,7 +7,7 @@ export function canEndTurnQ({
   played,
 }: {
   overlay: Tile;
-  overlayTopLeft: number;
+  overlayTopLeft: number | undefined;
   played: Square[];
 }): [boolean, string | undefined] {
   // If the overlay is not on the board, return

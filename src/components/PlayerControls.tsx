@@ -15,7 +15,7 @@ function EndTurnButton({
   potentialScore: number;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   overlay: Tile;
-  overlayTopLeft: number;
+  overlayTopLeft: number | undefined;
 }): React.JSX.Element {
   // Disable if the placement is invalid (obviously)
   // and if the current score is more than the opponent score (because you should end+score instead)
@@ -31,7 +31,7 @@ function EndTurnButton({
         dispatchGameState({
           action: "endTurn",
           overlay,
-          overlayTopLeft,
+          overlayTopLeft: overlayTopLeft!, // The button is disabled if overlayTopLeft is undefined
           andScore: false,
         })
       }
@@ -56,7 +56,7 @@ function EndTurnAndScoreButton({
   potentialScore: number;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   overlay: Tile;
-  overlayTopLeft: number;
+  overlayTopLeft: number | undefined;
 }): React.JSX.Element {
   // Don't show the button if the player has already scored
   if (playerScore != undefined) {
@@ -78,7 +78,7 @@ function EndTurnAndScoreButton({
         dispatchGameState({
           action: "endTurn",
           overlay,
-          overlayTopLeft,
+          overlayTopLeft: overlayTopLeft!, // The button is disabled if overlayTopLeft is undefined
           andScore: true,
         })
       }
@@ -99,7 +99,7 @@ export default function PlayerControls({
   opponentScore,
   potentialScore,
 }: {
-  overlayTopLeft: number;
+  overlayTopLeft: number | undefined;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   overlay: Tile;
   deck: Tile[];
@@ -112,16 +112,12 @@ export default function PlayerControls({
   return (
     <div id="playerScreen">
       <div id="playerControls" className={currentColor}>
-        {!overlay ? (
-          <></>
-        ) : (
-          <Deck
-            overlay={overlay}
-            overlayTopLeft={overlayTopLeft}
-            dispatchGameState={dispatchGameState}
-            deck={deck}
-          ></Deck>
-        )}
+        <Deck
+          overlay={overlay}
+          overlayTopLeft={overlayTopLeft}
+          dispatchGameState={dispatchGameState}
+          deck={deck}
+        ></Deck>
         <EndTurnButton
           placementIsLegal={placementIsLegal}
           opponentScore={opponentScore}

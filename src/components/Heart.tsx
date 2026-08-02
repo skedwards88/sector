@@ -1,12 +1,15 @@
-import Share from "./Share";
+import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import packageJson from "../../package.json";
 import type {DisplayState} from "../Types";
+import Share from "@skedwards88/shared-components/src/components/Share";
 
 export default function Heart({
   setDisplay,
 }: {
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
 }): React.JSX.Element {
+  const {userId, sessionId} = useMetadataContext();
+
   const feedbackLink = `https://github.com/skedwards88/sector/issues/new?body=Sector+version+${packageJson.version}`;
 
   return (
@@ -16,9 +19,13 @@ export default function Heart({
         {"Like this game? Share it with your friends.\n\n"}
         {
           <Share
-            appName={"Sector"}
-            url={"https://sector.twistedtrailgames.com/"}
-            text={"Check out this quick spatial strategy game!"}
+            appName="Sector"
+            text="Check out this quick spatial strategy game!"
+            url="https://sector.twistedtrailgames.com"
+            origin="heart"
+            content="Share"
+            userId={userId}
+            sessionId={sessionId}
           ></Share>
         }
         {`\n`}
