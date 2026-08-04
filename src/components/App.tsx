@@ -88,7 +88,7 @@ export default function App(): React.JSX.Element {
     null,
   );
 
-  React.useEffect(() => {
+  const onTurnChange = React.useEffectEvent(() => {
     const gameOver =
       gameState.scores.blue != undefined && gameState.scores.red != undefined;
 
@@ -106,7 +106,7 @@ export default function App(): React.JSX.Element {
 
       dispatchGameState({
         action: "endTurn",
-        andScore: andScore,
+        andScore,
         overlay: botOverlay,
         overlayTopLeft: botOverlayTopLeft,
       });
@@ -116,11 +116,17 @@ export default function App(): React.JSX.Element {
       setBotPlayedTopLeft(botOverlayTopLeft);
     }, 3000); // time to spin the deck
 
+    return timer;
+  });
+
+  React.useEffect(() => {
+    const timer = onTurnChange();
+
     return (): void => {
       clearTimeout(timer);
       setBotIsThinking(false);
     };
-  }, [gameState.isBlueTurn]);
+  }, [gameState.isBlueTurn, onTurnChange]);
 
   React.useEffect(() => {
     if (botPlayedTopLeft === null) {
