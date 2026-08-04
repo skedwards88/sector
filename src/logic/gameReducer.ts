@@ -108,7 +108,6 @@ export function gameReducer(
       draggedOverlayIndex: undefined,
     };
   } else if (payload.action === "endTurn") {
-    console.log(`end turn reducer ${JSON.stringify(payload)}`);
     // In all cases, update the board
     const newPlayed = mergeOverlayAndPlayed({
       played: currentGameState.played,
