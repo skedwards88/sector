@@ -32,8 +32,8 @@
     "@skedwards88/shared-components": "latest",
     "@skedwards88/word_logic": "^4.0.8",
     "lodash.clonedeep": "^4.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@babel/core": "^7.22.6",
