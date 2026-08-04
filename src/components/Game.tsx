@@ -46,6 +46,7 @@ export default function Game({
         setInstallPromptEvent={setInstallPromptEvent}
         showInstallButton={showInstallButton}
         installPromptEvent={installPromptEvent}
+        botPlayedTopLeft={botPlayedTopLeft}
       ></GameOver>
     );
   }

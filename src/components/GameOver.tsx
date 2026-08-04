@@ -11,6 +11,7 @@ export default function GameOver({
   setInstallPromptEvent,
   showInstallButton,
   installPromptEvent,
+  botPlayedTopLeft,
 }: {
   gameState: GameState;
   dispatchGameState: React.Dispatch<ReducerPayload>;
@@ -20,6 +21,7 @@ export default function GameOver({
   >;
   showInstallButton: boolean;
   installPromptEvent: BeforeInstallPromptEvent | null;
+  botPlayedTopLeft: number | null;
 }): React.JSX.Element {
   const redScore = gameState.scores.red ?? 0;
   const blueScore = gameState.scores.blue ?? 0;
@@ -49,6 +51,7 @@ export default function GameOver({
       <Board
         dispatchGameState={dispatchGameState}
         gameState={gameState}
+        botPlayedTopLeft={botPlayedTopLeft}
       ></Board>
 
       <div id="playerScreen">
