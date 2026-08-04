@@ -2,7 +2,6 @@ import {calculateScore} from "./calculateScore";
 import {gameInit} from "./gameInit";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 import {rotateTile} from "./rotateTile";
-import {playBot} from "./bot";
 import type {GameState, PlayerColor, Tile} from "../Types";
 
 export type ReducerPayload =
@@ -16,8 +15,7 @@ export type ReducerPayload =
       overlay: Tile;
       overlayTopLeft: number;
       andScore: boolean;
-    }
-  | {action: "playBot"};
+    };
 
 function updateDraggedOverlayIndex({
   draggedOverlayIndex,
@@ -110,6 +108,7 @@ export function gameReducer(
       draggedOverlayIndex: undefined,
     };
   } else if (payload.action === "endTurn") {
+    console.log(`end turn reducer ${JSON.stringify(payload)}`);
     // In all cases, update the board
     const newPlayed = mergeOverlayAndPlayed({
       played: currentGameState.played,
@@ -168,19 +167,6 @@ export function gameReducer(
       scores: newScores,
       isTie: newIsTie,
     };
-  } else if (payload.action === "playBot") {
-    const {botOverlay, botOverlayTopLeft, andScore} = playBot(
-      currentGameState,
-      "red",
-    );
-
-    // then call the reducer with the endTurn action
-    return gameReducer(currentGameState, {
-      action: "endTurn",
-      andScore,
-      overlay: botOverlay,
-      overlayTopLeft: botOverlayTopLeft,
-    });
   } else {
     console.log(
       `unknown action: ${(payload as unknown as {action: string}).action}`,
