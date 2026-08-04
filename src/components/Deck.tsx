@@ -21,9 +21,11 @@ function handlePointerDown({
 function DeckAsTile({
   overlay,
   dispatchGameState,
+  botIsThinking,
 }: {
   overlay: Tile;
   dispatchGameState: React.Dispatch<ReducerPayload>;
+  botIsThinking: boolean;
 }): React.JSX.Element {
   const deckDivs = [];
   for (let overlayIndex = 0; overlayIndex < overlay.length; overlayIndex++) {
@@ -41,7 +43,11 @@ function DeckAsTile({
     );
   }
 
-  return <div id="deck">{deckDivs}</div>;
+  return (
+    <div id="deck" className={botIsThinking ? "spinning" : ""}>
+      {deckDivs}
+    </div>
+  );
 }
 
 function DeckAsNumRemaining({deck}: {deck: Tile[]}): React.JSX.Element {
@@ -53,21 +59,27 @@ export default function Deck({
   overlay,
   dispatchGameState,
   deck,
+  botIsThinking,
+  botPlayedTopLeft,
 }: {
   overlayTopLeft: number | undefined;
   overlay: Tile;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   deck: Tile[];
+  botIsThinking: boolean;
+  botPlayedTopLeft: number | null;
 }): React.JSX.Element {
   // If overlayTopLeft is not undefined, the tile is being dragged (is not on the deck).
   // In this case, we don't want to show the deck
-  if (overlayTopLeft != undefined) {
+  // Also don't show the deck if the bot move animation is running (indicated by botPlayedTopLeft)
+  if (overlayTopLeft != undefined || botPlayedTopLeft != undefined) {
     return <DeckAsNumRemaining deck={deck}></DeckAsNumRemaining>;
   } else
     return (
       <DeckAsTile
         overlay={overlay}
         dispatchGameState={dispatchGameState}
+        botIsThinking={botIsThinking}
       ></DeckAsTile>
     );
 }

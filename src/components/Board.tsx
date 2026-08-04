@@ -6,13 +6,18 @@ import Played from "./Played";
 export default function Board({
   gameState,
   dispatchGameState,
+  botPlayedTopLeft,
 }: {
   gameState: GameState;
   dispatchGameState: React.Dispatch<ReducerPayload>;
+  botPlayedTopLeft: number | null;
 }): React.JSX.Element {
   return (
     <div id="board">
-      <Played played={gameState.played}></Played>
+      <Played
+        played={gameState.played}
+        botPlayedTopLeft={botPlayedTopLeft}
+      ></Played>
       <Overlay
         overlayTopLeft={gameState.overlayTopLeft}
         overlay={gameState.overlay}

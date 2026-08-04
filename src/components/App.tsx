@@ -14,6 +14,7 @@ import {useMetadataContext} from "@skedwards88/shared-components/src/components/
 import {inferEventsToLog} from "../logic/inferEventsToLog";
 import Home from "./Home";
 import type {DisplayState} from "../Types";
+import {playBot} from "../logic/bot";
 
 export default function App(): React.JSX.Element {
   // *****
@@ -81,11 +82,60 @@ export default function App(): React.JSX.Element {
     previousStateRef.current = gameState;
   }, [gameState, sessionId, userId]);
 
-  const gameOver =
-    gameState.scores.blue != undefined && gameState.scores.red != undefined;
-  if (gameState.isVsBot && !gameState.isBlueTurn && !gameOver) {
-    dispatchGameState({action: "playBot"});
-  }
+  const [botIsThinking, setBotIsThinking] = React.useState(false);
+
+  const [botPlayedTopLeft, setBotPlayedTopLeft] = React.useState<number | null>(
+    null,
+  );
+
+  React.useEffect(() => {
+    const gameOver =
+      gameState.scores.blue != undefined && gameState.scores.red != undefined;
+
+    if (!gameState.isVsBot || gameState.isBlueTurn || gameOver) {
+      return;
+    }
+
+    setBotIsThinking(true);
+
+    const timer = setTimeout(() => {
+      const {botOverlay, botOverlayTopLeft, andScore} = playBot(
+        gameState,
+        "red",
+      );
+
+      dispatchGameState({
+        action: "endTurn",
+        andScore: andScore,
+        overlay: botOverlay,
+        overlayTopLeft: botOverlayTopLeft,
+      });
+
+      setBotIsThinking(false);
+
+      setBotPlayedTopLeft(botOverlayTopLeft);
+    }, 3000); // time to spin the deck
+
+    return (): void => {
+      clearTimeout(timer);
+      setBotIsThinking(false);
+    };
+  }, [gameState.isBlueTurn]);
+
+  React.useEffect(() => {
+    if (botPlayedTopLeft === null) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setBotPlayedTopLeft(null);
+    }, 3000); // time to fade the played piece; this should match the animation time in css since the animation isn't infinite
+
+    return (): void => {
+      clearTimeout(timer);
+      setBotPlayedTopLeft(null);
+    };
+  }, [botPlayedTopLeft]);
 
   switch (display) {
     case "heart":
@@ -108,6 +158,8 @@ export default function App(): React.JSX.Element {
           setInstallPromptEvent={setInstallPromptEvent}
           showInstallButton={showInstallButton}
           installPromptEvent={installPromptEvent}
+          botIsThinking={botIsThinking}
+          botPlayedTopLeft={botPlayedTopLeft}
         ></Game>
       );
   }

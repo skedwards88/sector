@@ -17,6 +17,8 @@ export default function Game({
   setInstallPromptEvent,
   showInstallButton,
   installPromptEvent,
+  botIsThinking,
+  botPlayedTopLeft,
 }: {
   gameState: GameState;
   dispatchGameState: React.Dispatch<ReducerPayload>;
@@ -26,6 +28,8 @@ export default function Game({
   >;
   showInstallButton: boolean;
   installPromptEvent: BeforeInstallPromptEvent | null;
+  botIsThinking: boolean;
+  botPlayedTopLeft: number | null;
 }): React.JSX.Element {
   const currentColor = gameState.isBlueTurn ? "blue" : "red";
   const opponentColor = gameState.isBlueTurn ? "red" : "blue";
@@ -42,6 +46,7 @@ export default function Game({
         setInstallPromptEvent={setInstallPromptEvent}
         showInstallButton={showInstallButton}
         installPromptEvent={installPromptEvent}
+        botPlayedTopLeft={botPlayedTopLeft}
       ></GameOver>
     );
   }
@@ -82,6 +87,7 @@ export default function Game({
       <Board
         dispatchGameState={dispatchGameState}
         gameState={gameState}
+        botPlayedTopLeft={botPlayedTopLeft}
       ></Board>
 
       <PlayerControls
@@ -91,9 +97,12 @@ export default function Game({
         deck={gameState.deck}
         placementIsLegal={turnInvalidReason === null}
         currentColor={currentColor}
+        opponentColor={opponentColor}
         playerScore={playerScore}
         opponentScore={opponentScore}
         potentialScore={potentialScore}
+        botIsThinking={botIsThinking}
+        botPlayedTopLeft={botPlayedTopLeft}
       ></PlayerControls>
     </div>
   );

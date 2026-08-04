@@ -95,9 +95,12 @@ export default function PlayerControls({
   deck,
   placementIsLegal,
   currentColor,
+  opponentColor,
   playerScore,
   opponentScore,
   potentialScore,
+  botIsThinking,
+  botPlayedTopLeft,
 }: {
   overlayTopLeft: number | undefined;
   dispatchGameState: React.Dispatch<ReducerPayload>;
@@ -105,18 +108,26 @@ export default function PlayerControls({
   deck: Tile[];
   placementIsLegal: boolean;
   currentColor: PlayerColor;
+  opponentColor: PlayerColor;
   playerScore: number | undefined;
   opponentScore: number | undefined;
   potentialScore: number;
+  botIsThinking: boolean;
+  botPlayedTopLeft: number | null;
 }): React.JSX.Element {
   return (
     <div id="playerScreen">
-      <div id="playerControls" className={currentColor}>
+      <div
+        id="playerControls"
+        className={botPlayedTopLeft != undefined ? opponentColor : currentColor}
+      >
         <Deck
           overlay={overlay}
           overlayTopLeft={overlayTopLeft}
           dispatchGameState={dispatchGameState}
           deck={deck}
+          botIsThinking={botIsThinking}
+          botPlayedTopLeft={botPlayedTopLeft}
         ></Deck>
         <EndTurnButton
           placementIsLegal={placementIsLegal}
