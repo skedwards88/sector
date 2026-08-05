@@ -32,11 +32,11 @@ export const deck: Tile[] = [
 
     {
       color: "blue",
-      shape: "planet",
+      shape: null,
     },
     {
       color: "blue",
-      shape: "star",
+      shape: "planet",
     },
   ],
 
@@ -56,7 +56,7 @@ export const deck: Tile[] = [
     },
     {
       color: "blue",
-      shape: null,
+      shape: "star",
     },
   ],
 
@@ -183,11 +183,11 @@ export const deck: Tile[] = [
   [
     {
       color: "red",
-      shape: "whirl",
+      shape: null,
     },
     {
       color: "red",
-      shape: "moon",
+      shape: "whirl",
     },
 
     {
@@ -207,7 +207,7 @@ export const deck: Tile[] = [
     },
     {
       color: "red",
-      shape: null,
+      shape: "moon",
     },
 
     {
