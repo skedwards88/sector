@@ -133,6 +133,7 @@ export default function PlayerControls({
             continue
           </button>
         </div>
+        <div id="sheen"></div>
       </div>
     );
   }
