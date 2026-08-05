@@ -410,9 +410,8 @@ function findBestPlacementsWithSecondary({
           weightW * simulatedScore >
           dropInfinitiesAndSumArray(topOpponentNextScores) +
             numTilesRemainingWeight +
-            numTileRemaining
-            // + dropInfinitiesAndSumArray(lowOpponentNextScores)
-            ;
+            numTileRemaining;
+        // + dropInfinitiesAndSumArray(lowOpponentNextScores)
       }
     }
   }
@@ -436,15 +435,15 @@ export function playBot(
   currentGameState: GameState,
   botColor: PlayerColor,
   botParameters: BotParameters = {
-  numBotTopScores: 1,
-  numBotLowScores: 2,
-  numOpponentTopScores: 8,
-  numOpponentLowScores: 6,
-  weightW: 9,
-  weightY: 4,
-  numTilesRemainingWeight: 8,
-  maxPlacementsToFind: 12,
-  }, 
+    numBotTopScores: 1,
+    numBotLowScores: 2,
+    numOpponentTopScores: 8,
+    numOpponentLowScores: 6,
+    weightW: 9,
+    weightY: 4,
+    numTilesRemainingWeight: 8,
+    maxPlacementsToFind: 12,
+  },
 ): {
   botOverlay: Tile;
   botOverlayTopLeft: number;
