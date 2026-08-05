@@ -143,6 +143,26 @@ export default function App(): React.JSX.Element {
     };
   }, [botPlayedTopLeft]);
 
+  const [needToAnnounceScoring, setNeedToAnnounceScoring] =
+    React.useState(false);
+
+  React.useEffect(() => {
+    // Don't do anything if the score changed just due to initialization
+    if (
+      gameState.scores.red === undefined &&
+      gameState.scores.blue === undefined
+    ) {
+      return;
+    }
+
+    // If the human scored while playing the bot, don't do anything
+    if (gameState.isVsBot && gameState.scores.blue != undefined) {
+      return;
+    }
+
+    setNeedToAnnounceScoring(true);
+  }, [gameState.scores.red, gameState.scores.blue, gameState.isVsBot]);
+
   switch (display) {
     case "heart":
       return <Heart setDisplay={setDisplay}></Heart>;
@@ -166,6 +186,8 @@ export default function App(): React.JSX.Element {
           installPromptEvent={installPromptEvent}
           botIsThinking={botIsThinking}
           botPlayedTopLeft={botPlayedTopLeft}
+          setNeedToAnnounceScoring={setNeedToAnnounceScoring}
+          needToAnnounceScoring={needToAnnounceScoring}
         ></Game>
       );
   }

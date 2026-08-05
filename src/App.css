@@ -263,6 +263,7 @@ button {
   width: 100%;
 }
 
+/* required to show the sheen */
 #playerScreen > * {
   grid-column-start: 1;
   grid-row-start: 1;
@@ -292,12 +293,19 @@ button {
   padding: 10px 0;
 }
 
-#playerControls.red {
+#playerControls.red, #announceScore.red {
   background-color: var(--red-color);
 }
 
-#playerControls.blue {
+#playerControls.blue, #announceScore.blue {
   background-color: var(--blue-color);
+}
+
+#announceScore{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding-top: 10px;
 }
 
 #endTurn {
@@ -424,7 +432,7 @@ button {
     0 0 5px #bac5c7;
 }
 
-#playerControls > button {
+#playerControls > button, #announceScore > button {
   border-radius: 5px;
   border: 0;
   margin: 10px;
@@ -437,11 +445,11 @@ button {
     inset 0 0 0.9rem rgb(47 47 47);
 }
 
-#playerControls.blue > button {
+#playerControls.blue > button, #announceScore.blue > button {
   color: var(--blue-color);
 }
 
-#playerControls.red > button {
+#playerControls.red > button, #announceScore.red > button {
   color: var(--red-color);
 }
 

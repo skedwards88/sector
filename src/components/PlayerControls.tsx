@@ -101,6 +101,8 @@ export default function PlayerControls({
   potentialScore,
   botIsThinking,
   botPlayedTopLeft,
+  needToAnnounceScoring,
+  setNeedToAnnounceScoring,
 }: {
   overlayTopLeft: number | undefined;
   dispatchGameState: React.Dispatch<ReducerPayload>;
@@ -114,7 +116,27 @@ export default function PlayerControls({
   potentialScore: number;
   botIsThinking: boolean;
   botPlayedTopLeft: number | null;
+
+  needToAnnounceScoring: boolean;
+  setNeedToAnnounceScoring: React.Dispatch<React.SetStateAction<boolean>>;
 }): React.JSX.Element {
+  if (needToAnnounceScoring) {
+    return (
+      <div id="playerScreen" className={currentColor}>
+        <div id="announceScore" className={currentColor}>
+          {`${opponentColor} scored ${opponentScore}. score higher to win!`}
+          <button
+            onClick={() => {
+              setNeedToAnnounceScoring(false);
+            }}
+          >
+            continue
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div id="playerScreen">
       <div

@@ -19,6 +19,8 @@ export default function Game({
   installPromptEvent,
   botIsThinking,
   botPlayedTopLeft,
+  needToAnnounceScoring,
+  setNeedToAnnounceScoring,
 }: {
   gameState: GameState;
   dispatchGameState: React.Dispatch<ReducerPayload>;
@@ -30,6 +32,8 @@ export default function Game({
   installPromptEvent: BeforeInstallPromptEvent | null;
   botIsThinking: boolean;
   botPlayedTopLeft: number | null;
+  needToAnnounceScoring: boolean;
+  setNeedToAnnounceScoring: React.Dispatch<React.SetStateAction<boolean>>;
 }): React.JSX.Element {
   const currentColor = gameState.isBlueTurn ? "blue" : "red";
   const opponentColor = gameState.isBlueTurn ? "red" : "blue";
@@ -103,6 +107,8 @@ export default function Game({
         potentialScore={potentialScore}
         botIsThinking={botIsThinking}
         botPlayedTopLeft={botPlayedTopLeft}
+        setNeedToAnnounceScoring={setNeedToAnnounceScoring}
+        needToAnnounceScoring={needToAnnounceScoring}
       ></PlayerControls>
     </div>
   );
