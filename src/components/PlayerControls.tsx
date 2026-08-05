@@ -122,7 +122,7 @@ export default function PlayerControls({
 }): React.JSX.Element {
   if (needToAnnounceScoring) {
     return (
-      <div id="playerScreen" className={currentColor}>
+      <div id="playerScreen">
         <div id="announceScore" className={currentColor}>
           {`${opponentColor} scored ${opponentScore}. score higher to win!`}
           <button

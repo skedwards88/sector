@@ -126,7 +126,7 @@ export default function App(): React.JSX.Element {
       clearTimeout(timer);
       setBotIsThinking(false);
     };
-  }, [gameState.isBlueTurn, onTurnChange]);
+  }, [gameState.isBlueTurn]);
 
   React.useEffect(() => {
     if (botPlayedTopLeft === null) {
@@ -143,29 +143,31 @@ export default function App(): React.JSX.Element {
     };
   }, [botPlayedTopLeft]);
 
+  const [previousScore, setPreviousScore] = React.useState(gameState.scores);
+
   const [needToAnnounceScoring, setNeedToAnnounceScoring] =
     React.useState(false);
 
-  const onScoreChange = React.useEffectEvent(() => {
+  if (
+    previousScore.red != gameState.scores.red ||
+    previousScore.blue != gameState.scores.blue
+  ) {
+    setPreviousScore(gameState.scores);
+
+    const isInitialization =
+      gameState.scores.red === undefined && gameState.scores.blue === undefined;
+
+    const isHumanScoredVsBot =
+      gameState.isVsBot && gameState.scores.blue != undefined;
+
     // Don't do anything if the score changed just due to initialization
-    if (
-      gameState.scores.red === undefined &&
-      gameState.scores.blue === undefined
-    ) {
-      return;
+    // or if the human scored while playing the bot
+    if (!isInitialization && !isHumanScoredVsBot) {
+      setNeedToAnnounceScoring(true);
+    } else {
+      setNeedToAnnounceScoring(false);
     }
-
-    // If the human scored while playing the bot, don't do anything
-    if (gameState.isVsBot && gameState.scores.blue != undefined) {
-      return;
-    }
-
-    setNeedToAnnounceScoring(true);
-  });
-
-  React.useEffect(() => {
-    onScoreChange();
-  }, [gameState.scores.red, gameState.scores.blue, onScoreChange]);
+  }
 
   switch (display) {
     case "heart":
