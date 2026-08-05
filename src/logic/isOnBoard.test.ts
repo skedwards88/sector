@@ -1,6 +1,6 @@
 import {isOnBoard} from "./bot";
 
-describe("isOffBoard", () => {
+describe("isOnBoard", () => {
   const tileDiameter = 2;
   const boardDiameter = 5;
 
