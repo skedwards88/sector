@@ -146,7 +146,7 @@ export default function App(): React.JSX.Element {
   const [needToAnnounceScoring, setNeedToAnnounceScoring] =
     React.useState(false);
 
-  React.useEffect(() => {
+  const onScoreChange = React.useEffectEvent(() => {
     // Don't do anything if the score changed just due to initialization
     if (
       gameState.scores.red === undefined &&
@@ -161,7 +161,11 @@ export default function App(): React.JSX.Element {
     }
 
     setNeedToAnnounceScoring(true);
-  }, [gameState.scores.red, gameState.scores.blue, gameState.isVsBot]);
+  });
+
+  React.useEffect(() => {
+    onScoreChange();
+  }, [gameState.scores.red, gameState.scores.blue, onScoreChange]);
 
   switch (display) {
     case "heart":
