@@ -88,15 +88,27 @@ export default function App(): React.JSX.Element {
     null,
   );
 
-  const onTurnChange = React.useEffectEvent(() => {
-    const gameOver =
-      gameState.scores.blue != undefined && gameState.scores.red != undefined;
+  const [previousIsBlueTurn, setPreviousIsBlueTurn] = React.useState(
+    gameState.isBlueTurn,
+  );
 
-    if (!gameState.isVsBot || gameState.isBlueTurn || gameOver) {
+  const gameOver =
+    gameState.scores.blue != undefined && gameState.scores.red != undefined;
+
+  const botShouldThink =
+    gameState.isVsBot && !gameState.isBlueTurn && !gameOver;
+
+  if (previousIsBlueTurn !== gameState.isBlueTurn) {
+    setPreviousIsBlueTurn(gameState.isBlueTurn);
+    if (botShouldThink) {
+      setBotIsThinking(true);
+    }
+  }
+
+  const onTurnChange = React.useEffectEvent(() => {
+    if (!botShouldThink) {
       return;
     }
-
-    setBotIsThinking(true);
 
     const timer = setTimeout(() => {
       const {botOverlay, botOverlayTopLeft, andScore} = playBot(
@@ -123,8 +135,10 @@ export default function App(): React.JSX.Element {
     const timer = onTurnChange();
 
     return (): void => {
-      clearTimeout(timer);
-      setBotIsThinking(false);
+      if (timer !== undefined) {
+        clearTimeout(timer);
+        setBotIsThinking(false);
+      }
     };
   }, [gameState.isBlueTurn]);
 
