@@ -1,3 +1,4 @@
+import logo from "../images/logo.svg";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 
@@ -39,7 +40,7 @@ export default function BoardGame(): React.JSX.Element {
 
   return (
     <div className="boardGame">
-      <h1>Sector Board Game</h1>
+      <img src={logo} alt="Sector logo" id="logo" />
       <BoardGameButton
         link="/boardGameRules.pdf"
         text="Detailed rules (PDF)"
