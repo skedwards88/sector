@@ -16,6 +16,11 @@ body {
   justify-content: center;
 }
 
+/* Since already using bold font across the app, make the strong element (used in PWAInstall be normal instead */
+strong {
+  font-weight: normal;
+}
+
 .app {
   height: 90vh; /* fallback if svh isn't handled */
   height: 98svh;
@@ -102,7 +107,7 @@ button {
 
 /* Heart */
 
-.heart {
+.heart, .info {
   white-space: pre-line;
   display: flex;
   flex-direction: column;
@@ -111,9 +116,10 @@ button {
   justify-items: center;
   justify-content: space-evenly;
   align-items: center;
+  padding: 5vmin;
 }
 
-.heartText {
+.heart > *, .info > * {
   margin: 2vmax;
 }
 
