@@ -9,6 +9,8 @@ import {
   handleBeforeInstallPrompt,
   type BeforeInstallPromptEvent,
 } from "@skedwards88/shared-components/src/logic/handleInstall";
+import InstallOverview from "@skedwards88/shared-components/src/components/InstallOverview";
+import PWAInstall from "@skedwards88/shared-components/src/components/PWAInstall";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {inferEventsToLog} from "../logic/inferEventsToLog";
@@ -188,6 +190,7 @@ export default function App(): React.JSX.Element {
       return <Heart setDisplay={setDisplay}></Heart>;
     case "rules":
       return <Rules setDisplay={setDisplay}></Rules>;
+
     case "home":
       return (
         <Home
@@ -195,15 +198,35 @@ export default function App(): React.JSX.Element {
           setDisplay={setDisplay}
         ></Home>
       );
+
+    case "installOverview":
+      return (
+        <InstallOverview
+          setDisplay={setDisplay}
+          setInstallPromptEvent={setInstallPromptEvent}
+          showInstallButton={showInstallButton}
+          installPromptEvent={installPromptEvent}
+          userId={userId}
+          sessionId={sessionId}
+        ></InstallOverview>
+      );
+
+    case "pwaInstall":
+      return (
+        <PWAInstall
+          setDisplay={setDisplay}
+          pwaLink={"https://sector.twistedtrailgames.com"}
+          userId={userId}
+          sessionId={sessionId}
+        ></PWAInstall>
+      );
+
     default:
       return (
         <Game
           dispatchGameState={dispatchGameState}
           gameState={gameState}
           setDisplay={setDisplay}
-          setInstallPromptEvent={setInstallPromptEvent}
-          showInstallButton={showInstallButton}
-          installPromptEvent={installPromptEvent}
           botIsThinking={botIsThinking}
           botPlayedTopLeft={botPlayedTopLeft}
           setNeedToAnnounceScoring={setNeedToAnnounceScoring}

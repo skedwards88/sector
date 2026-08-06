@@ -8,15 +8,11 @@ import {mergeOverlayAndPlayed} from "../logic/mergeOverlayAndPlayed";
 import Board from "./Board";
 import type {DisplayState, GameState} from "../Types";
 import {type ReducerPayload} from "../logic/gameReducer";
-import {type BeforeInstallPromptEvent} from "@skedwards88/shared-components/src/logic/handleInstall";
 
 export default function Game({
   gameState,
   dispatchGameState,
   setDisplay,
-  setInstallPromptEvent,
-  showInstallButton,
-  installPromptEvent,
   botIsThinking,
   botPlayedTopLeft,
   needToAnnounceScoring,
@@ -25,11 +21,6 @@ export default function Game({
   gameState: GameState;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
-  setInstallPromptEvent: React.Dispatch<
-    React.SetStateAction<BeforeInstallPromptEvent | null>
-  >;
-  showInstallButton: boolean;
-  installPromptEvent: BeforeInstallPromptEvent | null;
   botIsThinking: boolean;
   botPlayedTopLeft: number | null;
   needToAnnounceScoring: boolean;
@@ -47,9 +38,6 @@ export default function Game({
         dispatchGameState={dispatchGameState}
         gameState={gameState}
         setDisplay={setDisplay}
-        setInstallPromptEvent={setInstallPromptEvent}
-        showInstallButton={showInstallButton}
-        installPromptEvent={installPromptEvent}
         botPlayedTopLeft={botPlayedTopLeft}
       ></GameOver>
     );
@@ -74,12 +62,7 @@ export default function Game({
 
   return (
     <div className="app" id="game">
-      <ControlBar
-        setDisplay={setDisplay}
-        setInstallPromptEvent={setInstallPromptEvent}
-        showInstallButton={showInstallButton}
-        installPromptEvent={installPromptEvent}
-      ></ControlBar>
+      <ControlBar setDisplay={setDisplay}></ControlBar>
 
       <GameText
         overlayTopLeft={gameState.overlayTopLeft}

@@ -2,25 +2,16 @@ import ControlBar from "./ControlBar";
 import Board from "./Board";
 import {type ReducerPayload} from "../logic/gameReducer";
 import type {DisplayState, GameState} from "../Types";
-import {type BeforeInstallPromptEvent} from "@skedwards88/shared-components/src/logic/handleInstall";
 
 export default function GameOver({
   gameState,
   dispatchGameState,
   setDisplay,
-  setInstallPromptEvent,
-  showInstallButton,
-  installPromptEvent,
   botPlayedTopLeft,
 }: {
   gameState: GameState;
   dispatchGameState: React.Dispatch<ReducerPayload>;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
-  setInstallPromptEvent: React.Dispatch<
-    React.SetStateAction<BeforeInstallPromptEvent | null>
-  >;
-  showInstallButton: boolean;
-  installPromptEvent: BeforeInstallPromptEvent | null;
   botPlayedTopLeft: number | null;
 }): React.JSX.Element {
   const redScore = gameState.scores.red ?? 0;
@@ -31,12 +22,7 @@ export default function GameOver({
 
   return (
     <div className="app" id="gameOver">
-      <ControlBar
-        setDisplay={setDisplay}
-        setInstallPromptEvent={setInstallPromptEvent}
-        showInstallButton={showInstallButton}
-        installPromptEvent={installPromptEvent}
-      ></ControlBar>
+      <ControlBar setDisplay={setDisplay}></ControlBar>
 
       <div id="gameOverResult" className={winner}>
         <div>{isTie ? "Tie!" : `${winner.toUpperCase()} wins!`}</div>

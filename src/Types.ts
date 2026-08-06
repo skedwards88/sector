@@ -27,4 +27,10 @@ export type GameState = {
   isVsBot: boolean;
 };
 
-export type DisplayState = "game" | "rules" | "home" | "heart";
+export type DisplayState =
+  | "game"
+  | "rules"
+  | "home"
+  | "heart"
+  | "installOverview"
+  | "pwaInstall";

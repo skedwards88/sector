@@ -1,23 +1,12 @@
-import {
-  handleInstall,
-  type BeforeInstallPromptEvent,
-} from "@skedwards88/shared-components/src/logic/handleInstall";
 import type {DisplayState} from "../Types";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import Share from "@skedwards88/shared-components/src/components/Share";
+import {isRunningStandalone} from "@skedwards88/shared-components/src/logic/isRunningStandalone";
 
 export default function ControlBar({
   setDisplay,
-  setInstallPromptEvent,
-  showInstallButton,
-  installPromptEvent,
 }: {
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
-  setInstallPromptEvent: React.Dispatch<
-    React.SetStateAction<BeforeInstallPromptEvent | null>
-  >;
-  showInstallButton: boolean;
-  installPromptEvent: BeforeInstallPromptEvent | null;
 }): React.JSX.Element {
   const {userId, sessionId} = useMetadataContext();
 
@@ -40,17 +29,10 @@ export default function ControlBar({
         userId={userId}
         sessionId={sessionId}
       ></Share>
-      {showInstallButton && installPromptEvent ? (
+      {!isRunningStandalone() ? (
         <button
           id="installButton"
-          onClick={() =>
-            handleInstall(
-              installPromptEvent,
-              setInstallPromptEvent,
-              userId,
-              sessionId,
-            )
-          }
+          onClick={() => setDisplay("installOverview")}
         ></button>
       ) : (
         <></>
