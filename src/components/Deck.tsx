@@ -50,8 +50,18 @@ function DeckAsTile({
   );
 }
 
-function DeckAsNumRemaining({deck}: {deck: Tile[]}): React.JSX.Element {
-  return <div id="deckRemaining">{`${deck.length}\nleft`}</div>;
+function DeckAsBlank({
+  deck,
+  hideRemainingCount,
+}: {
+  deck: Tile[];
+  hideRemainingCount: boolean;
+}): React.JSX.Element {
+  return (
+    <div id="deckRemaining">
+      {hideRemainingCount ? "" : `${deck.length}\nleft`}
+    </div>
+  );
 }
 
 export default function Deck({
@@ -73,7 +83,12 @@ export default function Deck({
   // In this case, we don't want to show the deck
   // Also don't show the deck if the bot move animation is running (indicated by botPlayedTopLeft)
   if (overlayTopLeft != undefined || botPlayedTopLeft != undefined) {
-    return <DeckAsNumRemaining deck={deck}></DeckAsNumRemaining>;
+    return (
+      <DeckAsBlank
+        deck={deck}
+        hideRemainingCount={botPlayedTopLeft != undefined}
+      ></DeckAsBlank>
+    );
   } else
     return (
       <DeckAsTile

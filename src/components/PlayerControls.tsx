@@ -138,12 +138,11 @@ export default function PlayerControls({
     );
   }
 
+  const botIsActive = botIsThinking || botPlayedTopLeft != undefined;
+
   return (
     <div id="playerScreen">
-      <div
-        id="playerControls"
-        className={botPlayedTopLeft != undefined ? opponentColor : currentColor}
-      >
+      <div id="playerControls" className={botIsActive ? "red" : currentColor}>
         <Deck
           overlay={overlay}
           overlayTopLeft={overlayTopLeft}
@@ -152,23 +151,31 @@ export default function PlayerControls({
           botIsThinking={botIsThinking}
           botPlayedTopLeft={botPlayedTopLeft}
         ></Deck>
-        <EndTurnButton
-          placementIsLegal={placementIsLegal}
-          opponentScore={opponentScore}
-          potentialScore={potentialScore}
-          dispatchGameState={dispatchGameState}
-          overlay={overlay}
-          overlayTopLeft={overlayTopLeft}
-        ></EndTurnButton>
-        <EndTurnAndScoreButton
-          placementIsLegal={placementIsLegal}
-          opponentScore={opponentScore}
-          playerScore={playerScore}
-          potentialScore={potentialScore}
-          dispatchGameState={dispatchGameState}
-          overlay={overlay}
-          overlayTopLeft={overlayTopLeft}
-        ></EndTurnAndScoreButton>
+        {botIsActive ? (
+          <></>
+        ) : (
+          <EndTurnButton
+            placementIsLegal={placementIsLegal}
+            opponentScore={opponentScore}
+            potentialScore={potentialScore}
+            dispatchGameState={dispatchGameState}
+            overlay={overlay}
+            overlayTopLeft={overlayTopLeft}
+          ></EndTurnButton>
+        )}
+        {botIsActive ? (
+          <></>
+        ) : (
+          <EndTurnAndScoreButton
+            placementIsLegal={placementIsLegal}
+            opponentScore={opponentScore}
+            playerScore={playerScore}
+            potentialScore={potentialScore}
+            dispatchGameState={dispatchGameState}
+            overlay={overlay}
+            overlayTopLeft={overlayTopLeft}
+          ></EndTurnAndScoreButton>
+        )}
       </div>
 
       <div id="sheen"></div>
