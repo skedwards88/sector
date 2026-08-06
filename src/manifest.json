@@ -14,16 +14,29 @@
   "categories": ["games", "entertainment"],
   "icons": [
     {
-      "src": "icon_512.png",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "any"
+      "src": "favicon.svg",
+      "sizes": "any",
+      "purpose": "maskable"
     },
     {
-      "src": "maskable_192.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "favicon_bw.svg",
+      "sizes": "any",
+      "purpose": "monochrome maskable"
+    },
+    {
+      "src": "favicon_180.png",
+      "sizes": "180x180",
       "purpose": "maskable"
+    },
+    {
+      "src": "favicon_900.png",
+      "sizes": "900x900",
+      "purpose": "maskable"
+    },
+    {
+      "src": "favicon_900_bw.png",
+      "sizes": "900x900",
+      "purpose": "monochrome maskable"
     }
   ],
   "screenshots": []

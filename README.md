@@ -8,7 +8,7 @@ Strategically place tiles to build the greatest galactic empire.
 
 [Play Now!](https://sector.twistedtrailgames.com/)
 
-![Game icon](./src/images/favicon.png)
+![Game icon](./src/images/favicon.svg)
 
 Want more games? Visit [Twisted Trail Games](https://twistedtrailgames.com/).
 

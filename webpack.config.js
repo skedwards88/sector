@@ -53,9 +53,11 @@ module.exports = (env, argv) => {
 
   const copyPlugin = new CopyPlugin({
     patterns: [
-      {from: "./src/images/favicon.png", to: "./assets/favicon.png"},
-      {from: "./src/images/icon_512.png", to: "./assets/icon_512.png"},
-      {from: "./src/images/maskable_192.png", to: "./assets/maskable_192.png"},
+      {from: "./src/images/favicon_900.png", to: "./assets/favicon_900.png"},
+      {from: "./src/images/favicon_180.png", to: "./assets/favicon_180.png"},
+      {from: "./src/images/favicon_bw_900.png", to: "./assets/favicon_bw_900.png"},
+      {from: "./src/images/favicon.svg", to: "./assets/favicon.svg"},
+      {from: "./src/images/favicon_bw.svg", to: "./assets/favicon_bw.svg"},
       {from: "./src/manifest.json", to: "./assets/manifest.json"},
       {
         from: "./src/images/rules/boardGameRules.pdf",
