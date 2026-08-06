@@ -443,7 +443,7 @@ export function playBot(
   weightY: 4,
   numTilesRemainingWeight: 9,
   maxPlacementsToFind: 12,
-  }, 
+  },
 ): {
   botOverlay: Tile;
   botOverlayTopLeft: number;
@@ -457,7 +457,7 @@ export function playBot(
 
   const numTileRemaining = currentGameState.deck.length;
 
-  const isBotLastTurn = numTileRemaining <= 2;
+  const isBotLastTurn = numTileRemaining <= 1;
 
   const opponentScore = currentGameState.scores[opponentColor];
   const botScore = currentGameState.scores[botColor];
