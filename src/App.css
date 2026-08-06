@@ -504,7 +504,7 @@ button {
 /* larger screens */
 @media (height >= 600px) and (width >= 936px), (width >= 600px) and (height >= 936px) {
   body {
-    --quad: 50px;
+    --quad: 6vmin;
   }
 
   .app {
