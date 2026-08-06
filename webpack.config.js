@@ -55,7 +55,10 @@ module.exports = (env, argv) => {
     patterns: [
       {from: "./src/images/favicon_900.png", to: "./assets/favicon_900.png"},
       {from: "./src/images/favicon_180.png", to: "./assets/favicon_180.png"},
-      {from: "./src/images/favicon_bw_900.png", to: "./assets/favicon_bw_900.png"},
+      {
+        from: "./src/images/favicon_bw_900.png",
+        to: "./assets/favicon_bw_900.png",
+      },
       {from: "./src/images/favicon.svg", to: "./assets/favicon.svg"},
       {from: "./src/images/favicon_bw.svg", to: "./assets/favicon_bw.svg"},
       {from: "./src/manifest.json", to: "./assets/manifest.json"},
