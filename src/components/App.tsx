@@ -149,7 +149,7 @@ export default function App(): React.JSX.Element {
 
     const timer = setTimeout(() => {
       setBotPlayedTopLeft(null);
-    }, 3000); // time to fade the played piece; this should match the animation time in css since the animation isn't infinite
+    }, 2000); // time to fade the played piece; this should be <= the animation time in css since the animation isn't infinite
 
     return (): void => {
       clearTimeout(timer);
