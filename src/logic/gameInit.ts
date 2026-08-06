@@ -50,7 +50,7 @@ export function gameInit({isVsBot = false}: {isVsBot?: boolean}): GameState {
       red: undefined,
       blue: undefined,
     },
-    isTie: false,
+    firstScorer: undefined,
     lastBreakingChange: "20230706",
   };
 }

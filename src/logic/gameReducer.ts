@@ -120,39 +120,30 @@ export function gameReducer(
     //   the drawn tile will be `undefined`
     const newDeck = structuredClone(currentGameState.deck);
     const playerColor = currentGameState.isBlueTurn ? "blue" : "red";
-    const opponentColor = currentGameState.isBlueTurn ? "red" : "blue";
 
     const newOverlay = newDeck.pop();
 
     // Calculate the score in certain cases:
     const newScores = structuredClone(currentGameState.scores);
-    let newIsTie = currentGameState.isTie;
+    // Calculate the score(s) if this is the last turn
     if (newOverlay === undefined) {
-      // Calculate the score(s) if this is the last turn
-      // If neither player has scored AND the scores are tied, this is a tie
-      // (if a player has already scored, ties count as a win for that player)
-      const canBeTie = Object.values(newScores).every(
-        (color) => color === undefined,
-      );
       for (const color in newScores) {
         if (newScores[color as PlayerColor] === undefined) {
           const score = calculateScore(color as PlayerColor, newPlayed);
           newScores[color as PlayerColor] = score;
         }
       }
-      newIsTie =
-        canBeTie && Object.values(newScores)[0] === Object.values(newScores)[1];
-    } else if (payload.andScore) {
-      // Calculate the score if the player requested
+    }
+    // Calculate the score if the player requested
+    else if (payload.andScore) {
       const score = calculateScore(playerColor, newPlayed);
       newScores[playerColor] = score;
-    } else if (newScores[opponentColor] != undefined) {
-      // Calculate the score if the opponent has scored
-      //  AND the current players score is > the opponent's score
-      const potentialScore = calculateScore(playerColor, newPlayed);
-      if (potentialScore > newScores[opponentColor]) {
-        newScores[playerColor] = potentialScore;
-      }
+    }
+
+    // Record if they are the first player to score
+    let newFirstScorer: PlayerColor | undefined = undefined;
+    if (payload.andScore && currentGameState.firstScorer === undefined) {
+      newFirstScorer = playerColor;
     }
 
     return {
@@ -164,7 +155,7 @@ export function gameReducer(
       played: newPlayed,
       isBlueTurn: !currentGameState.isBlueTurn,
       scores: newScores,
-      isTie: newIsTie,
+      ...(newFirstScorer && {firstScorer: newFirstScorer}),
     };
   } else {
     console.log(

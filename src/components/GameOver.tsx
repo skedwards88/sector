@@ -1,7 +1,7 @@
 import ControlBar from "./ControlBar";
 import Board from "./Board";
 import {type ReducerPayload} from "../logic/gameReducer";
-import type {DisplayState, GameState} from "../Types";
+import type {DisplayState, GameState, PlayerColor} from "../Types";
 
 export default function GameOver({
   gameState,
@@ -17,21 +17,38 @@ export default function GameOver({
   const redScore = gameState.scores.red ?? 0;
   const blueScore = gameState.scores.blue ?? 0;
 
-  const isTie = gameState.isTie;
-  const winner = redScore > blueScore ? "red" : "blue";
+  let winner: PlayerColor | undefined;
+  let gameOverText: string;
+  if (redScore != blueScore) {
+    // not a tie
+    winner = redScore > blueScore ? "red" : "blue";
+    gameOverText = `${winner.toUpperCase()} wins!\n\n${Math.max(
+      redScore,
+      blueScore,
+    )} vs ${Math.min(redScore, blueScore)}`;
+  } else {
+    // ties go to the player who scored first
+    // if no player scored before end of game, then the tie is a legit tie
+    winner = gameState.firstScorer;
+    if (winner != undefined) {
+      gameOverText = `${winner.toUpperCase()} wins!\n\n${Math.max(
+        redScore,
+        blueScore,
+      )} vs ${Math.min(redScore, blueScore)}\n\n(${winner} scored first)`;
+    } else {
+      gameOverText = `Tie!\n\n${Math.max(redScore, blueScore)} vs ${Math.min(
+        redScore,
+        blueScore,
+      )}`;
+    }
+  }
 
   return (
     <div className="app" id="gameOver">
       <ControlBar setDisplay={setDisplay}></ControlBar>
 
       <div id="gameOverResult" className={winner}>
-        <div>{isTie ? "Tie!" : `${winner.toUpperCase()} wins!`}</div>
-        <div>
-          {`${Math.max(redScore, blueScore)} vs ${Math.min(
-            redScore,
-            blueScore,
-          )}`}
-        </div>
+        {gameOverText}
       </div>
 
       <Board

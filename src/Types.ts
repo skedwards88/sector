@@ -22,7 +22,7 @@ export type GameState = {
   draggedOverlayIndex: number | undefined;
   overlayTopLeft: number | undefined;
   isBlueTurn: boolean;
-  isTie: boolean;
+  firstScorer: PlayerColor | undefined;
   scores: Scores;
   isVsBot: boolean;
 };
