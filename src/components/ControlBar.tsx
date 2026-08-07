@@ -2,6 +2,7 @@ import type {DisplayState} from "../Types";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import Share from "@skedwards88/shared-components/src/components/Share";
 import {isRunningStandalone} from "@skedwards88/shared-components/src/logic/isRunningStandalone";
+import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 
 export default function ControlBar({
   setDisplay,
@@ -19,7 +20,17 @@ export default function ControlBar({
         }}
       ></button>
       <button id="heartButton" onClick={() => setDisplay("heart")}></button>
-      <button id="rulesButton" onClick={() => setDisplay("rules")}></button>
+      <button
+        id="rulesButton"
+        onClick={() => {
+          sendAnalyticsCF({
+            userId,
+            sessionId,
+            analyticsToLog: [{eventName: "appRules"}],
+          });
+          setDisplay("rules");
+        }}
+      ></button>
       <Share
         id="shareButton"
         appName="Sector"
