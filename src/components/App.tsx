@@ -13,8 +13,15 @@ import Home from "./Home";
 import type {DisplayState} from "../Types";
 import {playBot} from "../logic/bot";
 import packageJson from "../../package.json";
+import {useInstallPrompt} from "@skedwards88/shared-components/src/logic/handleInstall";
 
 export default function App(): React.JSX.Element {
+  const {userId, sessionId} = useMetadataContext();
+
+  // This must live at the top level component, not in InstallOverview where it is used, since the InstallOverview is not rendered initially and therefore misses its chance to attach the listeners
+  const {installPromptEvent, showInstallButton, handleInstall} =
+    useInstallPrompt({userId, sessionId});
+
   const [display, setDisplay] = React.useState<DisplayState>("home");
 
   const [gameState, dispatchGameState] = React.useReducer(
@@ -22,8 +29,6 @@ export default function App(): React.JSX.Element {
     {},
     gameInit,
   );
-
-  const {userId, sessionId} = useMetadataContext();
 
   // Store the previous state so that we can infer which analytics events to send
   const previousStateRef = React.useRef(gameState);
@@ -171,6 +176,9 @@ export default function App(): React.JSX.Element {
           setDisplay={setDisplay}
           userId={userId}
           sessionId={sessionId}
+          installPromptEvent={installPromptEvent}
+          showInstallButton={showInstallButton}
+          handleInstall={handleInstall}
         ></InstallOverview>
       );
 
