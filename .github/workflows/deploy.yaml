@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write # write for bumping version (read-only required for deployment)
+  contents: write # Required for bumping version (read-only required for deployment)
   pages: write # Required for deployment
   id-token: write # Required for deployment
   actions: read # Required for deployment
@@ -36,11 +36,22 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install requirements
-        run: npm install
+        run: npm ci
 
-      - name: Push
+      - name: Run tests
+        run: npm test
+
+      - name: Setup git config
         run: |
-          git push origin main
+          git config --global user.name "skedwards88"
+          git config --global user.email "skedwards88@gmail.com"
+
+      - name: Bump version
+        run: npm version patch
+
+      - name: Push the version bump
+        run: |
+          git push
 
       - name: Build
         run: npm run build
