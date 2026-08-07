@@ -4,11 +4,6 @@ import {gameReducer} from "../logic/gameReducer";
 import Game from "./Game";
 import MoreGames from "@skedwards88/shared-components/src/components/MoreGames";
 import Rules from "./Rules";
-import {
-  handleAppInstalled,
-  handleBeforeInstallPrompt,
-  type BeforeInstallPromptEvent,
-} from "@skedwards88/shared-components/src/logic/handleInstall";
 import InstallOverview from "@skedwards88/shared-components/src/components/InstallOverview";
 import PWAInstall from "@skedwards88/shared-components/src/components/PWAInstall";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
@@ -20,45 +15,6 @@ import {playBot} from "../logic/bot";
 import packageJson from "../../package.json";
 
 export default function App(): React.JSX.Element {
-  // *****
-  // Install handling setup
-  // *****
-  // Set up states that will be used by the handleAppInstalled and handleBeforeInstallPrompt listeners
-  const [installPromptEvent, setInstallPromptEvent] =
-    React.useState<BeforeInstallPromptEvent | null>(null);
-  const [showInstallButton, setShowInstallButton] =
-    React.useState<boolean>(true);
-
-  React.useEffect(() => {
-    // Need to store the function in a variable so that
-    // the add and remove actions can reference the same function
-    const listener = (event: BeforeInstallPromptEvent): void =>
-      handleBeforeInstallPrompt(
-        event,
-        setInstallPromptEvent,
-        setShowInstallButton,
-      );
-
-    window.addEventListener("beforeinstallprompt", listener);
-
-    return (): void =>
-      window.removeEventListener("beforeinstallprompt", listener);
-  }, []);
-
-  React.useEffect(() => {
-    // Need to store the function in a variable so that
-    // the add and remove actions can reference the same function
-    const listener = (): void =>
-      handleAppInstalled(setInstallPromptEvent, setShowInstallButton);
-
-    window.addEventListener("appinstalled", listener);
-
-    return (): void => window.removeEventListener("appinstalled", listener);
-  }, []);
-  // *****
-  // End install handling setup
-  // *****
-
   const [display, setDisplay] = React.useState<DisplayState>("home");
 
   const [gameState, dispatchGameState] = React.useReducer(
@@ -213,9 +169,6 @@ export default function App(): React.JSX.Element {
       return (
         <InstallOverview
           setDisplay={setDisplay}
-          setInstallPromptEvent={setInstallPromptEvent}
-          showInstallButton={showInstallButton}
-          installPromptEvent={installPromptEvent}
           userId={userId}
           sessionId={sessionId}
         ></InstallOverview>
