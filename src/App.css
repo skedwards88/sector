@@ -331,6 +331,7 @@ button {
   width: 95%;
   height: 100%;
   overflow: scroll;
+  align-content: center;
 }
 
 #rulesTerminal {
@@ -338,6 +339,7 @@ button {
   white-space: pre-wrap;
   text-align: left;
   margin: 5px;
+  align-content: center;
 }
 
 #gameOverResult {
