@@ -112,7 +112,7 @@ button {
   display: flex;
   flex-direction: column;
   text-align: center;
-  overflow: scroll;
+  overflow: auto;
   justify-items: center;
   justify-content: space-evenly;
   align-items: center;
