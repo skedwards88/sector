@@ -2,7 +2,7 @@ import React from "react";
 import {gameInit} from "../logic/gameInit";
 import {gameReducer} from "../logic/gameReducer";
 import Game from "./Game";
-import Heart from "./Heart";
+import MoreGames from "@skedwards88/shared-components/src/components/MoreGames";
 import Rules from "./Rules";
 import {
   handleAppInstalled,
@@ -17,6 +17,7 @@ import {inferEventsToLog} from "../logic/inferEventsToLog";
 import Home from "./Home";
 import type {DisplayState} from "../Types";
 import {playBot} from "../logic/bot";
+import packageJson from "../../package.json";
 
 export default function App(): React.JSX.Element {
   // *****
@@ -187,7 +188,16 @@ export default function App(): React.JSX.Element {
 
   switch (display) {
     case "heart":
-      return <Heart setDisplay={setDisplay}></Heart>;
+      return (
+        <MoreGames
+          setDisplay={setDisplay}
+          games={["deepSpaceSlime", "lexlet", "crossjig"]}
+          repoName="https://github.com/skedwards88/sector"
+          includeExtraInfo={true}
+          version={packageJson.version}
+        ></MoreGames>
+      );
+
     case "rules":
       return <Rules setDisplay={setDisplay}></Rules>;
 
