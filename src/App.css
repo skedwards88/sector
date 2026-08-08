@@ -506,7 +506,29 @@ button {
 /* larger screens */
 @media (height >= 600px) and (width >= 936px), (width >= 600px) and (height >= 936px) {
   body {
-    --quad: 6vmin;
+    --quad: 5vmin;
+  }
+
+  .app {
+    width: calc(var(--quad) * 10);
+  }
+}
+
+/* almost squarish screens like the foldables */
+@media (height < 1200px) and (aspect-ratio <= 8/5) {
+  body {
+    --quad: 7.2vmin;
+  }
+
+  .app {
+    width: calc(var(--quad) * 10);
+  }
+}
+
+/* squarish screens like the foldables */
+@media (height < 1200px) and (aspect-ratio <= 6/5) {
+  body {
+    --quad: 5.8vmin;
   }
 
   .app {
