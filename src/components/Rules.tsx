@@ -4,19 +4,19 @@ import type {DisplayState} from "../Types";
 const rules = [
   {
     text: [
-      "players take turns dragging a tile onto the board",
-      "players drag to move and tap to rotate the tile",
-      "the color of the control panel reflects the color of the current player",
-    ],
-    image: "",
-  },
-  {
-    text: [
       "each tile is divided into quadrants",
       "quadrants are blue, red, or black",
       "some quadrants have one of four different icons",
     ],
-    image: "example_tile",
+    image: "tile_intro",
+  },
+  {
+    text: [
+      "players take turns dragging a tile onto the board",
+      "players drag to move and tap to rotate the tile",
+      "the color of the control panel reflects the color of the current player",
+    ],
+    image: "tile_movement",
   },
   {
     text: [
@@ -40,7 +40,7 @@ const rules = [
       "after this point, the un-scored player tries to beat their score, and the scored player tries to prevent this",
       "(if no player has scored by the end of the game, the highest scoring sector wins)",
     ],
-    image: "",
+    image: "example_sectors",
   },
 ];
 

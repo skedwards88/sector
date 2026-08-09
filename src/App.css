@@ -340,6 +340,7 @@ button {
   text-align: left;
   margin: 5px;
   align-content: center;
+  overflow: auto;
 }
 
 #gameOverResult {
@@ -382,16 +383,16 @@ button {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  min-height: 15vh;
-  min-width: 80vw;
+  width: calc(var(--quad) * 10);
+  aspect-ratio: 1;
 }
 
-.ruleImage#example_tile {
-  background-image: url("./images/rules/example_tile.webp");
+.ruleImage#tile_intro {
+  background-image: url("./images/rules/tile_intro.webp");
 }
 
-.ruleImage#symbols {
-  background-image: url("./images/rules/symbols.webp");
+.ruleImage#tile_movement {
+  background-image: url("./images/rules/tile_movement.webp");
 }
 
 .ruleImage#legal_moves {
