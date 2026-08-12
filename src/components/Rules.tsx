@@ -4,7 +4,7 @@ import type {DisplayState} from "../Types";
 const rules = [
   {
     text: [
-      "each tile is divided into quadrants",
+      "each card is divided into quadrants",
       "quadrants are blue, red, or black",
       "some quadrants have one of four different icons",
     ],
@@ -12,15 +12,15 @@ const rules = [
   },
   {
     text: [
-      "players take turns dragging a tile onto the board",
-      "players drag to move and tap to rotate the tile",
+      "players take turns dragging a card onto the board",
+      "players drag to move and tap to rotate the card",
       "the color of the control panel reflects the color of the current player",
     ],
     image: "tile_movement",
   },
   {
     text: [
-      "at least one quadrant of the new tile must be adjacent to or overlap another tile",
+      "at least one quadrant of the new card must be adjacent to or overlap another card",
       "however, blue and red cannot overlap each other",
       "if a placement is not legal, the 'end turn' button will be dark",
     ],

@@ -142,9 +142,9 @@ function findBestPlacements({
 
       if (
         turnInvalidReason ===
-        "the tile must make contact with the existing tiles"
+        "the card must make contact with the existing cards"
       ) {
-        // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
+        // If the card isn't touching other cards, don't bother testing the other rotations at this board position
         break rotationLoop;
       }
 
@@ -313,9 +313,9 @@ function findBestPlacementsWithSecondary({
 
           if (
             turnInvalidReason ===
-            "the tile must make contact with the existing tiles"
+            "the card must make contact with the existing cards"
           ) {
-            // If the tile isn't touching other tiles, don't bother testing the other rotations at this board position
+            // If the card isn't touching other cards, don't bother testing the other rotations at this board position
             break nextTileRotationLoop;
           }
 
@@ -439,7 +439,7 @@ export function playBot(
     numBotLowScores: 2,
     numOpponentTopScores: 8,
     numOpponentLowScores: 6,
-    weightW: 8.75,
+    weightW: 9.25,
     weightY: 4,
     numTilesRemainingWeight: 9,
     maxPlacementsToFind: 12,
@@ -450,7 +450,7 @@ export function playBot(
   andScore: boolean;
 } {
   if (currentGameState.overlay === undefined) {
-    throw new Error("No tiles remaining to play");
+    throw new Error("No cards remaining to play");
   }
 
   const opponentColor: PlayerColor = botColor === "red" ? "blue" : "red";

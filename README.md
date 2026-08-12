@@ -1,6 +1,6 @@
 # Sector
 
-Strategically place tiles to build the greatest galactic empire.
+Strategically place cards to build the greatest galactic empire.
 
 **Players:** 2
 

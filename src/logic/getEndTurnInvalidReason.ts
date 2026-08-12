@@ -12,7 +12,7 @@ export function getEndTurnInvalidReason({
 }): string | null {
   // If the overlay is not on the board, return
   if (overlayTopLeft === undefined) {
-    return "the tile must be on the board";
+    return "the card must be on the board";
   }
 
   const expanseSize = Math.sqrt(played.length);
@@ -46,7 +46,7 @@ export function getEndTurnInvalidReason({
 
   // If the overlay doesn't overlap or share an edge with any played spaces, placement is invalid
   if (!contactFound) {
-    return "the tile must make contact with the existing tiles";
+    return "the card must make contact with the existing cards";
   }
 
   return null;

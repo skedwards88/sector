@@ -131,7 +131,7 @@ describe("getEndTurnInvalidReason", () => {
 
     const output = getEndTurnInvalidReason({overlay, overlayTopLeft, played});
 
-    expect(output).toBe("the tile must be on the board");
+    expect(output).toBe("the card must be on the board");
   });
 
   test("if red is on top of blue", () => {
@@ -230,7 +230,7 @@ describe("getEndTurnInvalidReason", () => {
 
     const output = getEndTurnInvalidReason({overlay, overlayTopLeft, played});
 
-    expect(output).toBe("the tile must make contact with the existing tiles");
+    expect(output).toBe("the card must make contact with the existing cards");
   });
 
   test("overlapping shapes ok", () => {

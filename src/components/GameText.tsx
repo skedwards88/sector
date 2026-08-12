@@ -6,7 +6,7 @@ function PlayerGoal({
   opponentScore: number | undefined;
 }): string {
   if (playerScore === undefined && opponentScore === undefined) {
-    return "goal: maximize your score";
+    return `goal: maximize your score (you can score once per game)`;
   }
   if (playerScore != undefined) {
     return `goal: prevent your opponent from scoring more than ${playerScore} points`;
