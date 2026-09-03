@@ -28,9 +28,4 @@ export type GameState = {
 };
 
 export type DisplayState =
-  | "game"
-  | "rules"
-  | "home"
-  | "heart"
-  | "installOverview"
-  | "pwaInstall";
+  "game" | "rules" | "home" | "heart" | "installOverview" | "pwaInstall";

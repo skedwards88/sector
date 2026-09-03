@@ -197,7 +197,7 @@ describe("mergeOverlayAndPlayed", () => {
     expect(played).toEqual(output);
   });
 
-  test("returns the played unchanged if overlayTopLeft is not defined", () => {
+  test("updates the played unchanged if overlayTopLeft is defined", () => {
     const overlay: Tile = [
       {
         color: "blue",
