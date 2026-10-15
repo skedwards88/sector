@@ -6,7 +6,12 @@ import {getEndTurnInvalidReason} from "../logic/getEndTurnInvalidReason";
 import {calculateScore} from "../logic/calculateScore";
 import {mergeOverlayAndPlayed} from "../logic/mergeOverlayAndPlayed";
 import Board from "./Board";
-import type {DisplayState, GameState} from "../Types";
+import {
+  FIRST_COLOR,
+  OPPOSITE_COLOR,
+  type DisplayState,
+  type GameState,
+} from "../Types";
 import {type ReducerPayload} from "../logic/gameReducer";
 
 export default function Game({
@@ -26,8 +31,10 @@ export default function Game({
   needToAnnounceScoring: boolean;
   setNeedToAnnounceScoring: React.Dispatch<React.SetStateAction<boolean>>;
 }): React.JSX.Element {
-  const currentColor = gameState.isBlueTurn ? "blue" : "red";
-  const opponentColor = gameState.isBlueTurn ? "red" : "blue";
+  const currentColor = gameState.isFirstPlayerTurn
+    ? FIRST_COLOR
+    : OPPOSITE_COLOR[FIRST_COLOR];
+  const opponentColor = OPPOSITE_COLOR[currentColor];
   const playerScore = gameState.scores[currentColor];
   const opponentScore = gameState.scores[opponentColor];
   const gameOver = playerScore != undefined && opponentScore != undefined;

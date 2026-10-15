@@ -1,4 +1,4 @@
-import type {GameState} from "../Types";
+import {FIRST_COLOR, type GameState} from "../Types";
 
 export function inferEventsToLog(
   oldState: GameState,
@@ -27,21 +27,24 @@ export function inferEventsToLog(
   ) {
     const blueScore = newState.scores.blue;
     const redScore = newState.scores.red;
-    let winner;
+    let winner: "tie" | "first" | "second";
     if (redScore != blueScore) {
       // not a tie
-      winner = redScore > blueScore ? "red" : "blue";
-    } else {
+      const winningColor = redScore > blueScore ? "red" : "blue";
+      winner = FIRST_COLOR === winningColor ? "first" : "second";
+    } else if (newState.firstScorer) {
       // ties go to the player who scored first
+      winner = FIRST_COLOR === newState.firstScorer ? "first" : "second";
+    } else {
       // if no player scored before end of game, then the tie is a legit tie
-      winner = newState.firstScorer ?? "tie";
+      winner = "tie";
     }
 
     analyticsToLog.push({
       eventName: "gameOver",
       eventInfo: {
         isVsBot: oldState.isVsBot,
-        colorWon: winner,
+        winner,
       },
     });
   }

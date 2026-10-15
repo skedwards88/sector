@@ -1,7 +1,12 @@
 import {gameInit} from "./gameInit";
 import {gameReducer} from "./gameReducer";
 import {type BotParameters, playBot} from "./bot";
-import type {GameState, Scores} from "../Types";
+import {
+  FIRST_COLOR,
+  OPPOSITE_COLOR,
+  type GameState,
+  type Scores,
+} from "../Types";
 
 // For tweaking the bot algorithm
 
@@ -98,8 +103,8 @@ function runBattle(
   ) {
     const {botOverlay, botOverlayTopLeft, andScore} = playBot(
       gameState,
-      gameState.isBlueTurn ? "blue" : "red",
-      gameState.isBlueTurn ? botParametersBlue : botParametersRed,
+      gameState.isFirstPlayerTurn ? FIRST_COLOR : OPPOSITE_COLOR[FIRST_COLOR],
+      gameState.isFirstPlayerTurn ? botParametersBlue : botParametersRed,
     );
 
     gameState = gameReducer(gameState, {

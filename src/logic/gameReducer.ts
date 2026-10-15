@@ -2,7 +2,13 @@ import {calculateScore} from "./calculateScore";
 import {gameInit} from "./gameInit";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
 import {rotateTile} from "./rotateTile";
-import type {GameState, PlayerColor, Tile} from "../Types";
+import {
+  FIRST_COLOR,
+  OPPOSITE_COLOR,
+  type GameState,
+  type PlayerColor,
+  type Tile,
+} from "../Types";
 
 export type ReducerPayload =
   | {action: "newGame"; isVsBot: boolean}
@@ -119,7 +125,9 @@ export function gameReducer(
     // If this was the last turn, the deck is empty and
     //   the drawn tile will be `undefined`
     const newDeck = structuredClone(currentGameState.deck);
-    const playerColor = currentGameState.isBlueTurn ? "blue" : "red";
+    const playerColor = currentGameState.isFirstPlayerTurn
+      ? FIRST_COLOR
+      : OPPOSITE_COLOR[FIRST_COLOR];
 
     const newOverlay = newDeck.pop();
 
@@ -153,7 +161,7 @@ export function gameReducer(
       draggedOverlayIndex: undefined,
       overlayTopLeft: undefined,
       played: newPlayed,
-      isBlueTurn: !currentGameState.isBlueTurn,
+      isFirstPlayerTurn: !currentGameState.isFirstPlayerTurn,
       scores: newScores,
       ...(newFirstScorer && {firstScorer: newFirstScorer}),
     };

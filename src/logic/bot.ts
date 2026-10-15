@@ -1,4 +1,10 @@
-import type {GameState, PlayerColor, Square, Tile} from "../Types";
+import {
+  OPPOSITE_COLOR,
+  type GameState,
+  type PlayerColor,
+  type Square,
+  type Tile,
+} from "../Types";
 import {calculateScore} from "./calculateScore";
 import {getEndTurnInvalidReason} from "./getEndTurnInvalidReason";
 import {mergeOverlayAndPlayed} from "./mergeOverlayAndPlayed";
@@ -453,7 +459,7 @@ export function playBot(
     throw new Error("No cards remaining to play");
   }
 
-  const opponentColor: PlayerColor = botColor === "red" ? "blue" : "red";
+  const opponentColor: PlayerColor = OPPOSITE_COLOR[botColor];
 
   const numTileRemaining = currentGameState.deck.length;
 

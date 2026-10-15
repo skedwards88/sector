@@ -11,7 +11,7 @@ describe("inferEventsToLog", () => {
     overlay: deck[0],
     overlayTopLeft: undefined,
     draggedOverlayIndex: undefined,
-    isBlueTurn: true,
+    isFirstPlayerTurn: true,
     scores: {
       red: undefined,
       blue: undefined,
@@ -65,7 +65,7 @@ describe("inferEventsToLog", () => {
         eventName: "gameOver",
         eventInfo: {
           isVsBot: newState.isVsBot,
-          colorWon: "blue",
+          winner: "first",
         },
       },
     ]);
@@ -93,7 +93,7 @@ describe("inferEventsToLog", () => {
         eventName: "gameOver",
         eventInfo: {
           isVsBot: newState.isVsBot,
-          colorWon: "tie",
+          winner: "tie",
         },
       },
     ]);
@@ -122,7 +122,7 @@ describe("inferEventsToLog", () => {
         eventName: "gameOver",
         eventInfo: {
           isVsBot: newState.isVsBot,
-          colorWon: "red",
+          winner: "second",
         },
       },
     ]);

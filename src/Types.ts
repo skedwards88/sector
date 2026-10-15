@@ -21,7 +21,7 @@ export type GameState = {
   overlay: Tile | undefined;
   draggedOverlayIndex: number | undefined;
   overlayTopLeft: number | undefined;
-  isBlueTurn: boolean;
+  isFirstPlayerTurn: boolean;
   firstScorer: PlayerColor | undefined;
   scores: Scores;
   isVsBot: boolean;
@@ -29,3 +29,12 @@ export type GameState = {
 
 export type DisplayState =
   "game" | "rules" | "home" | "heart" | "installOverview" | "pwaInstall";
+
+export const OPPOSITE_COLOR: Record<PlayerColor, PlayerColor> = {
+  blue: "red",
+  red: "blue",
+};
+
+export const FIRST_COLOR: PlayerColor = "blue";
+
+export const BOT_COLOR = OPPOSITE_COLOR[FIRST_COLOR];

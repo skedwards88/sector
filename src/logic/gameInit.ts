@@ -1,4 +1,4 @@
-import type {GameState, Square} from "../Types";
+import {type GameState, type Square} from "../Types";
 import {deck} from "./deck";
 import {shuffleArray} from "@skedwards88/word_logic";
 
@@ -45,7 +45,7 @@ export function gameInit({isVsBot = false}: {isVsBot?: boolean}): GameState {
     overlay,
     overlayTopLeft: undefined, // undefined indicates that the overlay piece is off the board (on top of the deck)
     draggedOverlayIndex: undefined,
-    isBlueTurn: true,
+    isFirstPlayerTurn: true,
     scores: {
       red: undefined,
       blue: undefined,

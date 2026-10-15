@@ -10,7 +10,7 @@ import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnal
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {inferEventsToLog} from "../logic/inferEventsToLog";
 import Home from "./Home";
-import type {DisplayState} from "../Types";
+import {BOT_COLOR, type DisplayState} from "../Types";
 import {playBot} from "../logic/bot";
 import packageJson from "../../package.json";
 import {useInstallPrompt} from "@skedwards88/shared-components/src/logic/handleInstall";
@@ -52,18 +52,17 @@ export default function App(): React.JSX.Element {
     null,
   );
 
-  const [previousIsBlueTurn, setPreviousIsBlueTurn] = React.useState(
-    gameState.isBlueTurn,
-  );
+  const [previousIsFirstPlayerTurn, setPreviousIsFirstPlayerTurn] =
+    React.useState(gameState.isFirstPlayerTurn);
 
   const gameOver =
     gameState.scores.blue != undefined && gameState.scores.red != undefined;
 
   const botShouldThink =
-    gameState.isVsBot && !gameState.isBlueTurn && !gameOver;
+    gameState.isVsBot && !gameState.isFirstPlayerTurn && !gameOver;
 
-  if (previousIsBlueTurn !== gameState.isBlueTurn) {
-    setPreviousIsBlueTurn(gameState.isBlueTurn);
+  if (previousIsFirstPlayerTurn !== gameState.isFirstPlayerTurn) {
+    setPreviousIsFirstPlayerTurn(gameState.isFirstPlayerTurn);
     if (botShouldThink) {
       setBotIsThinking(true);
     }
@@ -77,7 +76,7 @@ export default function App(): React.JSX.Element {
     const timer = setTimeout(() => {
       const {botOverlay, botOverlayTopLeft, andScore} = playBot(
         gameState,
-        "red",
+        BOT_COLOR,
       );
 
       dispatchGameState({
@@ -104,7 +103,7 @@ export default function App(): React.JSX.Element {
         setBotIsThinking(false);
       }
     };
-  }, [gameState.isBlueTurn]);
+  }, [gameState.isFirstPlayerTurn]);
 
   React.useEffect(() => {
     if (botPlayedTopLeft === null) {
@@ -153,7 +152,7 @@ export default function App(): React.JSX.Element {
         <MoreGames
           setDisplay={setDisplay}
           games={["deepSpaceSlime", "lexlet", "crossjig"]}
-          repoName="https://github.com/skedwards88/sector"
+          repoName="sector"
           includeExtraInfo={true}
           version={packageJson.version}
         ></MoreGames>

@@ -1,5 +1,5 @@
 import {type ReducerPayload} from "../logic/gameReducer";
-import type {PlayerColor, Tile} from "../Types";
+import {BOT_COLOR, type PlayerColor, type Tile} from "../Types";
 import Deck from "./Deck";
 
 function EndTurnButton({
@@ -142,7 +142,10 @@ export default function PlayerControls({
 
   return (
     <div id="playerScreen">
-      <div id="playerControls" className={botIsActive ? "red" : currentColor}>
+      <div
+        id="playerControls"
+        className={botIsActive ? BOT_COLOR : currentColor}
+      >
         <Deck
           overlay={overlay}
           overlayTopLeft={overlayTopLeft}
